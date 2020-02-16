@@ -6,23 +6,6 @@ using UnityEngine.UI;
 
 public class UIBehaviour : MonoBehaviour
 {
-    public event Action<UIBehaviour> UiStart;
-    public event Action<UIBehaviour> UiUpdate;
-
-    protected virtual void Start()
-    {
-        if (UiStart!=null)
-        {
-            UiStart.Invoke(this);
-        }
-    }
-    protected virtual void Update()
-    {
-        if (UiUpdate!=null)
-        {
-            UiUpdate.Invoke(this);
-        }
-    }
 
     #region  给UI添加Toggle触发事件
     public void AddToggleListen(UnityAction<bool> action)
@@ -156,14 +139,4 @@ public class UIBehaviour : MonoBehaviour
     }
     #endregion
 
-    public void OnDestroy()
-    {
-        //if (UIManager.GetInstance()!=null)
-        //{
-        //    if (UIManager.Instance.)
-        //    {
-
-        //    }
-        //}
-    }
 }

@@ -4,8 +4,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+public enum UIStatus
+{
+    Open,
+    Close
+}
+
 public class UIBase : MonoBehaviour
 {
+    [HideInInspector]
+    public UIStatus Status;
+
     /// <summary>
     /// 加载所有子物体
     /// </summary>
@@ -50,7 +59,8 @@ public class UIBase : MonoBehaviour
 
     public virtual IEnumerator StartOpenAnim(UICallBack uiCallBack, params object[] objs)
     {
-        uiCallBack(objs);
+        if (uiCallBack != null)
+            uiCallBack(objs);
         yield break;
     }
 
@@ -61,6 +71,15 @@ public class UIBase : MonoBehaviour
     }
 
     public virtual void OnClose(params object[] objs)
+    {
+
+    }
+
+    /// <summary>
+    /// 刷新
+    /// </summary>
+    /// <param name="objs"></param>
+    public virtual void OnRefresh(params object[] objs)
     {
 
     }

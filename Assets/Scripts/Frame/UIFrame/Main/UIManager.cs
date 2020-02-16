@@ -45,7 +45,9 @@ public class UIManager
     void LoadWindow(string windowName)
     {
         string path = PathManager.GetWindowPath(windowName);
-        var windowObj = ResourceManager.Load(path);
+        var obj = ResourceManager.Load<GameObject>(path);
+        var windowObj = PoolManager.InstantiateGameObject(obj, PoolType.Window);
+        windowObj.transform.SetParent(MainCanvas.transform, false);
         UIBase window = windowObj.GetComponent<UIBase>();
         m_WindowDict.Add(windowObj.name, window);
         var uiDict = window.LoadAllUI();
@@ -68,6 +70,7 @@ public class UIManager
         T window = m_WindowDict[windowName] as T;
         window.transform.SetAsLastSibling();
         window.OnOpen(objs);
+        window.Status = UIStatus.Open;
         window.StartCoroutine(window.StartOpenAnim(uiCallBack, objs));
         return window;
     }
@@ -81,6 +84,8 @@ public class UIManager
     {
         string windowName = typeof(T).Name;
         T window = m_WindowDict[windowName] as T;
+        if (window.Status == UIStatus.Close) return;
+        window.Status = UIStatus.Close;
         if (uiCallBack == null)
         {
             uiCallBack = window.OnClose;
@@ -89,7 +94,7 @@ public class UIManager
         {
             uiCallBack += window.OnClose;
         }
-        window.StartCloseAnim(uiCallBack, objs);
+        window.StartCoroutine(window.StartCloseAnim(uiCallBack, objs));
     }
 
     /// <summary>
