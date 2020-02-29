@@ -71,7 +71,7 @@ public class WindowDemo : UIWindowBase
     public override IEnumerator StartOpenAnim(UICallBack uiCallBack, params object[] objs)
     {
         m_CanvasGroup.alpha = 0;
-        m_CanvasGroup.DOFade(1, 0.3f).OnComplete(() =>
+        m_CanvasGroup.DOFade(1, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartOpenAnim(uiCallBack, objs));
         });
@@ -86,7 +86,7 @@ public class WindowDemo : UIWindowBase
     /// <returns></returns>
     public override IEnumerator StartCloseAnim(UICallBack uiCallBack, params object[] objs)
     {
-        m_CanvasGroup.DOFade(0, 0.3f).OnComplete(() =>
+        m_CanvasGroup.DOFade(0, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartCloseAnim(uiCallBack, objs));
         });

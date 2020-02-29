@@ -75,7 +75,7 @@ public class UILogoWindow : UIWindowBase
         m_CanvasGroup.DOFade(1, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartOpenAnim(uiCallBack, objs));
-            TimerManager.Instance.AddListener(2f, () => {
+            TimerManager.Instance.AddListener(1.5f, () => {
                 UIManager.Instance.CloseWindow<UILogoWindow>();
                 });
         });
@@ -90,7 +90,7 @@ public class UILogoWindow : UIWindowBase
     /// <returns></returns>
     public override IEnumerator StartCloseAnim(UICallBack uiCallBack, params object[] objs)
     {
-        m_CanvasGroup.DOFade(0, 0.3f).OnComplete(() =>
+        m_CanvasGroup.DOFade(0, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartCloseAnim(uiCallBack, objs));
         });

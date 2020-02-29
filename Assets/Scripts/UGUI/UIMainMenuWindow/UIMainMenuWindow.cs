@@ -97,7 +97,7 @@ public class UIMainMenuWindow : UIWindowBase
     public override IEnumerator StartOpenAnim(UICallBack uiCallBack, params object[] objs)
     {
         m_CanvasGroup.alpha = 0;
-        m_CanvasGroup.DOFade(1, 0.4f).OnComplete(() =>
+        m_CanvasGroup.DOFade(1, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartOpenAnim(uiCallBack, objs));
             ShowTitleAnim();
@@ -148,12 +148,12 @@ public class UIMainMenuWindow : UIWindowBase
     {
         alpha.alpha = 0;
         Animator_OpenTitle.gameObject.SetActive(true);
-        alpha.DOFade(1, 0.5f);
+        alpha.DOFade(1, 0.8f);
     }
 
     void HideTitleAnim()
     {
-        alpha.DOFade(0, 0.3f).OnComplete(() =>
+        alpha.DOFade(0, 0.5f).OnComplete(() =>
         {
             Animator_OpenTitle.gameObject.SetActive(false);
             StartCoroutine(ShowButtons());
