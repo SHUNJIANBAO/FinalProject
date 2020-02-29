@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class WindowDemo : UIWindowBase
+public class UILogoWindow : UIWindowBase
 {
     #region 参数
     #endregion
@@ -60,6 +60,7 @@ public class WindowDemo : UIWindowBase
     public override void OnClose(params object[] objs)
     {
         base.OnClose(objs);
+        UIManager.Instance.OpenWindow<UIMainMenuWindow>();
     }
 
     /// <summary>
@@ -71,9 +72,12 @@ public class WindowDemo : UIWindowBase
     public override IEnumerator StartOpenAnim(UICallBack uiCallBack, params object[] objs)
     {
         m_CanvasGroup.alpha = 0;
-        m_CanvasGroup.DOFade(1, 0.3f).OnComplete(() =>
+        m_CanvasGroup.DOFade(1, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartOpenAnim(uiCallBack, objs));
+            TimerManager.Instance.AddListener(2f, () => {
+                UIManager.Instance.CloseWindow<UILogoWindow>();
+                });
         });
         yield return new WaitForEndOfFrame();
     }

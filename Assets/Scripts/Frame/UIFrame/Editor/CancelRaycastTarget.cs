@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-using UnityEditor.UI;
-using System.Collections;
-using System.Collections.Generic;
 using System;
-using System.IO;
 using System.Reflection;
 
 [InitializeOnLoad]

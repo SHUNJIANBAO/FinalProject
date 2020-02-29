@@ -42,6 +42,7 @@ public class CreateUITool : EditorWindow
             {
                 if (GUILayout.Button("创建脚本"))
                 {
+                    uiName = "UI" + uiName + "Window";
                     if (string.IsNullOrEmpty(uiName)) return;
                     CreateDirectory(type, uiName);
                     CreateWindowScript(uiName, scriptPath);

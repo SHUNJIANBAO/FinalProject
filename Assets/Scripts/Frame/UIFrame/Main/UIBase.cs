@@ -19,7 +19,7 @@ public class UIBase : MonoBehaviour
     /// 加载所有子物体
     /// </summary>
     /// <returns></returns>
-    public Dictionary<string, List<GameObject>> LoadAllUI()
+    public void LoadAllUI()
     {
         Transform[] trans = GetComponentsInChildren<Transform>(true);
         Dictionary<string, List<GameObject>> uiDict = new Dictionary<string, List<GameObject>>();
@@ -32,8 +32,9 @@ public class UIBase : MonoBehaviour
             }
             uiDict[trans[i].name].Add(trans[i].gameObject);
         }
+        UIManager.Instance.RegistUI(this, uiDict);
         OnInit();
-        return uiDict;
+        //return uiDict;
     }
 
     #region 生命周期

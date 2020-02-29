@@ -18,4 +18,6 @@ public class PathManager
     {
         return "Assets/Scripts/UGUI/"+windowName;
     }
+
+    public const string AudioPath = "Audios";
 }

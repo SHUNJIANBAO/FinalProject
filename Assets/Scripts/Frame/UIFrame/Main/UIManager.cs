@@ -50,8 +50,8 @@ public class UIManager
         windowObj.transform.SetParent(MainCanvas.transform, false);
         UIBase window = windowObj.GetComponent<UIBase>();
         m_WindowDict.Add(windowObj.name, window);
-        var uiDict = window.LoadAllUI();
-        RegistUI(window, uiDict);
+        window.LoadAllUI();
+        //RegistUI(window, uiDict);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class UIManager
     /// <param name="uiCallBack"></param>
     /// <param name="objs"></param>
     /// <returns></returns>
-    public T OpenWindow<T>(UICallBack uiCallBack = null, params object[] objs) where T : UIBase
+    public T OpenWindow<T>(bool openAnim = true, UICallBack uiCallBack = null, params object[] objs) where T : UIBase
     {
         string windowName = typeof(T).Name;
         if (!m_WindowDict.ContainsKey(windowName))
@@ -68,10 +68,13 @@ public class UIManager
             LoadWindow(windowName);
         }
         T window = m_WindowDict[windowName] as T;
-        window.transform.SetAsLastSibling();
+        //window.transform.SetAsLastSibling();
         window.OnOpen(objs);
         window.Status = UIStatus.Open;
-        window.StartCoroutine(window.StartOpenAnim(uiCallBack, objs));
+        if (openAnim)
+        {
+            window.StartCoroutine(window.StartOpenAnim(uiCallBack, objs));
+        }
         return window;
     }
 
@@ -124,7 +127,7 @@ public class UIManager
     /// <param name="window"></param>
     /// <param name="uiName"></param>
     /// <param name="uiObj"></param>
-    void RegistUI(UIBase uiBase, Dictionary<string, List<GameObject>> uiDict)
+    public void RegistUI(UIBase uiBase, Dictionary<string, List<GameObject>> uiDict)
     {
         if (m_UIList.ContainsKey(uiBase))
         {
