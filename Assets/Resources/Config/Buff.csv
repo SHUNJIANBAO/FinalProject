@@ -1,0 +1,3 @@
+动作ID,名称,值,值类型0血量1最大血量2攻击3防御,BUff类型0一次1限时2持续增加,持续时长0为无限
+Id,Name,Value,ValueType,BuffType,DurationTime
+1,回复少量HP,15,0,0,

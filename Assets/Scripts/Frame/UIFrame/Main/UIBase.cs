@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -33,15 +34,13 @@ public class UIBase : MonoBehaviour
             uiDict[trans[i].name].Add(trans[i].gameObject);
         }
         UIManager.Instance.RegistUI(this, uiDict);
+        GetUIComponent();
+        AddUIListener();
         OnInit();
         //return uiDict;
     }
 
     #region 生命周期
-    protected virtual void OnInit()
-    {
-
-    }
 
     protected virtual void GetUIComponent()
     {
@@ -49,6 +48,11 @@ public class UIBase : MonoBehaviour
     }
 
     protected virtual void AddUIListener()
+    {
+
+    }
+
+    protected virtual void OnInit()
     {
 
     }
@@ -172,6 +176,10 @@ public class UIBase : MonoBehaviour
     {
         UIBehaviour uiBehaviour = GetBehaviour(uiName);
         uiBehaviour.AddButtonListen(action);
+    }
+    protected void AddButtonListen(Button btn, UnityAction action)
+    {
+        btn.onClick.AddListener(action);
     }
 
     /// <summary>

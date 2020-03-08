@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour
     }
     #endregion
 
-    #region 音量控制面板
+    #region 音量控制
     //总音量
     private float masterVolume = 1;
     public float MasterVolume
@@ -64,19 +64,19 @@ public class AudioManager : MonoBehaviour
     }
 
     //背景音乐音量
-    private float bgmVolume = 1;
-    public float BgmVolume
+    private float musicVolume = 1;
+    public float MusicVolume
     {
         get
         {
-            return bgmVolume;
+            return musicVolume;
         }
         set
         {
-            bgmVolume = Mathf.Clamp(value, 0, 1);
+            musicVolume = Mathf.Clamp(value, 0, 1);
             if (bgmSource == null) bgmSource = gameObject.AddComponent<AudioSource>();
             if (bgmSource.loop == false) bgmSource.loop = true;
-            bgmSource.volume = bgmVolume;
+            bgmSource.volume = musicVolume;
         }
     }
 
@@ -122,7 +122,7 @@ public class AudioManager : MonoBehaviour
         if (bgmSource == null)
         {
             bgmSource = gameObject.AddComponent<AudioSource>();
-            bgmSource.volume = bgmVolume;
+            bgmSource.volume = MusicVolume;
         }
         if (bgmSource.loop == false) bgmSource.loop = true;
         AudioClip tempClip = clip.GetClip(bgmName);
@@ -146,17 +146,17 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            float vol = BgmVolume;
+            float vol = MusicVolume;
             while (bgmSource.volume > 0)
             {
-                BgmVolume -= Time.unscaledDeltaTime * 2f;
+                MusicVolume -= Time.unscaledDeltaTime * 2f;
                 yield return null;
             }
             bgmSource.clip = newClip;
             bgmSource.Play();
             while (bgmSource.volume < vol)
             {
-                BgmVolume += Time.unscaledDeltaTime * 2f;
+                MusicVolume += Time.unscaledDeltaTime * 2f;
                 yield return null;
             }
         }

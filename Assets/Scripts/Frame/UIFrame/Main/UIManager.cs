@@ -83,21 +83,60 @@ public class UIManager
     /// </summary>
     /// <param name="uiCallBack"></param>
     /// <param name="objs"></param>
-    public void CloseWindow<T>(UICallBack uiCallBack = null, params object[] objs) where T : UIBase
+    public void CloseWindow<T>(bool closeAnim=true, UICallBack uiCallBack = null, params object[] objs) where T : UIBase
     {
         string windowName = typeof(T).Name;
         T window = m_WindowDict[windowName] as T;
         if (window.Status == UIStatus.Close) return;
         window.Status = UIStatus.Close;
-        if (uiCallBack == null)
+        if (closeAnim)
         {
-            uiCallBack = window.OnClose;
+            if (uiCallBack == null)
+            {
+                uiCallBack = window.OnClose;
+            }
+            else
+            {
+                uiCallBack += window.OnClose;
+            }
+            window.StartCoroutine(window.StartCloseAnim(uiCallBack, objs));
         }
         else
         {
-            uiCallBack += window.OnClose;
+            window.OnClose();
+            if (uiCallBack!=null)
+            {
+                uiCallBack(objs);
+            }
         }
-        window.StartCoroutine(window.StartCloseAnim(uiCallBack, objs));
+    }
+
+    public void CloseWindow(UIBase uiBase, bool closeAnim = true, UICallBack uiCallBack = null, params object[] objs) 
+    {
+        string windowName = uiBase.name;
+        UIWindowBase window = m_WindowDict[windowName] as UIWindowBase;
+        if (window.Status == UIStatus.Close) return;
+        window.Status = UIStatus.Close;
+        if (closeAnim)
+        {
+            if (uiCallBack == null)
+            {
+                uiCallBack = window.OnClose;
+            }
+            else
+            {
+                uiCallBack += window.OnClose;
+            }
+            window.StartCoroutine(window.StartCloseAnim(uiCallBack, objs));
+        }
+        else
+        {
+            window.OnClose();
+            if (uiCallBack != null)
+            {
+                uiCallBack(objs);
+            }
+        }
     }
 
     /// <summary>

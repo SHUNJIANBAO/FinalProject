@@ -17,25 +17,28 @@ public class Main : MonoSingleton<Main>
     /// </summary>
     public void ApplicationEnter()
     {
-        AudioManager.Instance.LoadAudios(PathManager.AudioPath);
+        LoadAssets(); //加载资源
+        LoadConfigs();  //加载配置
+
         UIManager.Instance.OpenWindow<UILogoWindow>();
+    }
+
+    void LoadAssets()
+    {
+        AudioManager.Instance.LoadAudios(PathManager.AudioPath);
+    }
+
+    void LoadConfigs()
+    {
+        ItemConfig.LoadCsvCfg();
+
+
+        PlayerData.Load();
+        GameData.Load();
     }
 
     public void OnGameEnter()
     {
-
+        
     }
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.J))
-    //    {
-    //        //UIManager.Instance.OpenWindow<TestWindow>();
-
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.K))
-    //    {
-    //       // UIManager.Instance.CloseWindow<TestWindow>();
-
-    //    }
-    //}
 }

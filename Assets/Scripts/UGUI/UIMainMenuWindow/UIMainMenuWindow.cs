@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIMainMenuWindow : UIWindowBase
@@ -10,12 +11,15 @@ public class UIMainMenuWindow : UIWindowBase
     #region 参数
 
     Button Button_EnterGame;
+    Button Button_Set;
     Button Button_ExitGame;
 
     List<Transform> m_ButtonList = new List<Transform>();
 
-    GameObject Panel_MenuButton;
+    //GameObject Panel_MenuButton;
     Animator Animator_OpenTitle;
+
+    bool m_IsAnim;
 
     //临时
     CanvasGroup alpha;
@@ -23,33 +27,21 @@ public class UIMainMenuWindow : UIWindowBase
 
     #region 继承方法
     /// <summary>
-    /// 初始化
-    /// </summary>
-    protected override void OnInit()
-    {
-        base.OnInit();
-
-        Button_EnterGame = GetUI<Button>("Button_EnterGame");
-        Button_ExitGame = GetUI<Button>("Button_ExitGame");
-
-        m_ButtonList.Add(Button_EnterGame.transform);
-        m_ButtonList.Add(Button_ExitGame.transform);
-
-        Panel_MenuButton = GetUI<GameObject>("Panel_MenuButton");
-        Animator_OpenTitle = GetUI<Animator>("Animator_OpenTitle");
-
-        alpha = GetUI<CanvasGroup>("Animator_OpenTitle");
-
-        //Panel_MenuButton.SetActive(false);
-        Animator_OpenTitle.gameObject.SetActive(false);
-    }
-
-    /// <summary>
     /// 得到UI组件
     /// </summary>
     protected override void GetUIComponent()
     {
         base.GetUIComponent();
+
+        Button_EnterGame = GetUI<Button>("Button_EnterGame");
+        Button_Set = GetUI<Button>("Button_Set");
+        Button_ExitGame = GetUI<Button>("Button_ExitGame");
+
+
+        //Panel_MenuButton = GetUI<GameObject>("Panel_MenuButton");
+        Animator_OpenTitle = GetUI<Animator>("Animator_OpenTitle");
+
+        alpha = GetUI<CanvasGroup>("Animator_OpenTitle");
     }
 
     /// <summary>
@@ -58,6 +50,23 @@ public class UIMainMenuWindow : UIWindowBase
     protected override void AddUIListener()
     {
         base.AddUIListener();
+        AddButtonListen(Button_Set, OnClickButtonOpenSetWindow);
+    }
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    protected override void OnInit()
+    {
+        base.OnInit();
+
+        m_ButtonList.Add(Button_EnterGame.transform);
+        m_ButtonList.Add(Button_Set.transform);
+        m_ButtonList.Add(Button_ExitGame.transform);
+
+
+        //Panel_MenuButton.SetActive(false);
+        Animator_OpenTitle.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -76,7 +85,11 @@ public class UIMainMenuWindow : UIWindowBase
     public override void OnOpen(params object[] objs)
     {
         base.OnOpen(objs);
-        StartCoroutine(HideButtons(null,0,0));
+        foreach (var btn in m_ButtonList)
+        {
+            btn.DOLocalMoveX(600, 0);
+        }
+
     }
 
     /// <summary>
@@ -86,6 +99,7 @@ public class UIMainMenuWindow : UIWindowBase
     public override void OnClose(params object[] objs)
     {
         base.OnClose(objs);
+        StartCoroutine(HideButtons(null, 0, 0));
     }
 
     /// <summary>
@@ -125,18 +139,23 @@ public class UIMainMenuWindow : UIWindowBase
 
     private void Update()
     {
-        if (Animator_OpenTitle.gameObject.activeSelf)
+        if (!m_IsAnim)
         {
-            if (Input.anyKeyDown)
+            if (Animator_OpenTitle.gameObject.activeSelf)
             {
-                HideTitleAnim();
+                if (Input.anyKeyDown)
+                {
+                    m_IsAnim = true;
+                    HideTitleAnim();
+                }
             }
-        }
-        else
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            else
             {
-                StartCoroutine(HideButtons(ShowTitleAnim));
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    m_IsAnim = true;
+                    StartCoroutine(HideButtons(ShowTitleAnim));
+                }
             }
         }
     }
@@ -148,11 +167,12 @@ public class UIMainMenuWindow : UIWindowBase
     {
         alpha.alpha = 0;
         Animator_OpenTitle.gameObject.SetActive(true);
-        alpha.DOFade(1, 0.8f);
+        alpha.DOFade(1, 0.8f).OnComplete(() => m_IsAnim = false);
     }
 
     void HideTitleAnim()
     {
+        alpha.DOKill();
         alpha.DOFade(0, 0.5f).OnComplete(() =>
         {
             Animator_OpenTitle.gameObject.SetActive(false);
@@ -170,6 +190,7 @@ public class UIMainMenuWindow : UIWindowBase
             btn.DOLocalMoveX(0, 0.3f);
             yield return new WaitForSeconds(0.1f);
         }
+        m_IsAnim = false;
     }
 
     /// <summary>
@@ -185,6 +206,14 @@ public class UIMainMenuWindow : UIWindowBase
         }
         if (action != null)
             action();
+    }
+
+    /// <summary>
+    /// 打开设置界面
+    /// </summary>
+    void OnClickButtonOpenSetWindow()
+    {
+        UIManager.Instance.OpenWindow<UISetWindow>();
     }
 
     #endregion

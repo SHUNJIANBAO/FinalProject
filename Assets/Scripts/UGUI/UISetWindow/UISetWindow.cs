@@ -5,12 +5,19 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class WindowDemo : UIWindowBase
+public class UISetWindow : UIWindowBase
 {
     #region 参数
     #endregion
 
     #region 继承方法
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    protected override void OnInit()
+    {
+        base.OnInit();
+    }
 
     /// <summary>
     /// 得到UI组件
@@ -26,14 +33,6 @@ public class WindowDemo : UIWindowBase
     protected override void AddUIListener()
     {
         base.AddUIListener();
-    }
-
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    protected override void OnInit()
-    {
-        base.OnInit();
     }
 
     /// <summary>
