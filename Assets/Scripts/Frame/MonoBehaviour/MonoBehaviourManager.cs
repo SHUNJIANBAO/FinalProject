@@ -7,7 +7,7 @@ public static class MonoBehaviourManager
     /// <summary>
     /// 管理的所有MonoBehaviour类
     /// </summary>
-    static List<MonoBehaviourCell> m_CellList = new List<MonoBehaviourCell>();
+    static List<MonoEntity> m_CellList = new List<MonoEntity>();
     static bool m_IsInit = false;
 
     static void Init()
@@ -20,7 +20,7 @@ public static class MonoBehaviourManager
         MonoBehaviourRuntime.Instance.OnLateUpdate += OnLateUpdate;
     }
 
-    public static void Add(MonoBehaviourCell cell)
+    public static void Add(MonoEntity cell)
     {
         Init();
         if (!m_CellList.Contains(cell))
@@ -30,7 +30,7 @@ public static class MonoBehaviourManager
             m_CellList.OrderBy(m => m.Index);
         }
     }
-    public static void Remove(MonoBehaviourCell cell)
+    public static void Remove(MonoEntity cell)
     {
         Init();
         if (m_CellList.Contains(cell))

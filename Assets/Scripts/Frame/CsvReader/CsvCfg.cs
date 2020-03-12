@@ -86,7 +86,7 @@ public abstract class CsvCfg<T> where T : CsvCfg<T>, new()
                 }
                 else
                 {
-                    var obj = Util.GetValue(cfgDict[info.Name], info.PropertyType);
+                    var obj = Util.GetValue(cfgDict[info.Name], info.PropertyType,info.Name);
                     info.SetValue(cfg, obj, null);
                 }
             }

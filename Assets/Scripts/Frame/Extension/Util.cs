@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class Util
@@ -59,7 +60,7 @@ public class Util
     /// <param name="obj"></param>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static object GetValue(object obj, System.Type type)
+    public static object GetValue(object obj, System.Type type,string propertyName)
     {
         string value = obj.ToString().Trim();
         if (string.IsNullOrEmpty(value))
@@ -79,12 +80,19 @@ public class Util
         if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
         {
             string[] tempArry = value.Split('|', ';', ':', ',');
-            List<string> tempList = new List<string>();
+            var memberType = type.GetGenericArguments()[0];
+            var listType = typeof(List<>).MakeGenericType(new Type[] { memberType });
+            var list = Activator.CreateInstance(listType, new object[] { });
+
+            //List<string> tempList = new List<string>();
             for (int i = 0; i < tempArry.Length; i++)
             {
-                tempList.Add(tempArry[i]);
+                object addItem = GetValue(tempArry[i], memberType, "");
+                list.GetType().InvokeMember("Add", BindingFlags.Default | BindingFlags.InvokeMethod, null, list, new object[] { addItem });
+                //tempList.Add(tempArry[i]);
             }
-            return tempList;
+            //return tempList;
+            return list;
         }
         if (type == typeof(bool))
         {
@@ -93,7 +101,7 @@ public class Util
             return false;
         }
         else if (type.BaseType == typeof(Enum))
-            return GetValue(value, Enum.GetUnderlyingType(type));
+            return GetValue(value, Enum.GetUnderlyingType(type),"");
         if (type == typeof(Vector3))
         {
             string[] tempArry = value.Split('|', ';', ':', ',');

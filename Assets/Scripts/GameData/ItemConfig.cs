@@ -17,5 +17,7 @@ public class ItemConfig : CsvCfg<ItemConfig>
     public string Icon { get; protected set; }
     public int MaxCount { get; protected set; }
 
+    public List<int> TestList { get; protected set; }
+
     public static string FilePath = "Config/Item";
 }

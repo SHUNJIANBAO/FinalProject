@@ -20,7 +20,7 @@ public class Main : MonoSingleton<Main>
         LoadAssets(); //加载资源
         LoadConfigs();  //加载配置
 
-        UIManager.Instance.OpenWindow<UILogoWindow>();
+        //UIManager.Instance.OpenWindow<UILogoWindow>();
     }
 
     void LoadAssets()

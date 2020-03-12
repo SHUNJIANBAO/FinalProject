@@ -1,3 +1,3 @@
-动作ID,名称,道具类型0普通1消耗品2装备,描述,图片名,最大数量
-Id,Name,Type,Description,Icon,MaxCount
-1,苹果,1,回复少量HP,,99
+动作ID,名称,道具类型0普通1消耗品2装备,描述,New Column,图片名,最大数量
+Id,Name,Type,Description,TestList,Icon,MaxCount
+1,苹果,1,回复少量HP,1;2;3,,99

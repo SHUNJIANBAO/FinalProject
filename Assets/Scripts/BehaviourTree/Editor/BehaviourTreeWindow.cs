@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class BehaviourTreeWindow : EditorWindow
 {
@@ -77,6 +78,19 @@ public class BehaviourTreeWindow : EditorWindow
     void OnRightClick(Vector2 pos)
     {
         GenericMenu menu = new GenericMenu();
-        
+        Type[] compositeTypes = Util.GetTypes<CompositeNode>();
+        Type[] decoratorTypes = Util.GetTypes<DecoratorNode>();
+        Type[] actionTypes = Util.GetTypes<ActionNode>();
+        CreateMenuItem(compositeTypes, menu);
+        CreateMenuItem(decoratorTypes, menu);
+        CreateMenuItem(actionTypes, menu);
+    }
+
+    void CreateMenuItem(Type[] typeArry,GenericMenu menu)
+    {
+        for (int i = 0; i < typeArry.Length; i++)
+        {
+            //menu.AddItem()
+        }
     }
 }
