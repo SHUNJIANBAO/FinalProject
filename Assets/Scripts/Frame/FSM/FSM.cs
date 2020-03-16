@@ -4,15 +4,58 @@ using System;
 
 public abstract class FsmBase
 {
+    public Action OnComplete;
+    /// <summary>
+    /// 可以进入
+    /// </summary>
+    /// <returns></returns>
     abstract public bool CanEnter();
-    abstract public bool CanExit();
-    public virtual void OnEnter()
+    /// <summary>
+    /// 可以中断
+    /// </summary>
+    /// <returns></returns>
+    abstract public bool CanInterrupt();
+    public void Enter()
+    {
+        OnEnter();
+    }
+    public void Stay()
+    {
+        OnStay();
+    }
+    public void Interrupt()
+    {
+        OnInterrupt();
+    }
+    public void Exit()
+    {
+        OnComplete?.Invoke();
+        OnExit();
+    }
+
+    /// <summary>
+    /// 进入时调用
+    /// </summary>
+    protected virtual void OnEnter()
     {
     }
-    public virtual void OnStay()
+    /// <summary>
+    /// 运行时持续调用
+    /// </summary>
+    protected virtual void OnStay()
     {
     }
-    public virtual void OnExit()
+    /// <summary>
+    /// 中断时调用
+    /// </summary>
+    protected virtual void OnInterrupt()
+    {
+
+    }
+    /// <summary>
+    /// 退出时调用
+    /// </summary>
+    protected virtual void OnExit()
     {
     }
 }
@@ -38,10 +81,10 @@ public class FsmManager
     {
         return fsm[stateType];
     }
-    public bool CanChange()
+    public bool CanChange(int state)
     {
-        if (CurrentState == -1) return true;
-        return fsm[CurrentState].CanExit();
+        if (CurrentState == -1 && fsm[state].CanEnter()) return true;
+        return fsm[CurrentState].CanInterrupt() && fsm[state].CanEnter();
     }
 
     public void OnStay()
@@ -49,26 +92,37 @@ public class FsmManager
         if (fsm != null)
         {
             if (CurrentState != -1)
-                fsm[CurrentState].OnStay();
+                fsm[CurrentState].Stay();
         }
-    }
-
-    public bool CanEnter(int state)
-    {
-        return fsm[CurrentState].CanExit();
     }
 
     public void ChangeState(int state, bool beForce = false)
     {
+        if (!beForce&& !CanChange(state)) return;
+
         if (CurrentState != -1)
         {
-            if (!fsm[CurrentState].CanExit() && !beForce)
-            {
-                return;
-            }
-            fsm[CurrentState].OnExit();
+            fsm[CurrentState].Interrupt();
         }
+
         CurrentState = state;
-        fsm[CurrentState].OnEnter();
+        fsm[CurrentState].Enter();
     }
+}
+
+public enum E_FsmState
+{
+    Idle,
+    Move,
+    Jump,
+    Attack,
+    Hurt,
+    HitFly,
+    Blink,
+    Play,
+
+    Born,
+    Die,
+    
+    Max
 }

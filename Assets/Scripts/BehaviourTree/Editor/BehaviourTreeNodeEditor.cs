@@ -18,6 +18,9 @@ public class BehaviourTreeNodeEditor
             return _instance;
         }
     }
+    public BehaviourTreeNodeEventEditor NodeEvent = new BehaviourTreeNodeEventEditor();
+
+
     List<NodeBase> m_NodeList;
 
     void Init()

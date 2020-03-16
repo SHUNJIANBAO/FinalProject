@@ -81,16 +81,21 @@ public class BehaviourTreeWindow : EditorWindow
         Type[] compositeTypes = Util.GetTypes<CompositeNode>();
         Type[] decoratorTypes = Util.GetTypes<DecoratorNode>();
         Type[] actionTypes = Util.GetTypes<ActionNode>();
-        CreateMenuItem(compositeTypes, menu);
-        CreateMenuItem(decoratorTypes, menu);
-        CreateMenuItem(actionTypes, menu);
+        CreateMenuItem("组合节点",compositeTypes, menu,pos);
+        CreateMenuItem("修饰节点",decoratorTypes, menu,pos);
+        CreateMenuItem("行为节点",actionTypes, menu,pos);
+        menu.ShowAsContext();
     }
 
-    void CreateMenuItem(Type[] typeArry,GenericMenu menu)
+    void CreateMenuItem(string typeName, Type[] typeArry,GenericMenu menu,Vector2 pos)
     {
         for (int i = 0; i < typeArry.Length; i++)
         {
-            //menu.AddItem()
+            var attr= typeArry[i].GetCustomAttributes(typeof(NodeAttribute), false)[0] as NodeAttribute;
+            var path = attr.NodeName.Split('/');
+            string nodeName = path[path.Length - 1];
+            Type type = typeArry[i];
+            menu.AddItem(new GUIContent(typeName+"/"+attr.NodeName), true,()=> BehaviourTreeNodeEditor.Instance.NodeEvent.CreateNode(nodeName, type, pos));
         }
     }
 }

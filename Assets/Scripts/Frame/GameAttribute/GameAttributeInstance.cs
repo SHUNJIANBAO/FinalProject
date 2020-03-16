@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameAttributeInstance 
+public class GameAttributeInstance
 {
     public string Name => this.m_GameAttribute.Name;
     public MonoEntity m_MonoCell { get; private set; }
     GameAttribute m_GameAttribute;
     List<GameAttributeModifier> m_GameAttributeModifiersList;  //附加值
 
-    public GameAttributeInstance(MonoEntity monoCell,GameAttribute attribute)
+    public GameAttributeInstance(MonoEntity monoCell, GameAttribute attribute)
     {
         this.m_MonoCell = monoCell;
         this.m_GameAttribute = attribute;
@@ -54,7 +54,7 @@ public class GameAttributeInstance
                 baseValue += m_GameAttributeModifiersList[i].Value;
             }
         }
-        return baseValue * modifier.Value;
+        return baseValue * modifier.Value - baseValue;
     }
 
     /// <summary>
@@ -69,11 +69,11 @@ public class GameAttributeInstance
         {
             if (m_GameAttributeModifiersList[i].IsMultiplier)
             {
-                multiplier += m_GameAttributeModifiersList[i].Value;
+                multiplier += m_GameAttributeModifiersList[i].Value - 1;
             }
             else
             {
-                baseValue+= m_GameAttributeModifiersList[i].Value;
+                baseValue += m_GameAttributeModifiersList[i].Value;
             }
         }
         return baseValue * multiplier;

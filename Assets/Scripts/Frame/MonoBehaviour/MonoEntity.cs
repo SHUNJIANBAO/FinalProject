@@ -14,7 +14,12 @@ public class MonoEntity : MonoBehaviour
     /// <summary>
     /// 初始化方法（包括重置）
     /// </summary>
-    public virtual void Init()
+    public void Init()
+    {
+        OnInit();
+    }
+
+    protected virtual void OnInit()
     {
 
     }

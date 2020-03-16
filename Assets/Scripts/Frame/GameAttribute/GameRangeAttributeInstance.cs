@@ -112,7 +112,7 @@ public class GameRangeAttributeInstance
                 baseValue += m_GameAttributeMinModifiersList[i].Value;
             }
         }
-        return baseValue*modifier.Value;
+        return baseValue * modifier.Value - baseValue;
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ public class GameRangeAttributeInstance
         {
             if (m_GameAttributeMinModifiersList[i].IsMultiplier)
             {
-                multiplier += m_GameAttributeMinModifiersList[i].Value;
+                multiplier += m_GameAttributeMinModifiersList[i].Value - 1;
             }
             else
             {
@@ -157,7 +157,7 @@ public class GameRangeAttributeInstance
                 baseValue += m_GameAttributeMaxModifiersList[i].Value;
             }
         }
-        return baseValue * modifier.Value;
+        return baseValue * modifier.Value - baseValue;
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public class GameRangeAttributeInstance
         {
             if (m_GameAttributeMaxModifiersList[i].IsMultiplier)
             {
-                multiplier += m_GameAttributeMaxModifiersList[i].Value;
+                multiplier += m_GameAttributeMaxModifiersList[i].Value - 1;
             }
             else
             {
@@ -201,7 +201,7 @@ public class GameRangeAttributeInstance
                 baseValue += m_GameAttributeDeltaModifiersList[i].Value;
             }
         }
-        return baseValue * modifier.Value;
+        return baseValue * modifier.Value - baseValue;
     }
 
     /// <summary>
@@ -216,7 +216,7 @@ public class GameRangeAttributeInstance
         {
             if (m_GameAttributeDeltaModifiersList[i].IsMultiplier)
             {
-                multiplier += m_GameAttributeDeltaModifiersList[i].Value;
+                multiplier += m_GameAttributeDeltaModifiersList[i].Value - 1;
             }
             else
             {

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BehaviourTreeEventEditor : MonoBehaviour 
+[Node("行为/测试")]
+public class TextActionNode : ActionNode 
 {
 
 }
