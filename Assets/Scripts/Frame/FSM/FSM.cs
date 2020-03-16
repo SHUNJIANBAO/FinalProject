@@ -15,9 +15,14 @@ public abstract class FsmBase
     /// </summary>
     /// <returns></returns>
     abstract public bool CanInterrupt();
-    public void Enter()
+    /// <summary>
+    /// 可以退出
+    /// </summary>
+    /// <returns></returns>
+    abstract public bool CanExit();
+    public void Enter(params object[] objs)
     {
-        OnEnter();
+        OnEnter(objs);
     }
     public void Stay()
     {
@@ -36,7 +41,7 @@ public abstract class FsmBase
     /// <summary>
     /// 进入时调用
     /// </summary>
-    protected virtual void OnEnter()
+    protected virtual void OnEnter(params object[] objs)
     {
     }
     /// <summary>
@@ -63,61 +68,75 @@ public abstract class FsmBase
 public class FsmManager
 {
     Dictionary<int, FsmBase> fsm;
-    private int currentState = -1;
-    public int CurrentState
+    private int currentStatus = -1;
+    public int CurrentStatus
     {
-        get { return currentState; }
-        private set { currentState = value; }
+        get { return currentStatus; }
+        private set { currentStatus = value; }
     }
     public FsmManager()
     {
         fsm = new Dictionary<int, FsmBase>();
     }
-    public void AddState(int stateType, FsmBase fsmBase)
+    public void AddStatus(int statusType, FsmBase fsmBase)
     {
-        fsm.Add(stateType, fsmBase);
+        fsm.Add(statusType, fsmBase);
     }
-    public FsmBase GetState(int stateType)
+    public FsmBase GetStatus(int statusType)
     {
-        return fsm[stateType];
-    }
-    public bool CanChange(int state)
-    {
-        if (CurrentState == -1 && fsm[state].CanEnter()) return true;
-        return fsm[CurrentState].CanInterrupt() && fsm[state].CanEnter();
+        return fsm[statusType];
     }
 
     public void OnStay()
     {
         if (fsm != null)
         {
-            if (CurrentState != -1)
-                fsm[CurrentState].Stay();
+            if (CurrentStatus != -1)
+                fsm[CurrentStatus].Stay();
         }
     }
 
-    public void ChangeState(int state, bool beForce = false)
+    public bool ChangeStatus(int status, bool beForce = false, params object[] objs)
     {
-        if (!beForce&& !CanChange(state)) return;
-
-        if (CurrentState != -1)
+        if (CurrentStatus!=-1)
         {
-            fsm[CurrentState].Interrupt();
+            if (beForce)
+            {
+                if (fsm[CurrentStatus].CanExit())
+                {
+                    fsm[CurrentStatus].Exit();
+                }
+                else if (fsm[CurrentStatus].CanInterrupt())
+                {
+                    fsm[CurrentStatus].Interrupt();
+                }
+                else
+                    return false;
+            }
+            else
+            {
+                if (fsm[CurrentStatus].CanExit())
+                {
+                    fsm[CurrentStatus].Exit();
+                }
+                else
+                    return false;
+            }
         }
 
-        CurrentState = state;
-        fsm[CurrentState].Enter();
+        CurrentStatus = status;
+        fsm[CurrentStatus].Enter(objs);
+        return true;
     }
 }
 
-public enum E_FsmState
+public enum E_CharacterFsmStatus
 {
     Idle,
     Move,
     Jump,
     Attack,
     Hurt,
-    HitFly,
     Blink,
     Play,
 

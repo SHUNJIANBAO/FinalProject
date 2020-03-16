@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MonoEntity : MonoBehaviour 
 {
@@ -14,12 +12,12 @@ public class MonoEntity : MonoBehaviour
     /// <summary>
     /// 初始化方法（包括重置）
     /// </summary>
-    public void Init()
+    public void Init(params object[] objs)
     {
-        OnInit();
+        OnInit(objs);
     }
 
-    protected virtual void OnInit()
+    protected virtual void OnInit(params object[] objs)
     {
 
     }

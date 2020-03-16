@@ -354,6 +354,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1935426822}
   - component: {fileID: 1935426821}
+  - component: {fileID: 1935426823}
+  - component: {fileID: 1935426824}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -388,3 +390,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1935426823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1935426820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 968ba56ef5f18cb4aa6a359df0ba9bf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Plane:
+    serializedVersion: 2
+    m_Bits: 256
+  Player:
+    serializedVersion: 2
+    m_Bits: 0
+  Enemy:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &1935426824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1935426820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4d513226ba9eb4a926b1c67a3879fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

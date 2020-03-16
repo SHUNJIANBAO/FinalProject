@@ -20,12 +20,12 @@ public static class MonoBehaviourManager
         MonoBehaviourRuntime.Instance.OnLateUpdate += OnLateUpdate;
     }
 
-    public static void Add(MonoEntity cell)
+    public static void Add(MonoEntity cell,params object[] objs)
     {
         Init();
         if (!m_CellList.Contains(cell))
         {
-            cell.Init();
+            cell.Init(objs);
             m_CellList.Add(cell);
             m_CellList.OrderBy(m => m.Index);
         }
