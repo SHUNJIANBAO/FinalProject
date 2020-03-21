@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionNode : MonoBehaviour 
+public class ActionNode : NodeBase 
 {
 
 }

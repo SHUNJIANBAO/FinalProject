@@ -30,8 +30,9 @@ public class Main : MonoSingleton<Main>
 
     void LoadConfigs()
     {
+       
         ItemConfig.LoadCsvCfg();
-
+        AnimConfig.LoadCsvCfg();
 
         PlayerData.Load();
         GameData.Load();
@@ -40,5 +41,13 @@ public class Main : MonoSingleton<Main>
     public void OnGameEnter()
     {
         
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            LoadSceneManager.Instance.LoadSceneAsync("Level_1", null);
+        }
     }
 }

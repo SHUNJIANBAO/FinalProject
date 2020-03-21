@@ -30,32 +30,33 @@ public class CreateUITool : EditorWindow
 
     string uiName;
     UIType type;
+    string uiTypeName;
     private void OnGUI()
     {
         uiName = EditorGUILayout.TextField("UI名称", uiName);
         type = (UIType)EditorGUILayout.EnumPopup("UI类型", type);
-
+        uiTypeName = "UI" + uiName + "Window";
         if (!string.IsNullOrEmpty(uiName))
         {
-            Type classType = Util.GetType(uiName);
-            if (classType==null)
+            Type classType = Util.GetType(uiTypeName);
+            if (classType == null)
             {
                 if (GUILayout.Button("创建脚本"))
                 {
-                    uiName = "UI" + uiName + "Window";
+                    //uiName = "UI" + uiName + "Window";
                     if (string.IsNullOrEmpty(uiName)) return;
-                    CreateDirectory(type, uiName);
-                    CreateWindowScript(uiName, scriptPath);
+                    CreateDirectory(type, uiTypeName);
+                    CreateWindowScript(uiTypeName, scriptPath);
                     AssetDatabase.Refresh();
                 }
             }
-            else
+            else if (WindowIsNull(uiTypeName)) 
             {
                 if (GUILayout.Button("创建UI物体"))
                 {
-                    if (string.IsNullOrEmpty(uiName)) return;
-                    CreateDirectory(type, uiName);
-                    CreateWindowPrefab(uiName, prefabPath, uiName);
+                    if (string.IsNullOrEmpty(uiTypeName)) return;
+                    CreateDirectory(type, uiTypeName);
+                    CreateWindowPrefab(uiTypeName, prefabPath, uiTypeName);
                     AssetDatabase.Refresh();
                 }
             }
@@ -113,5 +114,12 @@ public class CreateUITool : EditorWindow
         go.AddComponent(type);
         var createGo = PrefabUtility.CreatePrefab(prefabAssetPath, go);
         PrefabUtility.ConnectGameObjectToPrefab(go, createGo);
+    }
+
+    bool WindowIsNull(string uiName)
+    {
+        string path = PathManager.GetWindowPath(uiName);
+        var obj= Resources.Load(path);
+        return obj==null;
     }
 }
