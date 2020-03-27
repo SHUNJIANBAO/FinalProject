@@ -11,20 +11,64 @@ public class BehaviourTreeNodeEditor
     {
         _window = window;
     }
-    BehaviourTreeEventEditor _nodeEvent = new BehaviourTreeEventEditor();
 
-    NodeBase curNode;
-    List<NodeBase> _nodeList = new List<NodeBase>();
+    NodeAssets _curAssets;
+    NodeBase _curNode;
+    NodeBase CurNode
+    {
+        get { return _curNode; }
+        set
+        {
+            if (_curNode == value) return;
+            if (_curNode!=null)
+            {
+                _curNode.SelectedNode(false);
+            }
+            _curNode = value;
+            if (_curNode != null)
+            {
+                _curNode.SelectedNode(true);
+            }
+            Selection.activeObject = value;
+            _window.Repaint();
+        }
+    }
+
+    List<NodeBase> _nodeList;
     List<ConnectLine> _lineList = new List<ConnectLine>();
 
-    //float _ratio;
-    //float _gridSize;
     bool _isDrag;
     bool _isConnecting;
 
-    void Init()
+    public void OnEnable()
     {
+        Reset();
+    }
 
+
+    public void Reset()
+    {
+        CurNode = null;
+        _isDrag = false;
+        _curAssets = new NodeAssets();
+        _isConnecting = false;
+        _nodeList = new List<NodeBase>();
+        _lineList.Clear();
+        CreateNode("根节点", typeof(SelectorNode), _window.GetXYCount(_window.position.center), NodeGUIStyle.RootNormalStyle, NodeGUIStyle.RootSelectedStyle);
+        _window.Repaint();
+    }
+
+    public void Refresh(NodeAssets assets)
+    {
+        if (_curAssets == assets) return;
+        _curAssets = assets;
+        _nodeList = new List<NodeBase>(assets.NodesList);
+        for (int i = 0; i < _nodeList.Count; i++)
+        {
+            _nodeList[i].Reset();
+        }
+        _nodeList[0].Reload(ReloadLine);
+        _window.Repaint();
     }
 
     public void OnGUI()
@@ -83,14 +127,14 @@ public class BehaviourTreeNodeEditor
                         if (_isConnecting)
                         {
                             _isConnecting = false;
-                            if (curNode!= _nodeList[i])
+                            if (CurNode != _nodeList[i])
                             {
-                                CreateLine(curNode, _nodeList[i]);
+                                CreateLine(CurNode, _nodeList[i]);
                             }
                             return;
                         }
                         //左键点击事件和右键点击事件
-                        curNode = _nodeList[i];
+                        CurNode = _nodeList[i];
                         if (e.button == 0)
                         {
                             _isDrag = true;
@@ -105,28 +149,28 @@ public class BehaviourTreeNodeEditor
                     }
                 }
                 _isDrag = false;
-                curNode = null;
+                CurNode = null;
                 _isConnecting = false;
                 break;
             case EventType.MouseDrag:
                 if (_isDrag)
                 {
-                    if (curNode != null)
-                        curNode.OnDrag(e.delta);
+                    if (CurNode != null)
+                        CurNode.OnDrag(e.delta);
                     e.Use();
                 }
                 break;
             case EventType.MouseUp:
                 if (_isDrag)
                 {
-                    curNode.SetNodePosition(_window.GetPosition(_window.GetXYCount(curNode.Position)));
+                    CurNode.SetNodePosition(_window.GetPosition(_window.GetXYCount(CurNode.Position)));
                     _isDrag = false;
                     _window.Repaint();
                 }
                 break;
-            //case EventType.ScrollWheel:
+                //case EventType.ScrollWheel:
 
-            //    break;
+                //    break;
         }
     }
 
@@ -134,11 +178,11 @@ public class BehaviourTreeNodeEditor
     {
         GenericMenu menu = new GenericMenu();
         menu.AddItem(new GUIContent("添加连线"), false, () => { _isConnecting = true; });
-        menu.AddItem(new GUIContent("删除节点"), false, () => { DestroyNode(curNode); });
+        menu.AddItem(new GUIContent("删除节点"), false, () => { DestroyNode(CurNode); });
         menu.ShowAsContext();
     }
 
-    public void CreateNode(string name, Type nodeType, Vector2 xyCount, GUIStyle nodeNormalStyle, GUIStyle nodeSelectedStyle)
+    public NodeBase CreateNode(string name, Type nodeType, Vector2 xyCount, GUIStyle nodeNormalStyle, GUIStyle nodeSelectedStyle)
     {
         Vector2 pos = _window.GetPosition(xyCount);
         Rect rect = new Rect(pos.x, pos.y, 200, 50);
@@ -147,11 +191,34 @@ public class BehaviourTreeNodeEditor
         node.InitEditorNode(editorStyle);
         _nodeList.Add(node);
         _window.Repaint();
+        return node;
     }
 
     public void DestroyNode(NodeBase node)
     {
+        for (int i = 0; i < _nodeList.Count; i++)
+        {
+            if (_nodeList[i].ParentNode == node)
+            {
+                _nodeList[i].ParentNode = null;
+            }
+        }
+        _nodeList.Find(n => n.ChildList.Contains(node))?.RemoveChildNode(node);
         _nodeList.Remove(node);
+
+        //移除包含该node的线
+        List<ConnectLine> lines = new List<ConnectLine>();
+        for (int i = 0; i < _lineList.Count; i++)
+        {
+            if (_lineList[i].FromNode == node || _lineList[i].ToNode == node)
+            {
+                lines.Add(_lineList[i]);
+            }
+        }
+        for (int i = 0; i < lines.Count; i++)
+        {
+            DestoryLine(lines[i]);
+        }
         _window.Repaint();
     }
 
@@ -160,13 +227,29 @@ public class BehaviourTreeNodeEditor
         if (_isConnecting)
         {
             Handles.color = Color.white;
-            Handles.DrawLine(curNode.Center, mousePosition);
+            Handles.DrawLine(CurNode.Center, mousePosition);
             _window.Repaint();
         }
     }
 
-    public void CreateLine(NodeBase fromNode,NodeBase toNode)
+    public void CreateLine(NodeBase fromNode, NodeBase toNode)
     {
+        if (fromNode.CanConnectLineAsParent() && toNode.CanConnectLineAsChild())
+        {
+            fromNode.AddChildNode(toNode);
+            toNode.ParentNode = fromNode;
+            ConnectLine line = new ConnectLine(fromNode, toNode, DestoryLine);
+            _lineList.Add(line);
+        }
+    }
+
+    public void ReloadLine(NodeBase fromNode, NodeBase toNode)
+    {
+        if (toNode.Name == "根节点" ||
+            (fromNode is ActionNode && toNode is ActionNode))
+        {
+            return;
+        }
         ConnectLine line = new ConnectLine(fromNode, toNode, DestoryLine);
         _lineList.Add(line);
     }
@@ -176,8 +259,66 @@ public class BehaviourTreeNodeEditor
         _lineList.Remove(line);
     }
 
-    public void SaveNodeAssest()
+    /// <summary>
+    /// 保存资源
+    /// </summary>
+    public void SaveNodeAssets()
     {
+        if (_curAssets == null || !AssetDatabase.Contains(_curAssets))
+        {
+            SaveNewNodeAssets();
+        }
+        else
+        {
+            List<NodeBase> destroyNodeList = new List<NodeBase>();
+            for (int i = 0; i < _curAssets.NodesList.Count; i++)
+            {
+                if (!_nodeList.Contains(_curAssets.NodesList[i]))
+                {
+                    destroyNodeList.Add(_curAssets.NodesList[i]);
+                }
+            }
+            for (int i = 0; i < destroyNodeList.Count; i++)
+            {
+                _curAssets.NodesList.Remove(destroyNodeList[i]);
+                UnityEngine.Object.DestroyImmediate(destroyNodeList[i],true);
+            }
 
+            string path = AssetDatabase.GetAssetPath(_curAssets);
+            for (int i = 0; i < _nodeList.Count; i++)
+            {
+                if (!_curAssets.NodesList.Contains(_nodeList[i]))
+                {
+                    AssetDatabase.AddObjectToAsset(_nodeList[i], path);
+                    _curAssets.NodesList.Add(_nodeList[i]);
+                }
+            }
+            EditorUtility.SetDirty(_curAssets);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+    }
+
+    /// <summary>
+    /// 另存为资源
+    /// </summary>
+    public void SaveNewNodeAssets()
+    {
+        NodeAssets assets = ScriptableObject.CreateInstance(typeof(NodeAssets)) as NodeAssets;
+        assets.RootNode = _nodeList[0];
+        _curAssets = assets;
+        string assetsPath = EditorUtility.SaveFilePanelInProject("Save", "new BehaviourTree", "asset", "", "Assets/Scripts/BehaviourTree/NodeAssets");
+        if (string.IsNullOrEmpty(assetsPath)) return;
+        AssetDatabase.CreateAsset(assets, assetsPath);
+        for (int i = 0; i < _nodeList.Count; i++)
+        {
+            if (!assets.NodesList.Contains(_nodeList[i]))
+            {
+                AssetDatabase.AddObjectToAsset(_nodeList[i], assetsPath);
+                assets.NodesList.Add(_nodeList[i]);
+            }
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 }

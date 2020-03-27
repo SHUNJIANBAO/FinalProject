@@ -4,6 +4,20 @@ using UnityEngine;
 
 public static class NodeGUIStyle 
 {
+    public static GUIStyle DescriptionStyle
+    {
+        get
+        {
+            GUIStyle nodeStyle = new GUIStyle();
+            nodeStyle.normal.background = DescriptionBG;
+            nodeStyle.alignment = TextAnchor.MiddleCenter;
+            nodeStyle.normal.textColor = Color.white;
+            nodeStyle.fontSize = 15;
+            nodeStyle.border = new RectOffset(12, 12, 12, 12);
+            return nodeStyle;
+        }
+    }
+
     public static GUIStyle RootNormalStyle
     {
         get
@@ -109,6 +123,14 @@ public static class NodeGUIStyle
         }
     }
 
+    static Texture2D DescriptionBG
+    {
+        get
+        {
+            return Resources.Load<Texture2D>("Description_BG");
+        }
+    }
+
     static Texture2D RootNormalNode
     {
         get
@@ -167,6 +189,7 @@ public static class NodeGUIStyle
     }
 }
 
+[System.Serializable]
 public class NodeStatusStyles
 {
     public GUIStyle NotWork;

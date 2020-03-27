@@ -10,22 +10,28 @@ public class ConnectLine
     public NodeBase ToNode;
     Action<ConnectLine> _destoryLine;
 
+    Vector2 _center;
+    Vector2 _offest=new Vector2(12,0);
+
     public ConnectLine(NodeBase fromNode,NodeBase toNode, Action<ConnectLine> destoryLine)
     {
         this.FromNode = fromNode;
         this.ToNode = toNode;
         this._destoryLine = destoryLine;
+
     }
 
     public void DrawLine()
     {
         Handles.color = Color.white;
         Handles.DrawLine(FromNode.Center, ToNode.Center);
-        if (Handles.Button((FromNode.Center+ToNode.Center)*0.5f,Quaternion.identity,8,8, Handles.RectangleHandleCap))
+        _center = (FromNode.Center + ToNode.Center) * 0.5f;
+        Handles.Label(_center+ _offest, (FromNode.ChildList.IndexOf(ToNode)+1).ToString());
+        if (Handles.Button(_center, Quaternion.identity,8,8, Handles.RectangleHandleCap))
         {
+            this.FromNode.RemoveChildNode(this.ToNode);
+            this.ToNode.ParentNode = null;
             _destoryLine(this);
         }
     }
-
-    
 }

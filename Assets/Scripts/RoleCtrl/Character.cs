@@ -7,15 +7,17 @@ using UnityEngine;
 public class Character : MonoEntity
 {
     [Header("角色当前状态")]
-    public E_CharacterFsmStatus m_CurStatus;
+    public E_CharacterFsmStatus CurStatus;
     [Header("是否在地面上")]
-    public bool m_IsGround;
+    public bool IsGround;
     [Header("是否无敌")]
-    public bool m_IsInvincible;
+    public bool IsInvincible;
+    [Header("攻击目标")]
+    public Character AttackTarget;
 
-    Animator m_Animator;
-    Rigidbody2D m_Rigibody;
-    BoxCollider2D m_BoxColider;
+    protected Animator m_Animator;
+    protected Rigidbody2D m_Rigibody;
+    protected BoxCollider2D m_BoxColider;
 
     FsmManager fsm = new FsmManager();
     protected int m_CurSkillId;
@@ -67,7 +69,7 @@ public class Character : MonoEntity
     {
         base.OnUpdate();
         fsm.OnStay();
-        m_IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
+        IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
     }
 
     /// <summary>
@@ -81,7 +83,7 @@ public class Character : MonoEntity
         bool result = fsm.ChangeStatus((int)status, beForce, objs);
         if (result)
         {
-            m_CurStatus = status;
+            CurStatus = status;
         }
         return result;
     }

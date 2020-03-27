@@ -159,4 +159,23 @@ public class Util
         bool result = int.TryParse(value, out num);
         return result;
     }
+
+    /// <summary>
+    /// 得到随机列表
+    /// </summary>
+    /// <param name="originList">源列表</param>
+    /// <returns></returns>
+    public static List<T> GetRandomList<T>(List<T> originList)
+    {
+        var randomList = new List<T>();
+        var tempList = new List<T>(originList);
+        for (int i = 0; i < originList.Count; i++)
+        {
+            int index = UnityEngine.Random.Range(0, tempList.Count);
+            randomList.Add(tempList[index]);
+            tempList.RemoveAt(index);
+        }
+        return randomList;
+    }
+
 }
