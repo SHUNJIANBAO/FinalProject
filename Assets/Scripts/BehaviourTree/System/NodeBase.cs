@@ -45,6 +45,7 @@ public abstract class NodeBase : ScriptableObject
     GUIStyle _curStyle;
     [NonSerialized]
     GUIStyle _curStatus;
+    Rect _descriptionRect;
 
     Vector2 _nodeSize;
     //Vector2 _initialNodeSize;
@@ -91,6 +92,7 @@ public abstract class NodeBase : ScriptableObject
         m_Status = new NodeStatusStyles(statusRect);
         _curStyle = Style.NormalStyle;
         _curStatus = m_Status.NotWork;
+        _descriptionRect = new Rect(Style.Rect.position + new Vector2(-Style.Rect.width*0.5f, Style.Rect.height), new Vector2(Style.Rect.width*2, Style.Rect.height * 0.7f));
         //_initialNodeSize = Style.Rect.size;
         //资产资源名
         name = Name;
@@ -111,7 +113,7 @@ public abstract class NodeBase : ScriptableObject
         GUI.Box(m_Status.Rect, "", _curStatus);
         if (!string.IsNullOrEmpty(Description))
         {
-            GUI.Box(Style.DescriptionRect, Description, Style.DescriptionStyle);
+            GUI.Box(_descriptionRect, Description, Style.DescriptionStyle);
         }
     }
 
@@ -119,6 +121,7 @@ public abstract class NodeBase : ScriptableObject
     {
         Style.Rect.position += delta;
         m_Status.Rect.position += delta;
+        _descriptionRect.position += delta;
     }
 
     /// <summary>
@@ -128,6 +131,7 @@ public abstract class NodeBase : ScriptableObject
     public void SetNodePosition(Vector2 pos)
     {
         m_Status.Rect.position += pos - Style.Rect.position;
+        _descriptionRect.position += pos - Style.Rect.position;
         Style.Rect.position = pos;
     }
 
@@ -357,7 +361,6 @@ public struct NodeEditorStyle
     public GUIStyle SelectedStyle;
     public Rect Rect;
     public Vector2 XYCount;
-    public Rect DescriptionRect;
     public GUIStyle DescriptionStyle;
     public NodeEditorStyle(Rect rect, Vector2 xyCount, string nodeName, GUIStyle normalSytle, GUIStyle selectedStyle)
     {
@@ -366,7 +369,6 @@ public struct NodeEditorStyle
         this.NormalStyle = normalSytle;
         this.SelectedStyle = selectedStyle;
         this.XYCount = xyCount;
-        this.DescriptionRect = new Rect(rect.position + new Vector2(0,rect.height), new Vector2(rect.width *1.3f,rect.height * 0.5f ));
         this.DescriptionStyle = NodeGUIStyle.DescriptionStyle;
     }
 }

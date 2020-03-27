@@ -11,8 +11,8 @@ public static class NodeGUIStyle
             GUIStyle nodeStyle = new GUIStyle();
             nodeStyle.normal.background = DescriptionBG;
             nodeStyle.alignment = TextAnchor.MiddleCenter;
-            nodeStyle.normal.textColor = Color.white;
-            nodeStyle.fontSize = 15;
+            nodeStyle.normal.textColor = Color.black;
+            nodeStyle.fontSize = 16;
             nodeStyle.border = new RectOffset(12, 12, 12, 12);
             return nodeStyle;
         }
