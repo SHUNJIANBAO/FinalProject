@@ -19,8 +19,8 @@ public class CreateUITool : EditorWindow
         //Panel
     }
 
-    string m_WindowPrefabModelPath= "Assets/Editor/Demo/WindowDemo.prefab";
-    string m_WindowScriptModelPath = "Assets/Editor/Demo/WindowDemo.cs";
+    string m_WindowPrefabModelPath= "Assets/Editor/Demo/UGUI/WindowDemo.prefab";
+    string m_WindowScriptModelPath = "Assets/Editor/Demo/UGUI/WindowDemo.cs";
     string m_WindowScriptContent;
     private void Awake()
     {
