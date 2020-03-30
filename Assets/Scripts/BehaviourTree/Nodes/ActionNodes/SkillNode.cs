@@ -19,7 +19,7 @@ public class SkillNode : ActionNode
 
     public override void OnEnter()
     {
-        m_Owner.Attack(SkillId, BeForce);
+        m_Movement.Attack(SkillId, BeForce);
     }
 
     public override void OnStay()

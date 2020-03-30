@@ -1,11 +1,11 @@
 ﻿
 public enum E_Attribute
 {
-    HP,
-    MP,
-    ATK,
-    DEF,
-    MOVESPEED,
+    Hp,
+    Mp,
+    Atk,
+    Def,
+    MoveSpeed,
 }
 
 public class GameAttribute  

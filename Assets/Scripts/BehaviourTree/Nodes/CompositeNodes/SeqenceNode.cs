@@ -4,7 +4,7 @@
 /// 如果成功则运行下一个子节点，直到全部成功则返回成功
 /// 如果失败则返回失败，不继续执行后续节点
 /// </summary>
-[Node("组合节点/顺序节点")]
+[Node("顺序节点")]
 public class SeqenceNode : CompositeNode
 {
     int _index;

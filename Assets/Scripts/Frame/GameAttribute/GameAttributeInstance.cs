@@ -37,6 +37,15 @@ public class GameAttributeInstance
     public float GetBaseValue => this.m_GameAttribute.Value;
 
     /// <summary>
+    /// 设置基础数值
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetValue(float value)
+    {
+        this.m_GameAttribute.Value = value;
+    }
+
+    /// <summary>
     /// 得到增加值,倍率之间是相加关系
     /// </summary>
     /// <returns></returns>
@@ -77,5 +86,9 @@ public class GameAttributeInstance
             }
         }
         return baseValue * multiplier;
+    }
+    public void Reset()
+    {
+        ClearModifier();
     }
 }

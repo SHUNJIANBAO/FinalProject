@@ -4,7 +4,7 @@
 /// 随机选择子节点中的一个来运行，如果成功则返回成功，失败会选择一个其它的节点
 /// 当所有节点全部失败会返回失败
 /// </summary>
-[Node("组合节点/随机选择节点")]
+[Node("随机选择节点")]
 public class RandomSelectorNode : CompositeNode
 {
     /// <summary>

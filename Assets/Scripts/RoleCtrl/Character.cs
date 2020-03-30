@@ -7,6 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(BehaviourTree))]
+[RequireComponent(typeof(CharacterMovement))]
 public class Character : MonoEntity
 {
     [Header("角色当前状态")]
@@ -17,6 +18,8 @@ public class Character : MonoEntity
     public bool IsInvincible;
     [Header("攻击目标")]
     public Character AttackTarget;
+    [Header("移动目标点")]
+    public Vector3 MoveTarget;
 
     protected Animator m_Animator;
     protected Rigidbody2D m_Rigibody;
@@ -26,6 +29,14 @@ public class Character : MonoEntity
     protected int m_CurSkillId;
     protected Vector2 m_TopOffest;
     protected Vector2 m_BottomOffest;
+
+    [HideInInspector]
+    public bool IsBoss;
+    GameRangeAttribute _hp;
+    GameRangeAttribute _mp;
+    GameAttribute _attack;
+    GameAttribute _moveSpeed;
+
     protected override void OnInit(params object[] objs)
     {
         base.OnInit(objs);
@@ -37,7 +48,24 @@ public class Character : MonoEntity
         m_TopOffest = new Vector2(0, m_BoxColider.size.y * 0.5f);
         m_BottomOffest = new Vector2(0, -m_BoxColider.size.y * 0.5f);
 
+        RegistAttribute();
         RegistFsmStatus();
+        ResetAttributes();
+    }
+
+    void RegistAttribute()
+    {
+        RoleConfig roleCfg = RoleConfig.GetData(Id);
+        gameObject.name = roleCfg.Name;
+        _hp = new GameRangeAttribute(E_Attribute.Hp.ToString(), 0, roleCfg.Hp);
+        AddRangeAttribute(_hp);
+        _mp = new GameRangeAttribute(E_Attribute.Mp.ToString(), 0, roleCfg.Mp,2);
+        AddRangeAttribute(_hp);
+        _attack = new GameAttribute(E_Attribute.Atk.ToString(), roleCfg.Attack);
+        AddAttribute(_attack);
+        _moveSpeed = new GameAttribute(E_Attribute.MoveSpeed.ToString(), roleCfg.MoveSpeed);
+        AddAttribute(_moveSpeed);
+        IsBoss = roleCfg.IsBoss;
     }
 
     /// <summary>
@@ -81,7 +109,7 @@ public class Character : MonoEntity
     /// <param name="status">状态类型</param>
     /// <param name="beForce">是否强制切换</param>
     /// <returns>切换是否成功</returns>
-    protected bool ChangeStatus(E_CharacterFsmStatus status, bool beForce = false, params object[] objs)
+    public bool ChangeStatus(E_CharacterFsmStatus status, bool beForce = false, params object[] objs)
     {
         bool result = fsm.ChangeStatus((int)status, beForce, objs);
         if (result)
@@ -91,51 +119,9 @@ public class Character : MonoEntity
         return result;
     }
 
-    /// <summary>
-    /// 播放动画
-    /// </summary>
-    /// <param name="animIndex"></param>
-    /// <param name="beForce"></param>
-    public void PlayAnim(int animIndex, bool beForce = false)
-    {
-        ChangeStatus(E_CharacterFsmStatus.Play, beForce, animIndex);
-    }
 
     #region 继承方法
 
-    /// <summary>
-    /// 重生
-    /// </summary>
-    protected virtual void ReBorn()
-    {
-
-    }
-
-    /// <summary>
-    /// 攻击
-    /// </summary>
-    /// <param name="skillId">技能Id</param>
-    public virtual void Attack(int skillId, bool beForce = false)
-    {
-
-    }
-
-    /// <summary>
-    /// 受击
-    /// </summary>
-    public virtual void Hurt(GameObject atkOwner, int damage, bool beForce = false)
-    {
-
-    }
-
-    /// <summary>
-    /// 移动到指定点
-    /// </summary>
-    /// <param name="targetPos"></param>
-    protected virtual void MoveToPoint(Vector3 targetPos)
-    {
-
-    }
 
     #endregion
 }

@@ -2,9 +2,12 @@
 
 public class MonoEntity : MonoBehaviour 
 {
+    [Header("角色Id")]
+    public int Id;
     /// <summary>
-    /// 排序下标，越小越先执行
+    /// 排序下标，越大越先执行
     /// </summary>
+    [Header("优先级")]
     public int Index=1;
     //属性
     MonoAttribute m_MonoAttribute;
@@ -210,6 +213,11 @@ public class MonoEntity : MonoBehaviour
     public void ClearDeltaModifier(GameRangeAttributeInstance attribute)
     {
         attribute.ClearDeltaModifier();
+    }
+
+    public void ResetAttributes()
+    {
+        m_MonoAttribute.Reset();
     }
     #endregion
 }

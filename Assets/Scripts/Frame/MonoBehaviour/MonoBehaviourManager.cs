@@ -27,7 +27,7 @@ public static class MonoBehaviourManager
         {
             cell.Init(objs);
             m_CellList.Add(cell);
-            m_CellList.OrderBy(m => m.Index);
+            m_CellList.OrderByDescending(m => m.Index);
         }
     }
     public static void Remove(MonoEntity cell)

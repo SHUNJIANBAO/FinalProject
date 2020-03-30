@@ -1,0 +1,3 @@
+角色ID,名称,血量,蓝量,攻击力,移动速度,是否为Boss
+Id,Name,Hp,Mp,Attack,MoveSpeed,IsBoss
+1010,小雯,100,100,5,5,0

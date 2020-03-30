@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameRangeAttributeInstance
 {
@@ -10,6 +11,8 @@ public class GameRangeAttributeInstance
     List<GameAttributeModifier> m_GameAttributeMinModifiersList;  //最小值附加值
     List<GameAttributeModifier> m_GameAttributeMaxModifiersList;  //最大值附加值
     List<GameAttributeModifier> m_GameAttributeDeltaModifiersList;  //回复值附加值
+    public float Current;
+    public Action<float> OnValueChanged;
 
     public GameRangeAttributeInstance(MonoEntity monoCell, GameRangeAttribute attribute)
     {
@@ -69,6 +72,17 @@ public class GameRangeAttributeInstance
     /// 得到基础回复值
     /// </summary>
     public float GetDeltaBaseValue => this.m_GameRangeAttribute.Delta.Value;
+
+    public void SetValue(float value)
+    {
+        Current = value;
+    }
+
+    public void ChangeValue(float delta)
+    {
+        Current = Mathf.Clamp(Current + delta, GetMinTotalValue(), GetMaxTotalValue());
+        OnValueChanged?.Invoke(delta);
+    }
 
     /// <summary>
     /// 清空最小值附加
@@ -226,4 +240,9 @@ public class GameRangeAttributeInstance
         return baseValue * multiplier;
     }
 
+    public void Reset()
+    {
+        ClearModifier();
+        SetValue(GetMaxTotalValue());
+    }
 }

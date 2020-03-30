@@ -1,5 +1,5 @@
 ﻿
-[Node("组合节点/选择节点")]
+[Node("选择节点")]
 public class SelectorNode : CompositeNode
 {
     protected override E_NodeStatus Trick()

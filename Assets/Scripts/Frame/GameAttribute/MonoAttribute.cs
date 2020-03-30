@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class MonoAttribute
 {
@@ -66,10 +64,10 @@ public class MonoAttribute
 
     public void AddAttributeModifier(GameAttribute attribute, GameAttributeModifier modifier)
     {
-        
+
     }
 
-    public void AddRangeAttributeModifier(GameRangeAttributeInstance rangeAttribute,GameAttributeModifier modifier)
+    public void AddRangeAttributeModifier(GameRangeAttributeInstance rangeAttribute, GameAttributeModifier modifier)
     {
 
     }
@@ -105,4 +103,17 @@ public class MonoAttribute
 
     }
 
+    public void Reset()
+    {
+        if (m_AttributeNameDict.Keys.Count > 0)
+            foreach (var attr in m_AttributeNameDict.Values)
+            {
+                attr.Reset();
+            }
+        if (m_RangeAttributeNameDict.Keys.Count > 0)
+            foreach (var attr in m_RangeAttributeNameDict.Values)
+            {
+                attr.Reset();
+            }
+    }
 }

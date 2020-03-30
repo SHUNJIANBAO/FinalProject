@@ -7,6 +7,7 @@ public abstract class NodeBase : ScriptableObject
     public string Description;
 
     protected Character m_Owner;
+    protected CharacterMovement m_Movement;
     protected BehaviourTree m_Tree;
 
     [SerializeField]
@@ -231,6 +232,7 @@ public abstract class NodeBase : ScriptableObject
     public void SetCharacter(Character character)
     {
         m_Owner = character;
+        m_Movement = character.GetComponent<CharacterMovement>();
     }
 
     /// <summary>
