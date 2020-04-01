@@ -9,6 +9,11 @@ public class PathManager
         return "Prefabs/UGUI/"+windowName+"/"+windowName;
     }
 
+    public static string GetPanelPath(string windowName,string panelName)
+    {
+        return "Prefabs/UGUI/" + windowName + "/" + panelName;
+    }
+
     public static string GetWindowAssetsPath(string windowName)
     {
         return "Assets/Resources/Prefabs/UGUI/" + windowName ;

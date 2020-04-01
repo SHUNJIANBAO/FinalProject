@@ -30,7 +30,7 @@ public class CharacterMovement : MonoBehaviour
     /// 移动到指定点
     /// </summary>
     /// <param name="targetPos"></param>
-    protected virtual void MoveToPoint(Vector3 targetPos)
+    public void MoveToPoint(Vector3 targetPos)
     {
         _character.MoveTarget = targetPos;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, _character.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue()*GameManager.DeltaTime);

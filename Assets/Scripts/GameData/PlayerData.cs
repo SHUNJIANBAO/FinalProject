@@ -7,6 +7,7 @@ using System;
 public class PlayerInfo
 {
     public int SaveId;
+    public int GameTimeMinutes;
     public List<ItemInfo> ItemList;
 }
 
@@ -22,6 +23,54 @@ public class PlayerData : Data<PlayerData>
 {
     public List<PlayerInfo> PlayerInfos;
     public PlayerInfo CurPlayerInfo;
+
+    public DateTime StartTime;
+
+    protected override void OnLoad()
+    {
+        base.OnLoad();
+        if (PlayerInfos==null)
+        {
+            PlayerInfos = new List<PlayerInfo>();
+        }
+    }
+
+    /// <summary>
+    /// 创建存档
+    /// </summary>
+    /// <param name="saveId"></param>
+    public PlayerInfo CreatePlayerInfo(int saveId)
+    {
+        var info= PlayerInfos.Find(i => i.SaveId == saveId);
+        if (info!=null)
+        {
+            PlayerInfos.Remove(info);
+        }
+        PlayerInfo newInfo = new PlayerInfo();
+        newInfo.SaveId = saveId;
+        PlayerInfos.Add(newInfo);
+        Save();
+        return newInfo;
+    }
+
+    public void SavePlayerInfo(PlayerInfo info)
+    {
+        var tempInfo = PlayerInfos.Find(i => i.SaveId == info.SaveId);
+        if (tempInfo == null) throw new Exception("Archive Error!!!");
+        tempInfo = info;
+        tempInfo.GameTimeMinutes += (DateTime.Now - StartTime).Minutes;
+        Save();
+    }
+
+    /// <summary>
+    /// 删除存档
+    /// </summary>
+    /// <param name="info"></param>
+    public void DeletePlayerInfo(PlayerInfo info)
+    {
+        PlayerInfos.Remove(info);
+        Save();
+    }
 
     /// <summary>
     /// 得到物品

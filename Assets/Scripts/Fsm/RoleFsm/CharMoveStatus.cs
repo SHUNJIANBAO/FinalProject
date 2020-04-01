@@ -27,6 +27,6 @@ public class CharMoveStatus : CharFsmBase
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
-        m_Animator.SetInteger("Index", (int)E_AnimatorIndex.MoveStart);
+        m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Moving);
     }
 }

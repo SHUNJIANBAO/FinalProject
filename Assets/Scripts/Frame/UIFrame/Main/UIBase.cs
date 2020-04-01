@@ -11,7 +11,7 @@ public enum UIStatus
     Close
 }
 
-public class UIBase : MonoBehaviour
+public abstract class UIBase : MonoBehaviour
 {
     [HideInInspector]
     public UIStatus Status;
@@ -20,7 +20,7 @@ public class UIBase : MonoBehaviour
     /// 加载所有子物体
     /// </summary>
     /// <returns></returns>
-    public void LoadAllUI()
+    public Dictionary<string,List<GameObject>> LoadAllUI()
     {
         Transform[] trans = GetComponentsInChildren<Transform>(true);
         Dictionary<string, List<GameObject>> uiDict = new Dictionary<string, List<GameObject>>();
@@ -33,14 +33,17 @@ public class UIBase : MonoBehaviour
             }
             uiDict[trans[i].name].Add(trans[i].gameObject);
         }
-        UIManager.Instance.RegistUI(this, uiDict);
-        GetUIComponent();
-        AddUIListener();
-        OnInit();
-        //return uiDict;
+        return uiDict;
     }
 
     #region 生命周期
+
+    public virtual void Init()
+    {
+        GetUIComponent();
+        AddUIListener();
+        OnInit();
+    }
 
     protected virtual void GetUIComponent()
     {
@@ -99,19 +102,7 @@ public class UIBase : MonoBehaviour
     /// <typeparam name="T"></typeparam>
     /// <param name="uiName"></param>
     /// <returns></returns>
-    protected T GetUI<T>(string uiName) where T : UnityEngine.Object
-    {
-        var uiList = UIManager.Instance.GetUIList(this, uiName);
-        if (typeof(T) == typeof(GameObject))
-        {
-            return uiList[0] as T;
-        }
-        if (typeof(T).IsSubclassOf(typeof(Component)))
-        {
-            return uiList[0].GetComponent<T>();
-        }
-        return null;
-    }
+    abstract protected T GetUI<T>(string uiName) where T : UnityEngine.Object;
 
     /// <summary>
     /// 获取UI列表
@@ -119,24 +110,7 @@ public class UIBase : MonoBehaviour
     /// <typeparam name="T"></typeparam>
     /// <param name="uiName"></param>
     /// <returns></returns>
-    protected List<T> GetUIList<T>(string uiName)
-    {
-        var uiList = UIManager.Instance.GetUIList(this, uiName);
-        if (typeof(T) == typeof(GameObject))
-        {
-            return uiList as List<T>;
-        }
-        if (typeof(T).IsSubclassOf(typeof(Component)))
-        {
-            List<T> coms = new List<T>();
-            foreach (var ui in uiList)
-            {
-                coms.Add(ui.GetComponent<T>());
-            }
-            return coms;
-        }
-        return null;
-    }
+    protected abstract List<T> GetUIList<T>(string uiName);
 
     /// <summary>
     /// 获取UIBehaviour事件类
@@ -191,6 +165,10 @@ public class UIBase : MonoBehaviour
     {
         UIBehaviour uiBehaviour = GetBehaviour(uiName);
         uiBehaviour.AddSliderListen(action);
+    }
+    protected void AddSliderListen(Slider slider,UnityAction<float> action)
+    {
+        slider.onValueChanged.AddListener(action);
     }
 
     /// <summary>

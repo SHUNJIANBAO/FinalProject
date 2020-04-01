@@ -34,9 +34,9 @@ public class UIManager
 
     public Canvas MainCanvas;
 
-
-    Dictionary<string, UIBase> m_WindowDict = new Dictionary<string, UIBase>();
-    Dictionary<UIBase, Dictionary<string, List<GameObject>>> m_UIList = new Dictionary<UIBase, Dictionary<string, List<GameObject>>>();
+    Stack<UIWindowBase> _windowStack = new Stack<UIWindowBase>();
+    Dictionary<string, UIWindowBase> _windowDict = new Dictionary<string, UIWindowBase>();
+    Dictionary<UIWindowBase, Dictionary<string, List<GameObject>>> _uiList = new Dictionary<UIWindowBase, Dictionary<string, List<GameObject>>>();
 
     /// <summary>
     /// 加载window
@@ -48,10 +48,11 @@ public class UIManager
         var obj = ResourceManager.Load<GameObject>(path);
         var windowObj = PoolManager.InstantiateGameObject(obj, PoolType.Window);
         windowObj.transform.SetParent(MainCanvas.transform, false);
-        UIBase window = windowObj.GetComponent<UIBase>();
-        m_WindowDict.Add(windowObj.name, window);
-        window.LoadAllUI();
-        //RegistUI(window, uiDict);
+        UIWindowBase window = windowObj.GetComponent<UIWindowBase>();
+        _windowDict.Add(windowObj.name, window);
+        var uiDict = window.LoadAllUI();
+        RegistUI(window, uiDict);
+        window.Init();
     }
 
     /// <summary>
@@ -60,14 +61,14 @@ public class UIManager
     /// <param name="uiCallBack"></param>
     /// <param name="objs"></param>
     /// <returns></returns>
-    public T OpenWindow<T>(bool openAnim = true, UICallBack uiCallBack = null, params object[] objs) where T : UIBase
+    public T OpenWindow<T>(bool openAnim = true, UICallBack uiCallBack = null, params object[] objs) where T : UIWindowBase
     {
         string windowName = typeof(T).Name;
-        if (!m_WindowDict.ContainsKey(windowName))
+        if (!_windowDict.ContainsKey(windowName))
         {
             LoadWindow(windowName);
         }
-        T window = m_WindowDict[windowName] as T;
+        T window = _windowDict[windowName] as T;
         //window.transform.SetAsLastSibling();
         window.OnOpen(objs);
         window.Status = UIStatus.Open;
@@ -75,6 +76,13 @@ public class UIManager
         {
             window.StartCoroutine(window.StartOpenAnim(uiCallBack, objs));
         }
+        if (_windowStack.Count > 0)
+        {
+            var curTopWindow = _windowStack.Peek();
+            if (curTopWindow != null) curTopWindow.OnLostFocus();
+        }
+        window.OnFocus();
+        _windowStack.Push(window);
         return window;
     }
 
@@ -83,39 +91,20 @@ public class UIManager
     /// </summary>
     /// <param name="uiCallBack"></param>
     /// <param name="objs"></param>
-    public void CloseWindow<T>(bool closeAnim=true, UICallBack uiCallBack = null, params object[] objs) where T : UIBase
+    public void CloseWindow<T>(bool closeAnim = true, bool beForce = false, UICallBack uiCallBack = null, params object[] objs) where T : UIWindowBase
     {
-        string windowName = typeof(T).Name;
-        T window = m_WindowDict[windowName] as T;
-        if (window.Status == UIStatus.Close) return;
-        window.Status = UIStatus.Close;
-        if (closeAnim)
+        if (_windowStack.Count <= 0) return;
+        var window = _windowStack.Peek();
+        if (window.GetType() is T)
         {
-            if (uiCallBack == null)
-            {
-                uiCallBack = window.OnClose;
-            }
-            else
-            {
-                uiCallBack += window.OnClose;
-            }
-            window.StartCoroutine(window.StartCloseAnim(uiCallBack, objs));
+            window = _windowStack.Pop();
         }
         else
         {
-            window.OnClose();
-            if (uiCallBack!=null)
-            {
-                uiCallBack(objs);
-            }
+            string windowName = typeof(T).Name;
+            window = _windowDict[windowName] as T;
+            if (window.Status == UIStatus.Close) return;
         }
-    }
-
-    public void CloseWindow(UIBase uiBase, bool closeAnim = true, UICallBack uiCallBack = null, params object[] objs) 
-    {
-        string windowName = uiBase.name;
-        UIWindowBase window = m_WindowDict[windowName] as UIWindowBase;
-        if (window.Status == UIStatus.Close) return;
         window.Status = UIStatus.Close;
         if (closeAnim)
         {
@@ -137,16 +126,75 @@ public class UIManager
                 uiCallBack(objs);
             }
         }
+        if (!beForce && _windowStack.Count > 0)
+        {
+            window.OnLostFocus();
+            var curTopWindow = _windowStack.Peek();
+            if (curTopWindow != null) curTopWindow.OnFocus();
+        }
+    }
+
+    public void CloseWindow(UIWindowBase UIWindowBase, bool closeAnim = true, bool beForce = false, UICallBack uiCallBack = null, params object[] objs)
+    {
+        if (_windowStack.Count <= 0) return;
+        var window = _windowStack.Peek();
+        if (window == UIWindowBase)
+        {
+            window = _windowStack.Pop();
+        }
+        else
+        {
+            string windowName = UIWindowBase.name;
+            window = _windowDict[windowName] as UIWindowBase;
+            if (window.Status == UIStatus.Close) return;
+        }
+        window.Status = UIStatus.Close;
+        if (closeAnim)
+        {
+            if (uiCallBack == null)
+            {
+                uiCallBack = window.OnClose;
+            }
+            else
+            {
+                uiCallBack += window.OnClose;
+            }
+            window.StartCoroutine(window.StartCloseAnim(uiCallBack, objs));
+        }
+        else
+        {
+            window.OnClose();
+            if (uiCallBack != null)
+            {
+                uiCallBack(objs);
+            }
+        }
+
+        if (!beForce && _windowStack.Count > 0)
+        {
+            window.OnLostFocus();
+            var curTopWindow = _windowStack.Peek();
+            if (curTopWindow != null) curTopWindow.OnFocus();
+        }
+    }
+
+    public void CloseAllWindow()
+    {
+        while (_windowStack.Count > 0)
+        {
+            var window = _windowStack.Pop();
+            CloseWindow(window, false, true);
+        }
     }
 
     /// <summary>
     /// 得到window
     /// </summary>
     /// <returns></returns>
-    public T GetWindow<T>() where T : UIBase
+    public T GetWindow<T>() where T : UIWindowBase
     {
         string windowName = typeof(T).Name;
-        return m_WindowDict[windowName] as T;
+        return _windowDict[windowName] as T;
     }
 
     /// <summary>
@@ -155,9 +203,9 @@ public class UIManager
     /// <param name="window"></param>
     /// <param name="uiName"></param>
     /// <returns></returns>
-    public List<GameObject> GetUIList(UIBase window, string uiName)
+    public List<GameObject> GetUIList(UIWindowBase window, string uiName)
     {
-        return m_UIList[window][uiName];
+        return _uiList[window][uiName];
     }
 
     /// <summary>
@@ -166,13 +214,13 @@ public class UIManager
     /// <param name="window"></param>
     /// <param name="uiName"></param>
     /// <param name="uiObj"></param>
-    public void RegistUI(UIBase uiBase, Dictionary<string, List<GameObject>> uiDict)
+    public void RegistUI(UIWindowBase UIWindowBase, Dictionary<string, List<GameObject>> uiDict)
     {
-        if (m_UIList.ContainsKey(uiBase))
+        if (_uiList.ContainsKey(UIWindowBase))
         {
-            Debug.LogError("存在相同UIBase" + uiBase.name);
+            Debug.LogError("存在相同UIWindowBase" + UIWindowBase.name);
         }
         else
-            m_UIList.Add(uiBase, uiDict);
+            _uiList.Add(UIWindowBase, uiDict);
     }
 }

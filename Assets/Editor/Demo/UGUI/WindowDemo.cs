@@ -64,6 +64,22 @@ public class WindowDemo : UIWindowBase
     }
 
     /// <summary>
+    /// 获得焦点时
+    /// </summary>
+    public override void OnFocus()
+    {
+        base.OnFocus();
+    }
+
+    /// <summary>
+    /// 失去焦点时
+    /// </summary>
+    public override void OnLostFocus()
+    {
+        base.OnLostFocus();
+    }
+
+    /// <summary>
     /// 打开时的动画效果
     /// </summary>
     /// <param name="uiCallBack"></param>

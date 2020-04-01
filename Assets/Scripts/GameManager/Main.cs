@@ -6,8 +6,11 @@ using UnityEngine;
 
 public class Main : MonoSingleton<Main>
 {
+    public Camera MainCamera;
+
     private void Awake()
     {
+        MainCamera = GetComponentInChildren<Camera>();
         DontDestroyOnLoad(gameObject);
         ApplicationEnter();
     }
@@ -33,6 +36,9 @@ public class Main : MonoSingleton<Main>
        
         ItemConfig.LoadCsvCfg();
         AnimConfig.LoadCsvCfg();
+        RoleConfig.LoadCsvCfg();
+        BuffConfig.LoadCsvCfg();
+        BulletConfig.LoadCsvCfg();
 
         PlayerData.Load();
         GameData.Load();
@@ -45,9 +51,13 @@ public class Main : MonoSingleton<Main>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        //if (Input.GetKeyDown(KeyCode.J))
+        //{
+        //    LoadSceneManager.Instance.LoadSceneAsync("Level_1", null);
+        //}
+        if (Input.GetKeyDown(KeyCode.K))
         {
-            LoadSceneManager.Instance.LoadSceneAsync("Level_1", null);
+            PlayerData.Instance.SavePlayerInfo(PlayerData.Instance.CurPlayerInfo);
         }
     }
 }

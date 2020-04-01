@@ -8,6 +8,9 @@ using DG.Tweening;
 public class UISetWindow : UIWindowBase
 {
     #region 参数
+    Slider Slider_MasterVolume;
+    Slider Slider_MusicVolume;
+    Slider Slider_AudioVolume;
     #endregion
 
     #region 继承方法
@@ -17,6 +20,7 @@ public class UISetWindow : UIWindowBase
     protected override void OnInit()
     {
         base.OnInit();
+        ShowVolumes(GameData.Instance.AudioVolumeInfo);
     }
 
     /// <summary>
@@ -25,6 +29,9 @@ public class UISetWindow : UIWindowBase
     protected override void GetUIComponent()
     {
         base.GetUIComponent();
+        Slider_MasterVolume = GetUI<Slider>("Slider_MasterVolume");
+        Slider_MusicVolume = GetUI<Slider>("Slider_MusicVolume");
+        Slider_AudioVolume = GetUI<Slider>("Slider_AudioVolume");
     }
 
     /// <summary>
@@ -33,6 +40,9 @@ public class UISetWindow : UIWindowBase
     protected override void AddUIListener()
     {
         base.AddUIListener();
+        AddSliderListen(Slider_MasterVolume, OnSliderChangeMasterVolume);
+        AddSliderListen(Slider_MusicVolume, OnSliderChangeMusicVolume);
+        AddSliderListen(Slider_AudioVolume, OnSliderChangeAudioVolume);
     }
 
     /// <summary>
@@ -51,6 +61,7 @@ public class UISetWindow : UIWindowBase
     public override void OnOpen(params object[] objs)
     {
         base.OnOpen(objs);
+        SetKeys(GameData.Instance.KeyCodeList);
     }
 
     /// <summary>
@@ -60,6 +71,7 @@ public class UISetWindow : UIWindowBase
     public override void OnClose(params object[] objs)
     {
         base.OnClose(objs);
+        GameData.Save();
     }
 
     /// <summary>
@@ -96,7 +108,38 @@ public class UISetWindow : UIWindowBase
 
     #region 成员方法
 
+    void SetKeys(List<InputKeyInfo> keyCodeList)
+    {
 
+    }
 
+    void ShowVolumes(AudioVolumeInfo info)
+    {
+        Slider_MasterVolume.value = info.MasterVolume;
+        Slider_MusicVolume.value = info.MusicVoulume;
+        Slider_AudioVolume.value = info.AudioVolume;
+    }
+
+    public void OnClickButtonResetKey()
+    {
+        GameData.Instance.ResetKey();
+        SetKeys(GameData.Instance.KeyCodeList);
+    }
+
+    public void OnSliderChangeMasterVolume(float value)
+    {
+        GameData.Instance.SetAudioVolume(E_AudioType.Master, value);
+        AudioManager.Instance.MasterVolume = value;
+    }
+    public void OnSliderChangeMusicVolume(float value)
+    {
+        GameData.Instance.SetAudioVolume(E_AudioType.Music, value);
+        AudioManager.Instance.MusicVolume = value;
+    }
+    public void OnSliderChangeAudioVolume(float value)
+    {
+        GameData.Instance.SetAudioVolume(E_AudioType.Audio, value);
+        AudioManager.Instance.AudioVolume = value;
+    }
     #endregion
 }

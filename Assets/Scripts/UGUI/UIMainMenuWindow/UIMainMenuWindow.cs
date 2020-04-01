@@ -19,7 +19,8 @@ public class UIMainMenuWindow : UIWindowBase
     //GameObject Panel_MenuButton;
     Animator Animator_OpenTitle;
 
-    bool m_IsAnim;
+    bool _animComplete = false;
+    bool _btnMoving = false;
 
     //临时
     CanvasGroup alpha;
@@ -51,6 +52,7 @@ public class UIMainMenuWindow : UIWindowBase
     {
         base.AddUIListener();
         AddButtonListen(Button_Set, OnClickButtonOpenSetWindow);
+        AddButtonListen(Button_EnterGame, OnClickButtonOpenArchiveWindow);
     }
 
     /// <summary>
@@ -85,11 +87,11 @@ public class UIMainMenuWindow : UIWindowBase
     public override void OnOpen(params object[] objs)
     {
         base.OnOpen(objs);
+        AudioManager.Instance.PlayBGM("B");
         foreach (var btn in m_ButtonList)
         {
             btn.DOLocalMoveX(600, 0);
         }
-
     }
 
     /// <summary>
@@ -99,7 +101,22 @@ public class UIMainMenuWindow : UIWindowBase
     public override void OnClose(params object[] objs)
     {
         base.OnClose(objs);
-        StartCoroutine(HideButtons(null, 0, 0));
+    }
+
+    public override void OnFocus()
+    {
+        base.OnFocus();
+        if (_animComplete)
+        {
+            StartCoroutine(HideButtons(null, 0, 0));
+            StartCoroutine(ShowButtons());
+        }
+    }
+
+    public override void OnLostFocus()
+    {
+        base.OnLostFocus();
+        StartCoroutine(HideButtons());
     }
 
     /// <summary>
@@ -127,6 +144,7 @@ public class UIMainMenuWindow : UIWindowBase
     /// <returns></returns>
     public override IEnumerator StartCloseAnim(UICallBack uiCallBack, params object[] objs)
     {
+        StartCoroutine(HideButtons(null, 0, 0));
         m_CanvasGroup.DOFade(0, 0.3f).OnComplete(() =>
         {
             StartCoroutine(base.StartCloseAnim(uiCallBack, objs));
@@ -139,13 +157,12 @@ public class UIMainMenuWindow : UIWindowBase
 
     private void Update()
     {
-        if (!m_IsAnim)
+        if (_animComplete&& !_btnMoving)
         {
             if (Animator_OpenTitle.gameObject.activeSelf)
             {
                 if (Input.anyKeyDown)
                 {
-                    m_IsAnim = true;
                     HideTitleAnim();
                 }
             }
@@ -153,7 +170,7 @@ public class UIMainMenuWindow : UIWindowBase
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    m_IsAnim = true;
+                    Debug.Log("click esc");
                     StartCoroutine(HideButtons(ShowTitleAnim));
                 }
             }
@@ -166,15 +183,18 @@ public class UIMainMenuWindow : UIWindowBase
     void ShowTitleAnim()
     {
         alpha.alpha = 0;
+        _animComplete = false;
         Animator_OpenTitle.gameObject.SetActive(true);
-        alpha.DOFade(1, 0.8f).OnComplete(() => m_IsAnim = false);
+        alpha.DOFade(1, 0.8f).OnComplete(() => _animComplete = true);
     }
 
     void HideTitleAnim()
     {
         alpha.DOKill();
+        _animComplete = false;
         alpha.DOFade(0, 0.5f).OnComplete(() =>
         {
+            _animComplete = true;
             Animator_OpenTitle.gameObject.SetActive(false);
             StartCoroutine(ShowButtons());
         });
@@ -185,20 +205,22 @@ public class UIMainMenuWindow : UIWindowBase
     /// </summary>
     IEnumerator ShowButtons()
     {
+        _btnMoving = true;
         foreach (var btn in m_ButtonList)
         {
             btn.DOLocalMoveX(0, 0.3f);
             yield return new WaitForSeconds(0.1f);
         }
-        m_IsAnim = false;
+        _btnMoving = false;
     }
 
     /// <summary>
     /// 隐藏界面按钮
     /// </summary>
     /// <returns></returns>
-    IEnumerator HideButtons(System.Action action=null,float intervalTime=0.1f,float moveSpeed=0.3f)
+    IEnumerator HideButtons(System.Action action = null, float intervalTime = 0.1f, float moveSpeed = 0.3f)
     {
+        _btnMoving = true;
         foreach (var btn in m_ButtonList)
         {
             btn.DOLocalMoveX(600, moveSpeed);
@@ -206,6 +228,12 @@ public class UIMainMenuWindow : UIWindowBase
         }
         if (action != null)
             action();
+        _btnMoving = false;
+    }
+
+    void OnClickButtonOpenArchiveWindow()
+    {
+        UIManager.Instance.OpenWindow<UIArchiveWindow>();
     }
 
     /// <summary>
