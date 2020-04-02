@@ -14,7 +14,7 @@ public class UIArchiveWindow : UIWindowBase
     Button Button_CancelDelete;
     GameObject Panel_CheckDeletePlayerInfo;
 
-
+    Image Image_Level;
 
     int _curIndex;
     PlayerInfo _curInfo;
@@ -30,6 +30,8 @@ public class UIArchiveWindow : UIWindowBase
     {
         base.GetUIComponent();
         Panel_ArchiveRoot = GetUI<Transform>("Panel_ArchiveRoot");
+
+        Image_Level = GetUI<Image>("Image_Level");
 
         Button_DeletePlayerInfo = GetUI<Button>("Button_DeletePlayerInfo");
         Button_CancelDelete = GetUI<Button>("Button_CancelDelete");
