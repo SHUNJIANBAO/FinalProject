@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 114804082249148668}
   - component: {fileID: 114912180406385238}
   m_Layer: 5
-  m_Name: UIArchivePanel (1)
+  m_Name: UIArchivePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 114420735033135714}
   - component: {fileID: 114215031951526344}
   m_Layer: 5
-  m_Name: UIArchivePanel (2)
+  m_Name: UIArchivePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

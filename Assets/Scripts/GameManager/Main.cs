@@ -20,6 +20,9 @@ public class Main : MonoSingleton<Main>
     /// </summary>
     public void ApplicationEnter()
     {
+        //todo delete
+        ClearData();
+
         LoadAssets(); //加载资源
         LoadConfigs();  //加载配置
 
@@ -42,6 +45,12 @@ public class Main : MonoSingleton<Main>
 
         PlayerData.Load();
         GameData.Load();
+    }
+
+    void ClearData()
+    {
+        PlayerData.Clear();
+        GameData.Clear();
     }
 
     public void OnGameEnter()

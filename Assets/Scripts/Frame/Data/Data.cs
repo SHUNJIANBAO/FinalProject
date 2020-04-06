@@ -31,4 +31,13 @@ public abstract class Data<T> where T : Data<T>, new()
         string json = JsonUtility.ToJson(_instance);
         PlayerPrefs.SetString(typeof(T).Name, json);
     }
+
+    public static void Clear()
+    {
+        string json = PlayerPrefs.GetString(typeof(T).Name);
+        if (string.IsNullOrEmpty(json))
+            return;
+        else
+            PlayerPrefs.SetString(typeof(T).Name, null);
+    }
 }

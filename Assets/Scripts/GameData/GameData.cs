@@ -30,6 +30,10 @@ public class GameData : Data<GameData>
             AudioManager.Instance.MusicVolume = AudioVolumeInfo.MusicVoulume;
             AudioManager.Instance.AudioVolume = AudioVolumeInfo.AudioVolume;
         }
+        else
+        {
+            AudioVolumeInfo = new AudioVolumeInfo();
+        }
 
         if (KeyCodeList==null)
         {

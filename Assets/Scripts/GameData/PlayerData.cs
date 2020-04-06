@@ -32,6 +32,7 @@ public class PlayerData : Data<PlayerData>
         if (PlayerInfos==null)
         {
             PlayerInfos = new List<PlayerInfo>();
+            CurPlayerInfo = new PlayerInfo();
         }
     }
 
