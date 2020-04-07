@@ -25,6 +25,8 @@ GameObject:
   - component: {fileID: 61403176307984578}
   - component: {fileID: 114019250260155708}
   - component: {fileID: 114559290566083926}
+  - component: {fileID: 114228447386396550}
+  - component: {fileID: 114239640310704614}
   m_Layer: 0
   m_Name: XiaoWen
   m_TagString: Untagged
@@ -121,6 +123,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NodeAssets: {fileID: 0}
   Interval: 0.1
+--- !u!114 &114228447386396550
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1120700869062392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a22e142cb111c3b4bb41b19751bf21e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114239640310704614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1120700869062392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e760f94fc39255438720826ad6026f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114559290566083926
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -132,18 +156,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a28a8c04e9e0ca45a3b390bc9794ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Id: 1010
   Index: 1
+  RoleType: 0
   CurStatus: 0
   IsGround: 0
   IsInvincible: 0
   AttackTarget: {fileID: 0}
+  MoveTarget: {x: 0, y: 0, z: 0}
 --- !u!212 &212753980372771970
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1120700869062392}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
