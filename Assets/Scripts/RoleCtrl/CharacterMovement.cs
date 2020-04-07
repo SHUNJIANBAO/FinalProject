@@ -11,9 +11,21 @@ public class CharacterMovement : MonoBehaviour
         _character = GetComponent<Character>();
     }
 
-    public void Attack(int skillId,bool beForce)
+    public void Attack(int skillId, bool beForce = false)
     {
+        if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, beForce)) return;
+        var skillCfg = SkillConfig.GetData(skillId);
+        if (CheckCanUse(skillCfg))
+        {
+            _character.CurSkill = skillCfg;
+            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce);
+        }
+    }
 
+    bool CheckCanUse(SkillConfig skillCfg)
+    {
+        var mpInstance = _character.GetRangeAttribute(E_Attribute.Mp.ToString());
+        return mpInstance.Current >= skillCfg.UseMp;
     }
 
     /// <summary>
@@ -32,8 +44,18 @@ public class CharacterMovement : MonoBehaviour
     /// <param name="targetPos"></param>
     public void MoveToPoint(Vector3 targetPos)
     {
+        if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Move)) return;
+
         _character.MoveTarget = targetPos;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, _character.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue()*GameManager.DeltaTime);
+        if (_character.CurStatus != E_CharacterFsmStatus.Move)
+        {
+            _character.ChangeStatus(E_CharacterFsmStatus.Move);
+        }
+    }
+
+    public void MoveEnd()
+    {
+        _character.MoveTarget = _character.transform.position;
     }
 
     /// <summary>
@@ -47,9 +69,34 @@ public class CharacterMovement : MonoBehaviour
     /// <summary>
     /// 受击
     /// </summary>
-    public virtual void Hurt(GameObject atkOwner, int damage, bool beForce = false)
+    public virtual void Hurt(GameObject atkOwner, int damage, int hitForce, bool beForce = false)
     {
-
+        if (_character.IsInvincible) return;
+        _character.GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
+        if (_character.CurStatus == E_CharacterFsmStatus.FallDown) return;
+        LookToTarget(atkOwner);
+        var shield = _character.GetRangeAttribute(E_Attribute.Shield.ToString());
+        shield.ChangeValue(-hitForce);
+        if (shield.Current <= shield.GetMinTotalValue())
+        {
+            shield.Reset();
+            _character.ChangeStatus(E_CharacterFsmStatus.HitFly);
+        }
+        else
+        {
+            _character.ChangeStatus(E_CharacterFsmStatus.Hurt);
+        }
     }
 
+    void LookToTarget(GameObject target)
+    {
+        if (target.transform.position.x > transform.position.x)
+        {
+            transform.localScale = Vector3.one;
+        }
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+    }
 }

@@ -96,8 +96,32 @@ public class FsmManager
         }
     }
 
+    public bool CheckCanChangeStatus(int status, bool beForce = false)
+    {
+        if (CurrentStatus != -1)
+        {
+            if (beForce)
+            {
+                if (fsm[CurrentStatus].CanExit()|| fsm[CurrentStatus].CanInterrupt())
+                    return fsm[status].CanEnter();
+                else
+                    return false;
+            }
+            else
+            {
+                if (fsm[CurrentStatus].CanExit())
+                    return fsm[status].CanEnter();
+                else
+                    return false;
+            }
+        }
+        return fsm[status].CanEnter();
+    }
+
     public bool ChangeStatus(int status, bool beForce = false, params object[] objs)
     {
+        if (!CheckCanChangeStatus(status, beForce)) return false;
+
         if (CurrentStatus!=-1)
         {
             if (beForce)
@@ -137,6 +161,8 @@ public enum E_CharacterFsmStatus
     Jump,
     Attack,
     Hurt,
+    HitFly,
+    FallDown,
     Blink,
     Play,
 

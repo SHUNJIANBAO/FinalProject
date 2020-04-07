@@ -58,6 +58,14 @@ public class Main : MonoSingleton<Main>
         
     }
 
+    private void Start()
+    {
+        var obj= Resources.Load<GameObject>("Prefabs/Roles/XiaoWen/XiaoWen");
+        var go = GameObject.Instantiate(obj);
+        var cha= go.GetComponent<Character>();
+        MonoBehaviourManager.Add(cha);
+    }
+
     private void Update()
     {
         //if (Input.GetKeyDown(KeyCode.J))

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CharAttackStatus : CharFsmBase
 {
+    float _timeCount;
+    SkillConfig _skill;
+    string _skillName;
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
 
@@ -16,17 +19,34 @@ public class CharAttackStatus : CharFsmBase
 
     public override bool CanExit()
     {
-        return true;
+        return _timeCount >= _skill.CanExitTime;
     }
 
     public override bool CanInterrupt()
     {
-        return true;
+        return _timeCount >= _skill.ComboTime;
     }
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
-        int animId = 0;
-        m_Animator.SetInteger("Index", animId);
+        _timeCount = 0;
+        _skill = m_Owner.CurSkill;
+        _skillName = AnimConfig.GetData(_skill.AnimId).Name;
+        m_Animator.SetInteger("Index", _skill.AnimId);
+    }
+
+    protected override void OnStay()
+    {
+        base.OnStay();
+        if (m_CurStateInfo.IsName(_skillName))
+        {
+            _timeCount += GameManager.DeltaTime;
+
+
+            if (m_CurStateInfo.normalizedTime>=1f)
+            {
+                m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
+            }
+        }
     }
 }

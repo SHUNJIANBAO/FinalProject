@@ -1,4 +1,4 @@
-动作ID,名称,备注
+﻿ID,名称,备注
 Id,Name,
 100,Idle,待机
 101,MoveStart,移动开始

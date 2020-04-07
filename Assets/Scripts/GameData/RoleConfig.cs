@@ -9,7 +9,14 @@ public class RoleConfig : CsvCfg<RoleConfig>
     public int Mp { get; protected set; }
     public int Attack { get; protected set; }
     public int MoveSpeed { get; protected set; }
-    public bool IsBoss { get; protected set; }
+    public int HitFlyShield { get; protected set; }
+    public RoleType RoleType { get; protected set; }
     public static string FilePath = "Config/Role";
 }
 
+public enum RoleType
+{
+    Player,
+    Enemy,
+    Boss,
+}

@@ -34,7 +34,10 @@ public static class MonoBehaviourManager
     {
         Init();
         if (m_CellList.Contains(cell))
+        {
             m_CellList.Remove(cell);
+            cell.OnDestory();
+        }
     }
 
     static void OnUpdate()

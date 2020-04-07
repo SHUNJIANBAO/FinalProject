@@ -4,7 +4,7 @@ public enum E_Attribute
     Hp,
     Mp,
     Atk,
-    Def,
+    Shield,
     MoveSpeed,
 }
 

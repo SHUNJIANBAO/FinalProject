@@ -10,6 +10,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterMovement))]
 public class Character : MonoEntity
 {
+    [Header("角色类型")]
+    public RoleType RoleType;
     [Header("角色当前状态")]
     public E_CharacterFsmStatus CurStatus;
     [Header("是否在地面上")]
@@ -20,6 +22,7 @@ public class Character : MonoEntity
     public Character AttackTarget;
     [Header("移动目标点")]
     public Vector3 MoveTarget;
+    public SkillConfig CurSkill;
 
     protected Animator m_Animator;
     protected Rigidbody2D m_Rigibody;
@@ -30,12 +33,17 @@ public class Character : MonoEntity
     protected Vector2 m_TopOffest;
     protected Vector2 m_BottomOffest;
 
-    [HideInInspector]
-    public bool IsBoss;
     GameRangeAttribute _hp;
     GameRangeAttribute _mp;
+    GameRangeAttribute _shield;
     GameAttribute _attack;
     GameAttribute _moveSpeed;
+
+    protected GameRangeAttributeInstance m_Hp;
+    protected GameRangeAttributeInstance m_Mp;
+    protected GameRangeAttributeInstance m_Shield;
+    protected GameAttributeInstance m_Attack;
+    protected GameAttributeInstance m_MoveSpeed;
 
     protected override void OnInit(params object[] objs)
     {
@@ -58,14 +66,33 @@ public class Character : MonoEntity
         RoleConfig roleCfg = RoleConfig.GetData(Id);
         gameObject.name = roleCfg.Name;
         _hp = new GameRangeAttribute(E_Attribute.Hp.ToString(), 0, roleCfg.Hp);
-        AddRangeAttribute(_hp);
-        _mp = new GameRangeAttribute(E_Attribute.Mp.ToString(), 0, roleCfg.Mp,2);
-        AddRangeAttribute(_hp);
+        m_Hp = AddRangeAttribute(_hp);
+        _mp = new GameRangeAttribute(E_Attribute.Mp.ToString(), 0, roleCfg.Mp, 2);
+        m_Mp = AddRangeAttribute(_mp);
         _attack = new GameAttribute(E_Attribute.Atk.ToString(), roleCfg.Attack);
-        AddAttribute(_attack);
+        m_Attack = AddAttribute(_attack);
         _moveSpeed = new GameAttribute(E_Attribute.MoveSpeed.ToString(), roleCfg.MoveSpeed);
-        AddAttribute(_moveSpeed);
-        IsBoss = roleCfg.IsBoss;
+        m_MoveSpeed = AddAttribute(_moveSpeed);
+        _shield = new GameRangeAttribute(E_Attribute.Shield.ToString(), 0, roleCfg.HitFlyShield, 5);
+        m_Shield = AddRangeAttribute(_shield);
+        RoleType = roleCfg.RoleType;
+
+        switch (RoleType)
+        {
+            case RoleType.Player:
+                UIBattleWindow.OnPlayerHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue());
+                UIBattleWindow.OnPlayerMpChange(m_Mp.Current, m_Mp.GetMinTotalValue(), m_Mp.GetMaxTotalValue());
+                GetRangeAttribute(E_Attribute.Hp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnPlayerHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue()); };
+                GetRangeAttribute(E_Attribute.Mp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnPlayerMpChange(m_Mp.Current, m_Mp.GetMinTotalValue(), m_Mp.GetMaxTotalValue()); };
+                break;
+            case RoleType.Boss:
+                UIBattleWindow.ShowBossUI();
+                UIBattleWindow.OnBossHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue());
+                UIBattleWindow.OnBossShieldChange(m_Shield.Current, m_Shield.GetMinTotalValue(), m_Shield.GetMaxTotalValue());
+                GetRangeAttribute(E_Attribute.Hp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnBossHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue()); };
+                GetRangeAttribute(E_Attribute.Shield.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnBossShieldChange(m_Shield.Current, m_Shield.GetMinTotalValue(), m_Shield.GetMaxTotalValue()); };
+                break;
+        }
     }
 
     /// <summary>
@@ -83,6 +110,8 @@ public class Character : MonoEntity
         fsm.AddStatus((int)E_CharacterFsmStatus.Attack, attackStatus);
         CharHurtStatus hurtStatus = new CharHurtStatus(this, m_Animator);
         fsm.AddStatus((int)E_CharacterFsmStatus.Hurt, hurtStatus);
+        CharHitFlyStatus hitFlyStatus = new CharHitFlyStatus(this, m_Animator);
+        fsm.AddStatus((int)E_CharacterFsmStatus.HitFly, hitFlyStatus);
         CharBlinkStatus blinkStatus = new CharBlinkStatus(this, m_Animator);
         fsm.AddStatus((int)E_CharacterFsmStatus.Blink, blinkStatus);
         CharPlayStatus playStatus = new CharPlayStatus(this, m_Animator);
@@ -91,6 +120,8 @@ public class Character : MonoEntity
         fsm.AddStatus((int)E_CharacterFsmStatus.Born, bornStatus);
         CharDieStatus dieStatus = new CharDieStatus(this, m_Animator);
         fsm.AddStatus((int)E_CharacterFsmStatus.Die, dieStatus);
+
+        ChangeStatus(E_CharacterFsmStatus.Idle);
     }
 
     /// <summary>
@@ -101,6 +132,17 @@ public class Character : MonoEntity
         base.OnUpdate();
         fsm.OnStay();
         IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
+    }
+
+    /// <summary>
+    /// 检测是否可以切换到指定状态
+    /// </summary>
+    /// <param name="targetStatus"></param>
+    /// <param name="beForce"></param>
+    /// <returns></returns>
+    public bool CheckCanChangeStatus(E_CharacterFsmStatus targetStatus, bool beForce = false)
+    {
+        return fsm.CheckCanChangeStatus((int)targetStatus, beForce);
     }
 
     /// <summary>
@@ -119,6 +161,55 @@ public class Character : MonoEntity
         return result;
     }
 
+    /// <summary>
+    /// 是否可以连击
+    /// </summary>
+    /// <param name="skillId"></param>
+    /// <returns></returns>
+    public bool CanCombo(int skillId)
+    {
+        if (CurStatus == E_CharacterFsmStatus.Attack)
+        {
+            if (fsm.GetStatus((int)CurStatus).CanInterrupt())
+            {
+                return IsSubSkill(skillId);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 是否是当前技能的连击技
+    /// </summary>
+    /// <param name="skillId"></param>
+    bool IsSubSkill(int skillId)
+    {
+        var skill = SkillConfig.GetData(skillId);
+        while (skill.NextSkillId != 0)
+        {
+            if (skill.Id == CurSkill.Id)
+            {
+                return true;
+            }
+            skill = SkillConfig.GetData(skill.NextSkillId);
+        }
+        return false;
+    }
+
+    public override void OnDestory()
+    {
+        base.OnDestory();
+        switch (RoleType)
+        {
+            case RoleType.Boss:
+                UIBattleWindow.HideBossUI();
+                break;
+        }
+    }
 
     #region 继承方法
 

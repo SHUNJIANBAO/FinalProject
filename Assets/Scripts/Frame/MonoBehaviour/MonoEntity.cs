@@ -17,6 +17,7 @@ public class MonoEntity : MonoBehaviour
     /// </summary>
     public void Init(params object[] objs)
     {
+        m_MonoAttribute = new MonoAttribute(this);
         OnInit(objs);
     }
 
@@ -60,6 +61,11 @@ public class MonoEntity : MonoBehaviour
         OnDrawGizmosUpdate();
     }
     protected virtual void OnDrawGizmosUpdate() { }
+
+    public virtual void OnDestory()
+    {
+
+    }
 
     #region 属性相关
 

@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class AudioVolumeInfo
 {
-    public float MusicVoulume=1;
-    public float AudioVolume=1;
-    public float MasterVolume=1;
+    public float MusicVoulume = 1;
+    public float AudioVolume = 1;
+    public float MasterVolume = 1;
 }
 [System.Serializable]
 public class InputKeyInfo
@@ -21,10 +21,12 @@ public class GameData : Data<GameData>
     public AudioVolumeInfo AudioVolumeInfo;
     public List<InputKeyInfo> KeyCodeList;
 
+    Dictionary<E_InputKey, KeyCode> _keyDict;
+
     protected override void OnLoad()
     {
         base.OnLoad();
-        if (AudioVolumeInfo!=null)
+        if (AudioVolumeInfo != null)
         {
             AudioManager.Instance.MasterVolume = AudioVolumeInfo.MasterVolume;
             AudioManager.Instance.MusicVolume = AudioVolumeInfo.MusicVoulume;
@@ -35,13 +37,21 @@ public class GameData : Data<GameData>
             AudioVolumeInfo = new AudioVolumeInfo();
         }
 
-        if (KeyCodeList==null)
+        if (KeyCodeList == null)
         {
             ResetKey();
         }
+        else
+        {
+            _keyDict = new Dictionary<E_InputKey, KeyCode>();
+            for (int i = 0; i < KeyCodeList.Count; i++)
+            {
+                _keyDict.Add(KeyCodeList[i].m_Key, KeyCodeList[i].Key);
+            }
+        }
     }
 
-    public void SetAudioVolume(E_AudioType type,float value)
+    public void SetAudioVolume(E_AudioType type, float value)
     {
         switch (type)
         {
@@ -57,9 +67,14 @@ public class GameData : Data<GameData>
         }
     }
 
-    public void SetKey(E_InputKey mKey,KeyCode curKey)
+    public void SetKey(E_InputKey mKey, KeyCode curKey)
     {
         KeyCodeList.Find(k => k.m_Key == mKey).Key = curKey;
+    }
+
+    public KeyCode GetKey(E_InputKey mKey)
+    {
+        return _keyDict[mKey];
     }
 
     public void ResetKey()
@@ -113,6 +128,12 @@ public class GameData : Data<GameData>
         info.m_Key = E_InputKey.Map;
         info.Key = KeyCode.M;
         KeyCodeList.Add(info);
+
+        _keyDict = new Dictionary<E_InputKey, KeyCode>();
+        for (int i = 0; i < KeyCodeList.Count; i++)
+        {
+            _keyDict.Add(KeyCodeList[i].m_Key, KeyCodeList[i].Key);
+        }
     }
 }
 

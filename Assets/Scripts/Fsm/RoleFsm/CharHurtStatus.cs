@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharHurtStatus : CharFsmBase
 {
-    E_HurtType m_HurtType;
+    bool _isComplete;
     public CharHurtStatus(Character owner, Animator animator) : base(owner, animator)
     {
 
@@ -17,7 +17,7 @@ public class CharHurtStatus : CharFsmBase
 
     public override bool CanExit()
     {
-        return true;
+        return _isComplete;
     }
 
     public override bool CanInterrupt()
@@ -27,21 +27,24 @@ public class CharHurtStatus : CharFsmBase
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
-        m_HurtType = (E_HurtType)objs[0];
-        switch (m_HurtType)
+        _isComplete = false;
+        if (m_CurStateInfo.IsName(E_AnimatorIndex.Hurt.ToString()))
+            m_Animator.Play(E_AnimatorIndex.Hurt.ToString(), 0, 0);
+        else
+            m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Hurt);
+    }
+
+    protected override void OnStay()
+    {
+        base.OnStay();
+        if (m_CurStateInfo.IsName(E_AnimatorIndex.Hurt.ToString()) && m_CurStateInfo.normalizedTime >= 1f)
         {
-            case E_HurtType.Normal:
-                m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Hurt);
-                break;
-            case E_HurtType.HitFly:
-                m_Animator.SetInteger("Index", (int)E_AnimatorIndex.HurtFlyStart);
-                break;
+            _isComplete = true;
+            m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
         }
     }
-}
-
-public enum E_HurtType
-{
-    Normal,
-    HitFly,
+    protected override void OnExit()
+    {
+        base.OnExit();
+    }
 }
