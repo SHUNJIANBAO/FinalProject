@@ -8,6 +8,10 @@ public class UIArchivePanel : UIPanelBase
     Text Text_PlayTimeLong;
     Button Button_DeleteArchive;
     Button Button_ClickArchive;
+    Image Image_Level;
+    Text Text_LevelName;
+    GameObject GameObject_NullArchive;
+
     UIArchiveWindow UIArchiveWindow;
     PlayerInfo _info;
     int _index;
@@ -18,6 +22,9 @@ public class UIArchivePanel : UIPanelBase
         Text_PlayTimeLong = GetUI<Text>("Text_PlayTimeLong");
         Button_ClickArchive = GetUI<Button>("Button_ClickArchive");
         Button_DeleteArchive = GetUI<Button>("Button_DeleteArchive");
+        Image_Level = GetUI<Image>("Image_Level");
+        Text_LevelName = GetUI<Text>("Text_LevelName");
+        GameObject_NullArchive = GetUI<GameObject>("GameObject_NullArchive");
     }
 
     public void Init(int index, PlayerInfo info)
@@ -27,6 +34,8 @@ public class UIArchivePanel : UIPanelBase
         if (info == null)
         {
             Button_DeleteArchive.gameObject.SetActive(false);
+            Text_LevelName.text = "";
+            GameObject_NullArchive.SetActive(true);
         }
         else
         {
@@ -44,6 +53,10 @@ public class UIArchivePanel : UIPanelBase
             {
                 Text_PlayTimeLong.text = string.Format("{0}m", _info.GameTimeMinutes);
             }
+            LevelConfig levelCfg = LevelConfig.GetData(info.CurLevelId);
+            Image_Level.sprite = ResourceManager.Load<Sprite>("Sprites/" + levelCfg.TitleIcon);
+            Text_LevelName.text = levelCfg.Name;
+            GameObject_NullArchive.SetActive(false);
         }
         AddButtonListen(Button_ClickArchive, OnClickButtonEnterGame);
     }
@@ -58,7 +71,11 @@ public class UIArchivePanel : UIPanelBase
         if (_info == null)
         {
             _info = PlayerData.Instance.CreatePlayerInfo(_index);
+            UIArchiveWindow.EnterGame(_info, true);
         }
-        UIArchiveWindow.EnterGame(_info);
+        else
+        {
+            UIArchiveWindow.EnterGame(_info,false);
+        }
     }
 }

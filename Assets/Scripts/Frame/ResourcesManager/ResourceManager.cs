@@ -9,9 +9,9 @@ public class ResourceManager
 
     public static T Load<T>(string path)where T:Object
     {
-        var obj= Resources.Load<Object>(path);
+        T obj = Resources.Load<T>(path);
         //m_AllGameObjects.Add(path, new List<Object> { obj });
-        return obj as T;
+        return obj;
     }
 
     public static List<Object> LoadAll(string path)

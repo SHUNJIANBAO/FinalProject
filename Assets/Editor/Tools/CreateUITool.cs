@@ -45,9 +45,13 @@ public class CreateUITool : EditorWindow
                 {
                     //uiName = "UI" + uiName + "Window";
                     if (string.IsNullOrEmpty(uiName)) return;
+                    EditorUtility.DisplayProgressBar("创建UI脚本", "正在创建文件夹... ...", 0);
                     CreateDirectory(type, uiTypeName);
+                    EditorUtility.DisplayProgressBar("创建UI脚本", "正在生成脚本... ...", 0.5f);
                     CreateWindowScript(uiTypeName, scriptPath);
+                    EditorUtility.DisplayProgressBar("创建UI脚本", "生成完毕", 1);
                     AssetDatabase.Refresh();
+                    EditorUtility.ClearProgressBar();
                 }
             }
             else if (WindowIsNull(uiTypeName)) 

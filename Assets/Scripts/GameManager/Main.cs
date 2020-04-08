@@ -21,7 +21,7 @@ public class Main : MonoSingleton<Main>
     public void ApplicationEnter()
     {
         //todo delete
-        ClearData();
+        //ClearData();
 
         LoadAssets(); //加载资源
         LoadConfigs();  //加载配置
@@ -41,6 +41,8 @@ public class Main : MonoSingleton<Main>
         AnimConfig.LoadCsvCfg();
         RoleConfig.LoadCsvCfg();
         BuffConfig.LoadCsvCfg();
+        SkillConfig.LoadCsvCfg();
+        LevelConfig.LoadCsvCfg();
         BulletConfig.LoadCsvCfg();
 
         PlayerData.Load();
@@ -58,13 +60,13 @@ public class Main : MonoSingleton<Main>
         
     }
 
-    private void Start()
-    {
-        var obj= Resources.Load<GameObject>("Prefabs/Roles/XiaoWen/XiaoWen");
-        var go = GameObject.Instantiate(obj);
-        var cha= go.GetComponent<Character>();
-        MonoBehaviourManager.Add(cha);
-    }
+    //private void Start()
+    //{
+    //    var obj= Resources.Load<GameObject>("Prefabs/Roles/XiaoWen/XiaoWen");
+    //    var go = GameObject.Instantiate(obj);
+    //    var cha= go.GetComponent<Character>();
+    //    MonoBehaviourManager.Add(cha);
+    //}
 
     private void Update()
     {

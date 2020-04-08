@@ -8,6 +8,7 @@ public class PlayerInfo
 {
     public int SaveId;
     public int GameTimeMinutes;
+    public int CurLevelId=1000;
     public List<ItemInfo> ItemList;
 }
 

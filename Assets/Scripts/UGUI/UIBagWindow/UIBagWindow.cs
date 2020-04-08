@@ -5,19 +5,9 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class UIArchiveWindow : UIWindowBase
+public class UIBagWindow : UIWindowBase
 {
     #region 参数
-    Transform Panel_ArchiveRoot;
-
-    Button Button_DeletePlayerInfo;
-    Button Button_CancelDelete;
-    GameObject Panel_CheckDeletePlayerInfo;
-
-
-    int _curIndex;
-    PlayerInfo _curInfo;
-    List<UIArchivePanel> _archiveList;
     #endregion
 
     #region 继承方法
@@ -28,13 +18,6 @@ public class UIArchiveWindow : UIWindowBase
     protected override void GetUIComponent()
     {
         base.GetUIComponent();
-        Panel_ArchiveRoot = GetUI<Transform>("Panel_ArchiveRoot");
-
-
-        Button_DeletePlayerInfo = GetUI<Button>("Button_DeletePlayerInfo");
-        Button_CancelDelete = GetUI<Button>("Button_CancelDelete");
-        Panel_CheckDeletePlayerInfo = GetUI<GameObject>("Panel_CheckDeletePlayerInfo");
-        _archiveList = GetUIList<UIArchivePanel>("UIArchivePanel");
     }
 
     /// <summary>
@@ -43,8 +26,6 @@ public class UIArchiveWindow : UIWindowBase
     protected override void AddUIListener()
     {
         base.AddUIListener();
-        AddButtonListen(Button_CancelDelete, CloseCheckWindow);
-        AddButtonListen(Button_DeletePlayerInfo, OnClickButtonDeletePlayerInfo);
     }
 
     /// <summary>
@@ -53,7 +34,6 @@ public class UIArchiveWindow : UIWindowBase
     protected override void OnInit()
     {
         base.OnInit();
-        CloseCheckWindow();
     }
 
     /// <summary>
@@ -72,7 +52,6 @@ public class UIArchiveWindow : UIWindowBase
     public override void OnOpen(params object[] objs)
     {
         base.OnOpen(objs);
-        SetArchiveList(PlayerData.Instance.PlayerInfos);
     }
 
     /// <summary>
@@ -82,6 +61,22 @@ public class UIArchiveWindow : UIWindowBase
     public override void OnClose(params object[] objs)
     {
         base.OnClose(objs);
+    }
+
+    /// <summary>
+    /// 获得焦点时
+    /// </summary>
+    public override void OnFocus()
+    {
+        base.OnFocus();
+    }
+
+    /// <summary>
+    /// 失去焦点时
+    /// </summary>
+    public override void OnLostFocus()
+    {
+        base.OnLostFocus();
     }
 
     /// <summary>
@@ -117,43 +112,8 @@ public class UIArchiveWindow : UIWindowBase
     #endregion
 
     #region 成员方法
-    void SetArchiveList(List<PlayerInfo> infos)
-    {
-        for (int i = 0; i < _archiveList.Count; i++)
-        {
-            var info = infos.Find(s => s.SaveId == i);
-            _archiveList[i].Init(i, info);
-        }
-    }
 
-    public void EnterGame(PlayerInfo info,bool isNewGame)
-    {
-        PlayerData.Instance.CurPlayerInfo = info;
-        System.Action callback = BattleSceneStatus.Instance.StartBattle;
-        if (isNewGame)
-        {
-            callback +=()=> PlayerData.Instance.SavePlayerInfo(info);
-        }
-        LoadSceneManager.Instance.LoadSceneAsync("Level_1", callback);
-    }
 
-    public void OpenDeletePlayerInfoPanel(PlayerInfo info)
-    {
-        _curInfo = info;
-        Panel_CheckDeletePlayerInfo.SetActive(true);
-    }
-
-    void OnClickButtonDeletePlayerInfo()
-    {
-        PlayerData.Instance.DeletePlayerInfo(_curInfo);
-        SetArchiveList(PlayerData.Instance.PlayerInfos);
-        CloseCheckWindow();
-    }
-
-    void CloseCheckWindow()
-    {
-        Panel_CheckDeletePlayerInfo.SetActive(false);
-    }
 
     #endregion
 }
