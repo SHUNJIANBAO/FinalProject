@@ -8,14 +8,21 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
 {
     public float LoadCompleteDelay = 0.2f;
 
-    public void LoadScene(string levelName,Action callback=null)
+    public void LoadScene(int levelId,Action callback=null)
     {
-        SceneManager.LoadScene(levelName);
-        callback?.Invoke();
+        string levelName = "Level_" + levelId;
+        UICallBack uiCallback = (args) =>
+        {
+            SceneManager.LoadScene(levelName);
+            callback?.Invoke();
+            UIManager.Instance.CloseWindow<UILoadingWindow>();
+        };
+        UIManager.Instance.OpenWindow<UILoadingWindow>(true, uiCallback);
     }
 
-    public void LoadSceneAsync(string levelName,Action onComplete)
+    public void LoadSceneAsync(int levelId,Action onComplete)
     {
+        string levelName = "Level_" + levelId;
         UIManager.Instance.CloseAllWindow();
         StartCoroutine(LoadSceneAsyncIE(levelName, onComplete));
     }

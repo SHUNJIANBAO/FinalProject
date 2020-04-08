@@ -36,8 +36,12 @@ public static class MonoBehaviourManager
         if (m_CellList.Contains(cell))
         {
             m_CellList.Remove(cell);
-            cell.OnDestory();
         }
+    }
+
+    public static MonoEntity GetById(int id)
+    {
+        return m_CellList.Find(m => m.Id == id);
     }
 
     static void OnUpdate()

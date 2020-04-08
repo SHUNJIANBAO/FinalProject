@@ -48,8 +48,12 @@ public class PlayerCtrl : MonoBehaviour
             if (_character.CanCombo(skillId))
             {
                 skillId = _character.CurSkill.NextSkillId;
+                _moment.Attack(skillId,true);
             }
-            _moment.Attack(skillId);
+            else
+            {
+                _moment.Attack(skillId);
+            }
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.LongAttack)))
         {
@@ -65,7 +69,10 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Blink)))
         {
-
+            if (_character.CanInterruptStatus())
+            {
+                _character.ChangeStatus(E_CharacterFsmStatus.Blink, true);
+            }
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Support)))
         {

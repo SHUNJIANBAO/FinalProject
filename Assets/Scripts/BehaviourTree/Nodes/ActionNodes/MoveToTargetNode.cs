@@ -26,6 +26,7 @@ public class MoveToTargetNode : ActionNode
     {
         if (Vector2.Distance(m_Owner.transform.position,m_Owner.AttackTarget.transform.position)>UntilDistance)
         {
+            m_Movement.MoveToPoint(m_Owner.AttackTarget.transform.position);
             return E_NodeStatus.Running;
         }
         return E_NodeStatus.Success;

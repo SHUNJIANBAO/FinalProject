@@ -70,11 +70,12 @@ public class TimerManager : MonoBehaviour
     /// </summary>
     /// <param name="time">总时长</param>
     /// <param name="action">计时结束后调用的方法</param>
-    public void AddListener(float totalTime, Action action)
+    public Timer AddListener(float totalTime, Action action)
     {
         Timer temp = new Timer(totalTime);
         temp.completeAction = action;
         timerActions.Add(temp);
+        return temp;
     }
 
     /// <summary>
@@ -84,12 +85,19 @@ public class TimerManager : MonoBehaviour
     /// <param name="intervalTime">间隔时长</param>
     /// <param name="action">间隔调用的方法</param>
     /// <param name="loop">是否循环（总时长无效）</param>
-    public void AddListener(float totalTime, float intervalTime, Action intervalAction,Action completeAction=null, bool loop = false)
+    public Timer AddListener(float totalTime, float intervalTime, Action intervalAction, Action completeAction = null, bool loop = false)
     {
         Timer temp = new Timer(totalTime, intervalTime, loop);
         temp.intervalAction = intervalAction;
         temp.completeAction = completeAction;
         timerActions.Add(temp);
+        return temp;
+    }
+
+    public void RemoveListener(Timer timer)
+    {
+        if (timerActions.Contains(timer))
+            timerActions.Remove(timer);
     }
 
     public void ClearActions()

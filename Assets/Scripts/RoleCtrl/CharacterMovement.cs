@@ -6,6 +6,9 @@ public class CharacterMovement : MonoBehaviour
 {
     Character _character;
 
+    Vector3 _right = Vector3.one;
+    Vector3 _left = new Vector3(-1, 1, 1);
+
     private void Awake()
     {
         _character = GetComponent<Character>();
@@ -44,12 +47,26 @@ public class CharacterMovement : MonoBehaviour
     /// <param name="targetPos"></param>
     public void MoveToPoint(Vector3 targetPos)
     {
+        _character.MoveTarget = targetPos;
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Move)) return;
 
-        _character.MoveTarget = targetPos;
-        if (_character.CurStatus != E_CharacterFsmStatus.Move)
+        LookToTarget(targetPos);
+
+        if (_character.IsGround && _character.CurStatus != E_CharacterFsmStatus.Move)
         {
             _character.ChangeStatus(E_CharacterFsmStatus.Move);
+        }
+    }
+
+    void LookToTarget(Vector3 targetPos)
+    {
+        if (targetPos.x > _character.transform.position.x)
+        {
+            _character.transform.localScale = _right;
+        }
+        if (targetPos.x < _character.transform.position.x)
+        {
+            _character.transform.localScale = _left;
         }
     }
 

@@ -15,6 +15,14 @@ public class MonoAttribute
         m_RangeAttributesList = new List<GameRangeAttributeInstance>();
     }
 
+    public void CaculateRangeDelta()
+    {
+        for (int i = 0; i < m_RangeAttributesList.Count; i++)
+        {
+            m_RangeAttributesList[i].ChangeValue(m_RangeAttributesList[i].GetDeltaTotalValue());
+        }
+    }
+
     public GameAttributeInstance AddAttribute(GameAttribute attribute)
     {
         GameAttributeInstance attr = new GameAttributeInstance(this.m_Owner, attribute);

@@ -21,11 +21,20 @@ public class CharDieStatus : CharFsmBase
 
     public override bool CanInterrupt()
     {
-        return true;
+        return false;
     }
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
         m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Die);
+    }
+
+    protected override void OnStay()
+    {
+        base.OnStay();
+        if (m_CurStateInfo.IsName(E_AnimatorIndex.Die.ToString())&&m_CurStateInfo.normalizedTime>=1f)
+        {
+            m_Owner.OnDestory();
+        }
     }
 }

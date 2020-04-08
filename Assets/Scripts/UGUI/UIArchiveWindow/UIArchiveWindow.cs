@@ -134,7 +134,7 @@ public class UIArchiveWindow : UIWindowBase
         {
             callback +=()=> PlayerData.Instance.SavePlayerInfo(info);
         }
-        LoadSceneManager.Instance.LoadSceneAsync("Level_1", callback);
+        LoadSceneManager.Instance.LoadSceneAsync(info.CurLevelId, callback);
     }
 
     public void OpenDeletePlayerInfoPanel(PlayerInfo info)

@@ -32,6 +32,7 @@ public class Character : MonoEntity
     protected int m_CurSkillId;
     protected Vector2 m_TopOffest;
     protected Vector2 m_BottomOffest;
+    Timer _caculateDelta;
 
     GameRangeAttribute _hp;
     GameRangeAttribute _mp;
@@ -58,7 +59,7 @@ public class Character : MonoEntity
 
         RegistAttribute();
         RegistFsmStatus();
-        ResetAttributes();
+        Reborn();
     }
 
     void RegistAttribute()
@@ -67,7 +68,7 @@ public class Character : MonoEntity
         gameObject.name = roleCfg.Name;
         _hp = new GameRangeAttribute(E_Attribute.Hp.ToString(), 0, roleCfg.Hp);
         m_Hp = AddRangeAttribute(_hp);
-        _mp = new GameRangeAttribute(E_Attribute.Mp.ToString(), 0, roleCfg.Mp, 2);
+        _mp = new GameRangeAttribute(E_Attribute.Mp.ToString(), 0, roleCfg.Mp, 0.1f);
         m_Mp = AddRangeAttribute(_mp);
         _attack = new GameAttribute(E_Attribute.Atk.ToString(), roleCfg.Attack);
         m_Attack = AddAttribute(_attack);
@@ -75,6 +76,9 @@ public class Character : MonoEntity
         m_MoveSpeed = AddAttribute(_moveSpeed);
         _shield = new GameRangeAttribute(E_Attribute.Shield.ToString(), 0, roleCfg.HitFlyShield, 5);
         m_Shield = AddRangeAttribute(_shield);
+
+        _caculateDelta= TimerManager.Instance.AddListener(0, 0.02f, m_MonoAttribute.CaculateRangeDelta, null, true);
+
         RoleType = roleCfg.RoleType;
 
         switch (RoleType)
@@ -162,6 +166,24 @@ public class Character : MonoEntity
     }
 
     /// <summary>
+    /// 是否可以中断当前状态
+    /// </summary>
+    /// <returns></returns>
+    public bool CanInterruptStatus()
+    {
+        return fsm.GetStatus((int)CurStatus).CanInterrupt();
+    }
+
+    /// <summary>
+    /// 复活
+    /// </summary>
+    void Reborn()
+    {
+        ResetAttributes();
+        ChangeStatus(E_CharacterFsmStatus.Idle);
+    }
+
+    /// <summary>
     /// 是否可以连击
     /// </summary>
     /// <param name="skillId"></param>
@@ -208,7 +230,12 @@ public class Character : MonoEntity
             case RoleType.Boss:
                 UIBattleWindow.HideBossUI();
                 break;
+            case RoleType.Player:
+                LoadSceneManager.Instance.LoadScene(PlayerData.Instance.CurPlayerInfo.CurLevelId, Reborn);
+                return;
         }
+        TimerManager.Instance.RemoveListener(_caculateDelta);
+        MonoBehaviourManager.Remove(this);
     }
 
     #region 继承方法

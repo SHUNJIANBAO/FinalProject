@@ -21,6 +21,7 @@ public class GameRangeAttributeInstance
         m_GameAttributeMinModifiersList = new List<GameAttributeModifier>();
         m_GameAttributeMaxModifiersList = new List<GameAttributeModifier>();
         m_GameAttributeDeltaModifiersList = new List<GameAttributeModifier>();
+        Current = attribute.Max.Value;
     }
 
     public void AddMinModifier(GameAttributeModifier modifier)

@@ -73,6 +73,8 @@ public class UILoadingWindow : UIWindowBase
         Text_LoadProgress.text = "0%";
         Image_LoadProgress.fillAmount = 0;
         base.OnClose(objs);
+        Image_LoadProgress.enabled = false;
+        Text_LoadProgress.enabled = false;
     }
 
     /// <summary>
@@ -111,14 +113,22 @@ public class UILoadingWindow : UIWindowBase
 
     public void SetProgress(float value)
     {
+        if (Image_LoadProgress.enabled==false)
+        {
+            Image_LoadProgress.enabled = true;
+            Text_LoadProgress.enabled = true;
+        }
         m_Progress = value;
     }
     private void Update()
     {
-        if (Image_LoadProgress.fillAmount < m_Progress)
+        if (Image_LoadProgress.enabled)
         {
-            Progress= Image_LoadProgress.fillAmount += Time.deltaTime;
-            Text_LoadProgress.text = string.Format("{0}%", Mathf.CeilToInt(Image_LoadProgress.fillAmount * 100));
+            if (Image_LoadProgress.fillAmount < m_Progress)
+            {
+                Progress = Image_LoadProgress.fillAmount += Time.deltaTime;
+                Text_LoadProgress.text = string.Format("{0}%", Mathf.CeilToInt(Image_LoadProgress.fillAmount * 100));
+            }
         }
     }
 

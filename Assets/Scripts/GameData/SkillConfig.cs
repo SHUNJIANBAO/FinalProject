@@ -15,6 +15,8 @@ public class SkillConfig : CsvCfg<SkillConfig>
     public float DamageTime { get; protected set; }
     public float ComboTime { get; protected set; }
     public float CanExitTime { get; protected set; }
+    public float InvincibleTime { get; protected set; }
+    public float InvincibleDuration { get; protected set; }
     public float MoveDistance { get; protected set; }
     public float MoveStartTime { get; protected set; }
     public float MoveDuration { get; protected set; }

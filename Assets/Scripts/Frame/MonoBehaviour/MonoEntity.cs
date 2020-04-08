@@ -10,7 +10,7 @@ public class MonoEntity : MonoBehaviour
     [Header("优先级")]
     public int Index=1;
     //属性
-    MonoAttribute m_MonoAttribute;
+    protected MonoAttribute m_MonoAttribute;
 
     /// <summary>
     /// 初始化方法（包括重置）
