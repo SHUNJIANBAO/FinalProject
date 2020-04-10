@@ -17,6 +17,7 @@ public class PlayerPoint : MonoBehaviour
             DontDestroyOnLoad(go);
             var character = go.GetComponent<Character>();
             MonoBehaviourManager.Add(character);
+            CameraManager.Instance.SetFollowTarget(character.transform);
         }
     }
 }

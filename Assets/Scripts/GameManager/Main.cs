@@ -1,16 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using Cinemachine;
 
 public class Main : MonoSingleton<Main>
 {
-    public Camera MainCamera;
 
     private void Awake()
     {
-        MainCamera = GetComponentInChildren<Camera>();
         DontDestroyOnLoad(gameObject);
         ApplicationEnter();
     }

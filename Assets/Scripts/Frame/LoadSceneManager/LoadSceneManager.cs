@@ -62,7 +62,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         var cams = GameObject.FindObjectsOfType<Camera>();
         for (int i = 0; i < cams.Length; i++)
         {
-            if (cams[i].tag=="MainCamera"&& cams[i] != Main.Instance.MainCamera)
+            if (cams[i].tag=="MainCamera"&&  !CameraManager.Instance.IsMainCamera(cams[i]))
                 cams[i].gameObject.SetActive(false);
         }
     }
