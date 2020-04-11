@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCtrl : MonoBehaviour 
+public class PlayerCtrl : MonoBehaviour
 {
     CharacterMovement _moment;
     Character _character;
@@ -35,7 +35,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             _moment.MoveToPoint(transform.position + Vector3.right);
         }
-        if (Input.GetKeyUp(GameData.Instance.GetKey(E_InputKey.Left))||Input.GetKeyUp(GameData.Instance.GetKey(E_InputKey.Rigth)))
+        if (Input.GetKeyUp(GameData.Instance.GetKey(E_InputKey.Left)) || Input.GetKeyUp(GameData.Instance.GetKey(E_InputKey.Rigth)))
         {
             if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)) || Input.GetKey(GameData.Instance.GetKey(E_InputKey.Rigth)))
                 return;
@@ -48,7 +48,7 @@ public class PlayerCtrl : MonoBehaviour
             if (_character.CanCombo(skillId))
             {
                 skillId = _character.CurSkill.NextSkillId;
-                _moment.Attack(skillId,true);
+                _moment.Attack(skillId, true);
             }
             else
             {
@@ -65,7 +65,8 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Jump)))
         {
-
+            if (_character.IsGround)
+                _moment.Jump(15, false);
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Blink)))
         {

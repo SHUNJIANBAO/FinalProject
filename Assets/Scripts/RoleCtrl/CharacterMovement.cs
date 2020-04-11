@@ -31,6 +31,12 @@ public class CharacterMovement : MonoBehaviour
         return mpInstance.Current >= skillCfg.UseMp;
     }
 
+    public void Jump(float jumpForce,bool beForce)
+    {
+        if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Jump, beForce)) return;
+        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce, jumpForce);
+    }
+
     /// <summary>
     /// 播放动画
     /// </summary>
@@ -86,7 +92,7 @@ public class CharacterMovement : MonoBehaviour
     /// <summary>
     /// 受击
     /// </summary>
-    public virtual void Hurt(GameObject atkOwner, int damage, int hitForce, bool beForce = false)
+    public virtual void Hurt(GameObject atkOwner, int damage, int hitForce)
     {
         if (_character.IsInvincible) return;
         _character.GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
@@ -97,11 +103,11 @@ public class CharacterMovement : MonoBehaviour
         if (shield.Current <= shield.GetMinTotalValue())
         {
             shield.Reset();
-            _character.ChangeStatus(E_CharacterFsmStatus.HitFly);
+            _character.ChangeStatus(E_CharacterFsmStatus.HitFly,true);
         }
         else
         {
-            _character.ChangeStatus(E_CharacterFsmStatus.Hurt);
+            _character.ChangeStatus(E_CharacterFsmStatus.Hurt,true);
         }
     }
 

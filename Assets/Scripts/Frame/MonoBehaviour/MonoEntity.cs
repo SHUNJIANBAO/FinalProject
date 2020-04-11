@@ -26,6 +26,19 @@ public class MonoEntity : MonoBehaviour
 
     }
 
+    public void Awake()
+    {
+        OnAwake();
+    }
+
+    protected virtual void OnAwake() { }
+
+    public void Start()
+    {
+        OnStart();
+    }
+    protected virtual void OnStart() { }
+
     protected virtual void OnUpdate()
     {
 

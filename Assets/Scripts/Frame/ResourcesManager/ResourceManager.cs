@@ -6,10 +6,16 @@ using System.Linq;
 public class ResourceManager
 {
     static Dictionary<string, List<Object>> m_AllGameObjects = new Dictionary<string, List<Object>>();
+    static Dictionary<string, Object> m_GameObjects = new Dictionary<string, Object>();
 
     public static T Load<T>(string path)where T:Object
     {
+        if (m_GameObjects.ContainsKey(path))
+        {
+            return m_GameObjects[path] as T;
+        }
         T obj = Resources.Load<T>(path);
+        m_GameObjects.Add(path, obj);
         //m_AllGameObjects.Add(path, new List<Object> { obj });
         return obj;
     }

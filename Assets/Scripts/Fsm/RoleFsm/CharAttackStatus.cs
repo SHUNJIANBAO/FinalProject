@@ -8,6 +8,10 @@ public class CharAttackStatus : CharFsmBase
     SkillConfig _skill;
     string _skillName;
     float _moveSpeed;
+
+    bool _createCollider;
+    bool _createBullet;
+
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
 
@@ -31,6 +35,7 @@ public class CharAttackStatus : CharFsmBase
     {
         base.OnEnter(objs);
         _timeCount = 0;
+        _createCollider = false;
         _skill = m_Owner.CurSkill;
         _skillName = AnimConfig.GetData(_skill.AnimId).Name;
         m_Animator.SetInteger("Index", _skill.AnimId);
@@ -45,6 +50,8 @@ public class CharAttackStatus : CharFsmBase
         {
             _timeCount += GameManager.DeltaTime;
 
+            CreateBullet();
+            CreateCollider();
             CaculateInvincible();
             CaculateMove();
 
@@ -79,7 +86,7 @@ public class CharAttackStatus : CharFsmBase
         if (_skill.MoveDistance == 0 || _skill.MoveDuration == 0) return;
         if (_timeCount >= _skill.MoveStartTime && _timeCount < _skill.MoveStartTime + _skill.MoveDuration)
         {
-            if (m_Owner.transform.localScale.x>0)
+            if (m_Owner.transform.localScale.x > 0)
             {
                 m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
             }
@@ -87,6 +94,33 @@ public class CharAttackStatus : CharFsmBase
             {
                 m_Owner.transform.Translate(Vector3.left * _moveSpeed * GameManager.DeltaTime);
             }
+        }
+    }
+
+    /// <summary>
+    /// 造成伤害
+    /// </summary>
+    void CreateCollider()
+    {
+        if (!_createCollider && _skill.ColliderId != 0 && _timeCount >= _skill.DamageTime)
+        {
+            _createCollider = true;
+            var collider = PoolManager.InstantiateGameObject(PathManager.ColliderPath, PoolType.Collider);
+            var ctrl = collider.GetComponent<ColliderCtrl>();
+            float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * _skill.DamageRatio / 100;
+            ctrl.Init(_skill.ColliderId, m_Owner, (int)damage, _skill.HitFlyForce);
+        }
+    }
+
+    /// <summary>
+    /// 生成弹幕
+    /// </summary>
+    void CreateBullet()
+    {
+        if (!_createBullet && _skill.BulletId != 0 && _timeCount >= _skill.DamageTime)
+        {
+            _createBullet = true;
+            Debug.LogError("弹幕未完成");
         }
     }
 

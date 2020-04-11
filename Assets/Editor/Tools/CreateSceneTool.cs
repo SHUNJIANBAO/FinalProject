@@ -59,6 +59,11 @@ public class CreateSceneTool : EditorWindow
     {
         CreateGameObject("PlayerPoint", Selection.activeGameObject.transform);
     }
+    [MenuItem("GameObject/场景相关/创建传送门")]
+    static void CreatePortal()
+    {
+        CreateGameObject("PortalPoint", Selection.activeGameObject.transform);
+    }
 
     public static void CreateGameObject(string name,Transform parent=null)
     {
@@ -71,6 +76,7 @@ public class CreateSceneTool : EditorWindow
             go.transform.SetParent(parent,false);
             go.transform.localPosition = Vector3.zero;
         }
+        Selection.activeGameObject = go;
     }
 
 }

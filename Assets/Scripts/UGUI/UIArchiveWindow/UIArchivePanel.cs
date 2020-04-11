@@ -47,11 +47,11 @@ public class UIArchivePanel : UIPanelBase
             if (hours > 0)
             {
                 int minutes = (_info.GameTimeMinutes - hours * 60);
-                Text_PlayTimeLong.text = string.Format("{0}h:{1}m", hours, minutes);
+                Text_PlayTimeLong.text = hours + "h:" + minutes + "m";
             }
             else
             {
-                Text_PlayTimeLong.text = string.Format("{0}m", _info.GameTimeMinutes);
+                Text_PlayTimeLong.text = _info.GameTimeMinutes + "m";
             }
             LevelConfig levelCfg = LevelConfig.GetData(info.CurLevelId);
             Image_Level.sprite = ResourceManager.Load<Sprite>("Sprites/" + levelCfg.TitleIcon);
@@ -75,7 +75,7 @@ public class UIArchivePanel : UIPanelBase
         }
         else
         {
-            UIArchiveWindow.EnterGame(_info,false);
+            UIArchiveWindow.EnterGame(_info, false);
         }
     }
 }

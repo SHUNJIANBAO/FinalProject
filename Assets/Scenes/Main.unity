@@ -137,7 +137,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 52065661}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 960, y: 540, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1708801834}
@@ -266,7 +266,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0.2748015, b: 0.38679248, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -304,7 +304,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 960, y: 540, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1935426822}
@@ -609,10 +609,12 @@ MonoBehaviour:
     m_Bits: 256
   Player:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   Enemy:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
+  Texture: {fileID: 2800000, guid: bb13ec488b81fa44eab626c024661258, type: 3}
+  ClickTexture: {fileID: 2800000, guid: 3fe3b0de0817fbf49a3d95b1f6a44639, type: 3}
 --- !u!114 &1935426824
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -31,7 +31,7 @@ public class Main : MonoSingleton<Main>
         AudioManager.Instance.LoadAudios(PathManager.AudioPath);
     }
 
-    void LoadConfigs()
+    public void LoadConfigs()
     {
        
         ItemConfig.LoadCsvCfg();
@@ -41,6 +41,7 @@ public class Main : MonoSingleton<Main>
         SkillConfig.LoadCsvCfg();
         LevelConfig.LoadCsvCfg();
         BulletConfig.LoadCsvCfg();
+        ColliderConfig.LoadCsvCfg();
 
         PlayerData.Load();
         GameData.Load();

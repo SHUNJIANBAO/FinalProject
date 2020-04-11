@@ -120,7 +120,7 @@ public class Util
         {
             string[] tempArry = value.Split('|', ';', ':', ',');
             Vector2 temp;
-            if (tempArry.Length < 3)
+            if (tempArry.Length < 2)
             {
                 temp = Vector2.zero;
             }

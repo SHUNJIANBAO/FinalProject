@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
-public class LoadSceneManager : MonoSingleton<LoadSceneManager> 
+public class LoadSceneManager : MonoSingleton<LoadSceneManager>
 {
     public float LoadCompleteDelay = 0.2f;
 
-    public void LoadScene(int levelId,Action callback=null)
+    public void LoadScene(int levelId, Action callback = null)
     {
+        PlayerData.Instance.CurPlayerInfo.CurLevelId = levelId;
         string levelName = "Level_" + levelId;
         UICallBack uiCallback = (args) =>
         {
@@ -20,8 +21,9 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         UIManager.Instance.OpenWindow<UILoadingWindow>(true, uiCallback);
     }
 
-    public void LoadSceneAsync(int levelId,Action onComplete)
+    public void LoadSceneAsync(int levelId, Action onComplete = null)
     {
+        PlayerData.Instance.CurPlayerInfo.CurLevelId = levelId;
         string levelName = "Level_" + levelId;
         UIManager.Instance.CloseAllWindow();
         StartCoroutine(LoadSceneAsyncIE(levelName, onComplete));
@@ -34,7 +36,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         {
             complete = true;
         };
-        UILoadingWindow loadingWindow= UIManager.Instance.OpenWindow<UILoadingWindow>(true, callback);
+        UILoadingWindow loadingWindow = UIManager.Instance.OpenWindow<UILoadingWindow>(true, callback);
         while (!complete)
         {
             yield return null;
@@ -42,13 +44,13 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         var asyncOperation = SceneManager.LoadSceneAsync(levelName);
         asyncOperation.completed += (op) => { CloseTrashCamera(); onComplete?.Invoke(); };
         asyncOperation.allowSceneActivation = false;
-        while (asyncOperation.progress<0.9f)
+        while (asyncOperation.progress < 0.9f)
         {
-            loadingWindow.SetProgress(asyncOperation.progress/9*10);
+            loadingWindow.SetProgress(asyncOperation.progress / 9 * 10);
             yield return null;
         }
         loadingWindow.SetProgress(1);
-        while (loadingWindow.Progress<1)
+        while (loadingWindow.Progress < 1)
         {
             yield return null;
         }
@@ -62,7 +64,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         var cams = GameObject.FindObjectsOfType<Camera>();
         for (int i = 0; i < cams.Length; i++)
         {
-            if (cams[i].tag=="MainCamera"&&  !CameraManager.Instance.IsMainCamera(cams[i]))
+            if (cams[i].tag == "MainCamera" && !CameraManager.Instance.IsMainCamera(cams[i]))
                 cams[i].gameObject.SetActive(false);
         }
     }

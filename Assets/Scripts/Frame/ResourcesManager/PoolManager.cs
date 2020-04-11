@@ -4,12 +4,29 @@ using UnityEngine;
 
 public enum PoolType
 {
-    Window
+    Window,
+    Collider,
 }
 
 public static class PoolManager
 {
     static Dictionary<PoolType, Dictionary<string, PoolSpawn>> m_PoolDict = new Dictionary<PoolType, Dictionary<string, PoolSpawn>>();
+
+    public static GameObject InstantiateGameObject(string path, PoolType pType)
+    {
+        GameObject go = ResourceManager.Load<GameObject>(path);
+        if (!m_PoolDict.ContainsKey(pType))
+        {
+            m_PoolDict.Add(pType, new Dictionary<string, PoolSpawn>());
+        }
+        if (!m_PoolDict[pType].ContainsKey(go.name))
+        {
+            var pool = new PoolSpawn(go);
+            m_PoolDict[pType].Add(go.name, pool);
+        }
+        return m_PoolDict[pType][go.name].GetGameObject();
+    }
+
     public static GameObject InstantiateGameObject(GameObject go, PoolType pType)
     {
         if (!m_PoolDict.ContainsKey(pType))

@@ -22,10 +22,13 @@ public class Character : MonoEntity
     public Character AttackTarget;
     [Header("移动目标点")]
     public Vector3 MoveTarget;
+    //是否面向右
+    public bool IsFaceRight => transform.localScale.x > 0;
+
     public SkillConfig CurSkill;
 
+    public Rigidbody2D Rigibody;
     protected Animator m_Animator;
-    protected Rigidbody2D m_Rigibody;
     protected BoxCollider2D m_BoxColider;
 
     FsmManager fsm = new FsmManager();
@@ -51,7 +54,7 @@ public class Character : MonoEntity
         base.OnInit(objs);
 
         m_Animator = GetComponent<Animator>();
-        m_Rigibody = GetComponent<Rigidbody2D>();
+        Rigibody = GetComponent<Rigidbody2D>();
         m_BoxColider = GetComponent<BoxCollider2D>();
 
         m_TopOffest = new Vector2(0, m_BoxColider.size.y * 0.5f);
@@ -136,6 +139,13 @@ public class Character : MonoEntity
         base.OnUpdate();
         fsm.OnStay();
         IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
+        if (!IsGround)
+        {
+            if (CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
+            {
+                ChangeStatus(E_CharacterFsmStatus.Jump);
+            }
+        }
     }
 
     /// <summary>
