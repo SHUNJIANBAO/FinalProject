@@ -137,7 +137,6 @@ public class Character : MonoEntity
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        fsm.OnStay();
         IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
         if (!IsGround)
         {
@@ -146,6 +145,7 @@ public class Character : MonoEntity
                 ChangeStatus(E_CharacterFsmStatus.Jump);
             }
         }
+        fsm.OnStay();
     }
 
     /// <summary>
@@ -246,6 +246,13 @@ public class Character : MonoEntity
         }
         TimerManager.Instance.RemoveListener(_caculateDelta);
         MonoBehaviourManager.Remove(this);
+    }
+
+    protected override void OnDrawGizmosUpdate()
+    {
+        base.OnDrawGizmosUpdate();
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere((Vector2)transform.position + m_BottomOffest, 0.3f);
     }
 
     #region 继承方法

@@ -12,6 +12,9 @@ public class CharAttackStatus : CharFsmBase
     bool _createCollider;
     bool _createBullet;
 
+    Vector3 _blinkTarget=Vector3.zero;
+    Vector3 _tempVector=Vector3.zero;
+
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
 
@@ -24,7 +27,7 @@ public class CharAttackStatus : CharFsmBase
 
     public override bool CanExit()
     {
-        return _timeCount >= _skill.CanExitTime || m_CurStateInfo.normalizedTime >= 1f;
+        return _timeCount >= _skill.CanExitTime;//|| (m_CurStateInfo.IsName(_skillName) && m_CurStateInfo.normalizedTime >= 1f);
     }
 
     public override bool CanInterrupt()
@@ -41,6 +44,14 @@ public class CharAttackStatus : CharFsmBase
         m_Animator.SetInteger("Index", _skill.AnimId);
         _moveSpeed = _skill.MoveDistance / _skill.MoveDuration;
         m_Owner.GetRangeAttribute(E_Attribute.Mp.ToString()).ChangeValue(-_skill.UseMp);
+        if (m_Owner.IsFaceRight)
+        {
+            _blinkTarget.x = _skill.MoveDistance;
+        }
+        else
+        {
+            _blinkTarget.x =- _skill.MoveDistance;
+        }
     }
 
     protected override void OnStay()
@@ -86,6 +97,7 @@ public class CharAttackStatus : CharFsmBase
         if (_skill.MoveDistance == 0 || _skill.MoveDuration == 0) return;
         if (_timeCount >= _skill.MoveStartTime && _timeCount < _skill.MoveStartTime + _skill.MoveDuration)
         {
+            m_Owner.Rigibody.velocity = Vector2.zero;
             if (m_Owner.transform.localScale.x > 0)
             {
                 m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
