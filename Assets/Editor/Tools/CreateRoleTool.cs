@@ -56,7 +56,9 @@ public class CreateRoleTool : EditorWindow
         go.GetComponent<BoxCollider2D>().size = Vector2.one*2;
         go.GetComponent<Animator>().runtimeAnimatorController = controller;
         go.AddComponent<CharacterMovement>();
-        go.GetComponent<Rigidbody2D>().gravityScale = 4;
+        var rigi = go.GetComponent<Rigidbody2D>();
+        rigi.gravityScale = 4;
+        rigi.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         GameObject prefab= PrefabUtility.CreatePrefab(GetNewPrefabPath(name), go);
         PrefabUtility.ConnectGameObjectToPrefab(go, prefab);

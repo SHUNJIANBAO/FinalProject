@@ -26,7 +26,7 @@ public class Character : MonoEntity
     public bool IsFaceRight => transform.localScale.x > 0;
 
     public SkillConfig CurSkill;
-
+    [HideInInspector]
     public Rigidbody2D Rigibody;
     protected Animator m_Animator;
     protected BoxCollider2D m_BoxColider;
@@ -80,7 +80,7 @@ public class Character : MonoEntity
         _shield = new GameRangeAttribute(E_Attribute.Shield.ToString(), 0, roleCfg.HitFlyShield, 5);
         m_Shield = AddRangeAttribute(_shield);
 
-        _caculateDelta= TimerManager.Instance.AddListener(0, 0.02f, m_MonoAttribute.CaculateRangeDelta, null, true);
+        _caculateDelta = TimerManager.Instance.AddListener(0, 0.02f, m_MonoAttribute.CaculateRangeDelta, null, true);
 
         RoleType = roleCfg.RoleType;
 
@@ -140,7 +140,7 @@ public class Character : MonoEntity
         IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
         if (!IsGround)
         {
-            if (CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
+            if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
             {
                 ChangeStatus(E_CharacterFsmStatus.Jump);
             }
