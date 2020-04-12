@@ -63,6 +63,7 @@ public class Character : MonoEntity
         RegistAttribute();
         RegistFsmStatus();
         Reborn();
+        IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
     }
 
     void RegistAttribute()
