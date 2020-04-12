@@ -21,7 +21,13 @@ public class CharJumpStatus : CharFsmBase
 
     public override bool CanExit()
     {
-        return m_Owner.IsGround && _isJumping;
+        if (!_isJumping) return false;
+        m_CurStateInfo = m_Animator.GetCurrentAnimatorStateInfo(0);
+        //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpEnd.ToString()))
+        //{
+        //    return m_CurStateInfo.normalizedTime >1f;
+        //}
+        return m_CurStateInfo.IsName(E_AnimatorIndex.JumpEnd.ToString())&& m_CurStateInfo.normalizedTime > 0.2f;
     }
 
     public override bool CanInterrupt()

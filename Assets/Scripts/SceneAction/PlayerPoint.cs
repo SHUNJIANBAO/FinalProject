@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerPoint : MonoBehaviour 
 {
+    [HideInInspector]
     public int PlayerId = 1010;
     private void Start()
     {
