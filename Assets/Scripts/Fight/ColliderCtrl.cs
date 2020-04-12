@@ -13,7 +13,7 @@ public class ColliderCtrl : MonoBehaviour
     float _timeCount;
     float _intervalTimeCount;
 
-    protected void Awake()
+    protected void Start()
     {
         _box = GetComponent<BoxCollider2D>();
     }

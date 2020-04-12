@@ -58,7 +58,7 @@ public class CameraManager : MonoSingleton<CameraManager>
         }
         else
         {
-            _body.m_SoftZoneWidth = 0.05f;
+            _body.m_SoftZoneWidth = 0.04f;
         }
         if (!vertical)
         {
@@ -67,7 +67,7 @@ public class CameraManager : MonoSingleton<CameraManager>
         }
         else
         {
-            _body.m_SoftZoneHeight = 0.05f;
+            _body.m_SoftZoneHeight = 0.04f;
         }
     }
 

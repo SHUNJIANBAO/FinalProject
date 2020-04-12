@@ -92,11 +92,8 @@ public class UIArchiveWindow : UIWindowBase
     /// <returns></returns>
     public override IEnumerator StartOpenAnim(UICallBack uiCallBack, params object[] objs)
     {
-        Debug.Log("open");
         m_CanvasGroup.alpha = 0;
-        m_CanvasGroup.blocksRaycasts = false;
-        uiCallBack += (args)=> { m_CanvasGroup.blocksRaycasts = true; };
-        m_CanvasGroup.DOFade(1, 0.4f).OnComplete(() =>
+        m_CanvasGroup.DOFade(1, 0.5f).OnComplete(() =>
         {
             StartCoroutine(base.StartOpenAnim(uiCallBack, objs));
         });

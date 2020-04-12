@@ -70,12 +70,10 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Blink)))
         {
-            _moment.Attack(1010011, true);
-            //if (_character.CanInterruptStatus())
-            //{
-
-            //    _character.ChangeStatus(E_CharacterFsmStatus.Blink, true);
-            //}
+            if (_character.CanInterruptStatus())
+            {
+                _character.ChangeStatus(E_CharacterFsmStatus.Blink, true);
+            }
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Support)))
         {

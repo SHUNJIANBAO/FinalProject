@@ -50,13 +50,10 @@ public class CreateRoleTool : EditorWindow
 
         GameObject go = new GameObject(name);
         go.AddComponent<Character>();
-        var sr = go.GetComponent<SpriteRenderer>();
-        sr.sprite = GetRoleIdleSprite(name);
-        sr.sortingOrder = 10;
+        go.GetComponent<SpriteRenderer>().sprite = GetRoleIdleSprite(name);
         go.GetComponent<BoxCollider2D>().size = Vector2.one*2;
         go.GetComponent<Animator>().runtimeAnimatorController = controller;
         go.AddComponent<CharacterMovement>();
-        go.GetComponent<Rigidbody2D>().gravityScale = 4;
 
         GameObject prefab= PrefabUtility.CreatePrefab(GetNewPrefabPath(name), go);
         PrefabUtility.ConnectGameObjectToPrefab(go, prefab);

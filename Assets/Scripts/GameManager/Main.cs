@@ -22,7 +22,6 @@ public class Main : MonoSingleton<Main>
 
         LoadAssets(); //加载资源
         LoadConfigs();  //加载配置
-        LoadData();
 
         UIManager.Instance.OpenWindow<UILogoWindow>();
     }
@@ -44,10 +43,6 @@ public class Main : MonoSingleton<Main>
         BulletConfig.LoadCsvCfg();
         ColliderConfig.LoadCsvCfg();
 
-    }
-
-    void LoadData()
-    {
         PlayerData.Load();
         GameData.Load();
     }
