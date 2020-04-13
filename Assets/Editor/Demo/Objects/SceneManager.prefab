@@ -283,6 +283,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Horizontal: 1
   Vertical: 1
+  MoveEffectName: 
+  MoveEffectInterval: 0
+  JumpDownEffectName: 
 --- !u!114 &114749071437916744
 MonoBehaviour:
   m_ObjectHideFlags: 0

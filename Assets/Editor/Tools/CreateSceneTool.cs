@@ -9,7 +9,7 @@ public class CreateSceneTool : EditorWindow
     string _levelId;
     string _sceneName;
 
-    static string SceneGameObjectPath = "Assets/Editor/Demo/SceneObjects/";
+    static string SceneGameObjectPath = "Assets/Editor/Demo/Objects/";
 
     [MenuItem("工具/创建新场景")]
     static void OpenWindow()

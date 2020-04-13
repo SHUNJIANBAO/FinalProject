@@ -9,6 +9,8 @@ public class ColliderCtrl : MonoBehaviour
 
     int _damage;
     int _hitForce;
+    string _hitEffect;
+    E_HitEffectPosType _hitPosType;
 
     float _timeCount;
     float _intervalTimeCount;
@@ -18,11 +20,13 @@ public class ColliderCtrl : MonoBehaviour
         _box = GetComponent<BoxCollider2D>();
     }
 
-    public void Init(int colliderId, Character owner, int damage, int hitForce)
+    public void Init(int colliderId, Character owner, int damage, int hitForce, string hitEffect, E_HitEffectPosType hitPosType)
     {
         _timeCount = 0;
         _damage = damage;
         _hitForce = hitForce;
+        _hitEffect = hitEffect;
+        _hitPosType = hitPosType;
         _owner = owner;
         _coliderCfg = ColliderConfig.GetData(colliderId);
         _intervalTimeCount = _coliderCfg.DamageInterval;
@@ -98,6 +102,21 @@ public class ColliderCtrl : MonoBehaviour
         else
         {
             movement.Hurt(_owner.gameObject, _damage, _hitForce);
+        }
+
+        switch (_hitPosType)
+        {
+            case E_HitEffectPosType.HitPoint:
+                Vector2 dir = target.transform.position - _owner.transform.position;
+                var hit = Physics2D.Raycast(_owner.transform.position, dir, 5);
+                if (hit.transform.GetComponent<Character>() == target)
+                {
+                    EffectManager.Instance.Play(_hitEffect, hit.point, _owner.IsFaceRight);
+                }
+                break;
+            case E_HitEffectPosType.CharacterCenter:
+                EffectManager.Instance.Play(_hitEffect, Vector3.zero, target);
+                break;
         }
     }
 

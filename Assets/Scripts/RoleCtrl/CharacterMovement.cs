@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -14,14 +15,14 @@ public class CharacterMovement : MonoBehaviour
         _character = GetComponent<Character>();
     }
 
-    public void Attack(int skillId, bool beForce = false)
+    public void Attack(int skillId, bool beForce = false, System.Action damageCallback = null)
     {
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, beForce)) return;
         var skillCfg = SkillConfig.GetData(skillId);
         if (CheckCanUse(skillCfg))
         {
             _character.CurSkill = skillCfg;
-            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce);
+            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, damageCallback);
         }
     }
 
@@ -31,10 +32,11 @@ public class CharacterMovement : MonoBehaviour
         return mpInstance.Current >= skillCfg.UseMp;
     }
 
-    public void Jump(float jumpForce,bool beForce)
+    public void Jump(float jumpForce, bool beForce, Action<Character> jumpDownCallback = null)
     {
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Jump, beForce)) return;
-        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce, jumpForce);
+
+        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce, jumpForce, jumpDownCallback);
     }
 
     /// <summary>
@@ -51,7 +53,7 @@ public class CharacterMovement : MonoBehaviour
     /// 移动到指定点
     /// </summary>
     /// <param name="targetPos"></param>
-    public void MoveToPoint(Vector3 targetPos)
+    public void MoveToPoint(Vector3 targetPos, Action<Character> moveCallback = null)
     {
         _character.MoveTarget = targetPos;
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Move)) return;
@@ -60,7 +62,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (_character.IsGround && _character.CurStatus != E_CharacterFsmStatus.Move)
         {
-            _character.ChangeStatus(E_CharacterFsmStatus.Move);
+            _character.ChangeStatus(E_CharacterFsmStatus.Move,false, moveCallback);
         }
     }
 
@@ -103,11 +105,11 @@ public class CharacterMovement : MonoBehaviour
         if (shield.Current <= shield.GetMinTotalValue())
         {
             shield.Reset();
-            _character.ChangeStatus(E_CharacterFsmStatus.HitFly,true);
+            _character.ChangeStatus(E_CharacterFsmStatus.HitFly, true);
         }
         else
         {
-            _character.ChangeStatus(E_CharacterFsmStatus.Hurt,true);
+            _character.ChangeStatus(E_CharacterFsmStatus.Hurt, true);
         }
     }
 

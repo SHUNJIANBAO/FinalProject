@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CharJumpStatus : CharFsmBase
 {
     float _jumpForce;
     bool _isJumping;
+    Action<Character> _jumpDownCallback;
 
     float _jumpMoveSpeedRatio = 0.65f;
 
@@ -37,6 +39,10 @@ public class CharJumpStatus : CharFsmBase
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
+        if (objs!=null&&objs.Length>0)
+        {
+            _jumpDownCallback = (Action<Character>)objs[0];
+        }
         m_Owner.MoveTarget = m_Owner.transform.position;
         if (objs != null && objs.Length > 0)
         {
@@ -90,6 +96,7 @@ public class CharJumpStatus : CharFsmBase
                 }
                 else //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString()))
                 {
+                    _jumpDownCallback?.Invoke(m_Owner);
                     m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpEnd);
                 }
             }

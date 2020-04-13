@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CharAttackStatus : CharFsmBase
 {
@@ -14,6 +15,8 @@ public class CharAttackStatus : CharFsmBase
 
     Vector3 _blinkTarget=Vector3.zero;
     Vector3 _tempVector=Vector3.zero;
+
+    Action _damageCallback;
 
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
@@ -37,6 +40,10 @@ public class CharAttackStatus : CharFsmBase
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
+        if (objs != null && objs.Length > 0)
+            _damageCallback = (Action)objs[0];
+        else
+            _damageCallback = null;
         _timeCount = 0;
         _createCollider = false;
         _skill = m_Owner.CurSkill;
@@ -120,7 +127,8 @@ public class CharAttackStatus : CharFsmBase
             var collider = PoolManager.InstantiateGameObject(PathManager.ColliderPath, PoolType.Collider);
             var ctrl = collider.GetComponent<ColliderCtrl>();
             float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * _skill.DamageRatio / 100;
-            ctrl.Init(_skill.ColliderId, m_Owner, (int)damage, _skill.HitFlyForce);
+            ctrl.Init(_skill.ColliderId, m_Owner, (int)damage, _skill.HitFlyForce,_skill.HitEffect,_skill.HitEffectPosType);
+            _damageCallback?.Invoke();
         }
     }
 
@@ -140,5 +148,6 @@ public class CharAttackStatus : CharFsmBase
     {
         base.OnExit();
         _timeCount = 0;
+        _damageCallback = null;
     }
 }

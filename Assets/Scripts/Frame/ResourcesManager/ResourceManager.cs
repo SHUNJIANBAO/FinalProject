@@ -20,25 +20,25 @@ public class ResourceManager
         return obj;
     }
 
-    public static List<Object> LoadAll(string path)
+    public static List<T> LoadAll<T>(string path,string key)
     {
-        List<Object> objs = Resources.LoadAll<Object>(path).ToList();
-        m_AllGameObjects.Add(path, objs);
-        return objs;
-    }
-
-    public static Object GetGameObject(string path,string objName)
-    {
-        if (!m_AllGameObjects.ContainsKey(path))
+        if (m_AllGameObjects.ContainsKey(key))
         {
-            Debug.LogError("Can't find:" + path);
+            return m_AllGameObjects[key] as List<T>;
         }
-        return m_AllGameObjects[path].Find(obj => obj.name == objName);
+        List<Object> objs = Resources.LoadAll<Object>(path).ToList();
+        m_AllGameObjects.Add(key, objs);
+        return objs as List<T>;
     }
 
-    public static List<Object> GetGameObjectList(string path)
+    public static Object GetGameObject(string path)
     {
-        return m_AllGameObjects[path];
+        return m_GameObjects[path];
+    }
+
+    public static List<Object> GetGameObjectList(string key)
+    {
+        return m_AllGameObjects[key];
     }
 
     /// <summary>

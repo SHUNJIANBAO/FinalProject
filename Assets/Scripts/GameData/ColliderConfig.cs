@@ -18,13 +18,13 @@ public class ColliderConfig : CsvCfg<ColliderConfig>
 
 public enum E_ColliderFollowType
 {
-    None=0,
-    Follow=1,
+    None = 0,
+    Follow = 1,
 }
 
 public enum E_DamageType
 {
-    Once,
-    Enter,
-    Repeat,
+    Once = 0,
+    Enter = 1,
+    Repeat = 2,
 }

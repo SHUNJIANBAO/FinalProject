@@ -6,6 +6,7 @@ public enum PoolType
 {
     Window,
     Collider,
+    Effect,
 }
 
 public static class PoolManager

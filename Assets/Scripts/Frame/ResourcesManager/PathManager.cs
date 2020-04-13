@@ -24,6 +24,11 @@ public class PathManager
         return "Assets/Scripts/UGUI/"+windowName;
     }
 
+    public static string GetEffectPath(string effName)
+    {
+        return "Prefabs/Effects/" + effName+"/"+effName;
+    }
+
     public static string ScenesPath = "Assets/Scenes/BattleScenes/";
 
     public static string ColliderPath = "Prefabs/Collider/Collider";

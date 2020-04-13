@@ -351,6 +351,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Horizontal: 1
   Vertical: 0
+  MoveEffectName: Test
+  MoveEffectInterval: 1
+  JumpDownEffectName: Test
 --- !u!1 &348979474
 GameObject:
   m_ObjectHideFlags: 0

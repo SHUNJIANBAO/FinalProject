@@ -29,11 +29,11 @@ public class PlayerCtrl : MonoBehaviour
         //}
         if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)))
         {
-            _moment.MoveToPoint(transform.position + Vector3.left);
+            _moment.MoveToPoint(transform.position + Vector3.left, SceneConfigManager.Instance.PlayMoveEffect);
         }
         if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Rigth)))
         {
-            _moment.MoveToPoint(transform.position + Vector3.right);
+            _moment.MoveToPoint(transform.position + Vector3.right, SceneConfigManager.Instance.PlayMoveEffect);
         }
         if (Input.GetKeyUp(GameData.Instance.GetKey(E_InputKey.Left)) || Input.GetKeyUp(GameData.Instance.GetKey(E_InputKey.Rigth)))
         {
@@ -66,7 +66,7 @@ public class PlayerCtrl : MonoBehaviour
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Jump)))
         {
             if (_character.IsGround)
-                _moment.Jump(15, false);
+                _moment.Jump(15, false,SceneConfigManager.Instance.PlayJumpDownEffect);
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Blink)))
         {
