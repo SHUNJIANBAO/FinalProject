@@ -16,6 +16,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         {
             SceneManager.LoadScene(levelName);
             callback?.Invoke();
+            CloseTrashCamera();
             UIManager.Instance.CloseWindow<UILoadingWindow>();
         };
         UIManager.Instance.OpenWindow<UILoadingWindow>(true, uiCallback);

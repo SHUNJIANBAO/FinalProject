@@ -2,12 +2,10 @@
 
 public class MonoEntity : MonoBehaviour 
 {
-    [Header("角色Id")]
     public int Id;
     /// <summary>
     /// 排序下标，越大越先执行
     /// </summary>
-    [Header("优先级")]
     public int Index=1;
     //属性
     protected MonoAttribute m_MonoAttribute;

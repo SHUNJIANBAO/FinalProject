@@ -11,9 +11,9 @@ public class EffectCtrl : MonoEntity
     float _lifeTime;
     float _timeCount;
 
-    protected override void OnStart()
+    protected override void OnAwake()
     {
-        base.OnStart();
+        base.OnAwake();
         _anim = GetComponent<Animator>();
     }
 
@@ -48,6 +48,7 @@ public class EffectCtrl : MonoEntity
 
     void Destroy()
     {
+        MonoBehaviourManager.Remove(this);
         PoolManager.DestroyGameObject(gameObject, PoolType.Effect);
     }
 }

@@ -39,16 +39,19 @@ public class CharJumpStatus : CharFsmBase
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
-        if (objs!=null&&objs.Length>0)
-        {
-            _jumpDownCallback = (Action<Character>)objs[0];
-        }
         m_Owner.MoveTarget = m_Owner.transform.position;
-        if (objs != null && objs.Length > 0)
+        if (objs != null)
         {
-            _isJumping = false;
-            _jumpForce = float.Parse(objs[0].ToString());
-            m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpStart);
+            if (objs.Length>0)
+            {
+                _isJumping = false;
+                _jumpForce = float.Parse(objs[0].ToString());
+                m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpStart);
+            }
+            if (objs.Length > 1)
+            {
+                _jumpDownCallback = objs[1] as Action<Character>;
+            }
         }
         else if (!m_Owner.IsGround)
         {

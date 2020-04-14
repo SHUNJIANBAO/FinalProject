@@ -22,7 +22,7 @@ public class Main : MonoSingleton<Main>
 
         LoadAssets(); //加载资源
         LoadConfigs();  //加载配置
-        LoadData();
+        LoadData(); //加载数据
 
         UIManager.Instance.OpenWindow<UILogoWindow>();
     }
@@ -77,9 +77,9 @@ public class Main : MonoSingleton<Main>
         //{
         //    LoadSceneManager.Instance.LoadSceneAsync("Level_1", null);
         //}
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            PlayerData.Instance.SavePlayerInfo(PlayerData.Instance.CurPlayerInfo);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    PlayerData.Instance.SavePlayerInfo(PlayerData.Instance.CurPlayerInfo);
+        //}
     }
 }
