@@ -5,7 +5,7 @@ AnimatorController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TestAnimatorController
+  m_Name: Effect_Grass2AnimatorController
   serializedVersion: 5
   m_AnimatorParameters: []
   m_AnimatorLayers:
@@ -40,7 +40,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 7a4e4311ba837684e9aaae5b534dc795, type: 2}
+  m_Motion: {fileID: 7400000, guid: 4b19b66a0682ba347ad66ef340dd6bf9, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

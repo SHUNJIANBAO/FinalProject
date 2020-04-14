@@ -9,32 +9,32 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1518305171436244}
+  m_RootGameObject: {fileID: 1294669497616606}
   m_IsPrefabAsset: 1
---- !u!1 &1518305171436244
+--- !u!1 &1294669497616606
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4664612313780206}
-  - component: {fileID: 212315949548130740}
-  - component: {fileID: 95610817119036356}
-  - component: {fileID: 114131481585819304}
+  - component: {fileID: 4146450469511200}
+  - component: {fileID: 212889467255459618}
+  - component: {fileID: 95069164834791824}
+  - component: {fileID: 114714440231046268}
   m_Layer: 0
-  m_Name: Grass2
+  m_Name: Effect_Grass2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4664612313780206
+--- !u!4 &4146450469511200
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1518305171436244}
+  m_GameObject: {fileID: 1294669497616606}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -42,16 +42,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95610817119036356
+--- !u!95 &95069164834791824
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1518305171436244}
+  m_GameObject: {fileID: 1294669497616606}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bf542d2f31f3fd44c9578747b663b278, type: 2}
+  m_Controller: {fileID: 9100000, guid: de2f517af8eb4ed4da0b13f0fba0e96a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -60,12 +60,12 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114131481585819304
+--- !u!114 &114714440231046268
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1518305171436244}
+  m_GameObject: {fileID: 1294669497616606}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a124cbc3096a77e43b727fc5721af96a, type: 3}
@@ -73,12 +73,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: 0
   Index: 1
---- !u!212 &212315949548130740
+--- !u!212 &212889467255459618
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1518305171436244}
+  m_GameObject: {fileID: 1294669497616606}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
