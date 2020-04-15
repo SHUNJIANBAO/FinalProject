@@ -48,7 +48,7 @@ public class SceneConfigManager : MonoBehaviour
             if (_moveTimeCount > MoveEffectInterval)
             {
                 _moveTimeCount = 0;
-                EffectManager.Instance.Play(MoveEffectName, hit.point, true);
+                EffectManager.Instance.Play(MoveEffectName, hit.point, owner.transform.localScale.x > 0);
             }
         }
     }
@@ -59,7 +59,7 @@ public class SceneConfigManager : MonoBehaviour
         var hit = Physics2D.Raycast(owner.transform.position, Vector2.down, 3, GameConfig.Instance.Plane);
         if (hit)
         {
-            EffectManager.Instance.Play(JumpDownEffectName, hit.point, true);
+            EffectManager.Instance.Play(JumpDownEffectName, hit.point, owner.transform.localScale.x > 0);
         }
     }
 }
