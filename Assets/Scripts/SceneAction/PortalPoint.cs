@@ -19,7 +19,7 @@ public class PortalPoint : MonoBehaviour
         var character = collision.GetComponent<Character>();
         if (character != null && character.RoleType == RoleType.Player)
         {
-            if (IsLoading)
+            if (!IsLoading)
             {
                 LoadSceneManager.Instance.LoadScene(TargetLevelId);
             }

@@ -47,25 +47,29 @@ public class CreateSceneTool : EditorWindow
     [MenuItem("GameObject/场景相关/创建存档点", false, 20)]
     static void CreateSavePoint()
     {
-        CreateGameObject("SavePoint", Selection.activeGameObject.transform);
+        var go = CreateGameObject("SavePoint", Selection.activeGameObject.transform);
+        go.name = "存档点";
     }
     [MenuItem("GameObject/场景相关/创建敌人出生点")]
     static void CreateEnemyPoint()
     {
-        CreateGameObject("EnemyPoint", Selection.activeGameObject.transform);
+        var go = CreateGameObject("EnemyPoint", Selection.activeGameObject.transform);
+        go.name = "出怪点";
     }
     [MenuItem("GameObject/场景相关/创建玩家初始点", false, 20)]
     static void CreatePlayerPoint()
     {
-        CreateGameObject("PlayerPoint", Selection.activeGameObject.transform);
+        var go = CreateGameObject("PlayerPoint", Selection.activeGameObject.transform);
+        go.name = "玩家初始点";
     }
     [MenuItem("GameObject/场景相关/创建传送门")]
     static void CreatePortal()
     {
-        CreateGameObject("PortalPoint", Selection.activeGameObject.transform);
+        var go = CreateGameObject("PortalPoint", Selection.activeGameObject.transform);
+        go.name = "传送门";
     }
 
-    public static void CreateGameObject(string name,Transform parent=null)
+    public static GameObject CreateGameObject(string name,Transform parent=null)
     {
         string objPath = SceneGameObjectPath + name + ".prefab";
         var obj = AssetDatabase.LoadAssetAtPath(objPath, typeof(GameObject));
@@ -77,6 +81,7 @@ public class CreateSceneTool : EditorWindow
             go.transform.localPosition = Vector3.zero;
         }
         Selection.activeGameObject = go;
+        return go;
     }
 
 }

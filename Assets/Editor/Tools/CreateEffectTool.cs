@@ -46,11 +46,12 @@ public class CreateEffectTool : EditorWindow
         CreatTargetDirectory(_effName);
 
 
-        GameObject go = new GameObject("Effect_" + _effName);
+        GameObject go = new GameObject(_effName);
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sortingOrder = 20;
         var controller = CreateAnimatorController(GetAnimatorPath(_effName), GetNewAnimatorPath(_effName));
         go.AddComponent<Animator>().runtimeAnimatorController = controller;
+        go.AddComponent<EffectCtrl>();
 
         GameObject prefab = PrefabUtility.CreatePrefab(GetNewPrefabPath(_effName), go);
         PrefabUtility.ConnectGameObjectToPrefab(go, prefab);

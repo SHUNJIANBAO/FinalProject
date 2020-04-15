@@ -42,7 +42,7 @@ public class EffectManager : Singleton<EffectManager>
         var ctrl = eff.GetComponent<EffectCtrl>();
         EffectConfig cfg = new EffectConfig();
         cfg.LifeTime = lifeTime;
-        ctrl.Init(cfg);
+        MonoBehaviourManager.Add(ctrl, cfg);
         return eff;
     }
 }
