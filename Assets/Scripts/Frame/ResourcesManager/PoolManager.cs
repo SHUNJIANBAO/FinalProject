@@ -7,6 +7,9 @@ public enum PoolType
     Window,
     Collider,
     Effect,
+    EmitterManager,
+    Emitter,
+    Bullet,
 }
 
 public static class PoolManager

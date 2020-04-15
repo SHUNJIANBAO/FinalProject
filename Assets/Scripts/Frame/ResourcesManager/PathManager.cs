@@ -29,6 +29,16 @@ public class PathManager
         return "Prefabs/Effects/" + effName+"/"+effName;
     }
 
+    public static string GetEmitterPath(string emitterName)
+    {
+        return "Prefabs/Emitters/" + emitterName;
+    }
+
+    public static string GetBulletPath(string bulletName)
+    {
+        return "Prefabs/Bullets/" + bulletName;
+    }
+
     public static string ScenesPath = "Assets/Scenes/BattleScenes/";
 
     public static string ColliderPath = "Prefabs/Collider/Collider";
