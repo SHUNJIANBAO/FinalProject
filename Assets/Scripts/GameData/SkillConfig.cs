@@ -7,6 +7,7 @@ public class SkillConfig : CsvCfg<SkillConfig>
     public string Name { get; protected set; }
     public int AnimId { get; protected set; }
     public int ColliderId { get; protected set; }
+    public int BarrageId { get; protected set; }
     public int BulletId { get; protected set; }
     public int NextSkillId { get; protected set; }
     public int UseMp { get; protected set; }

@@ -79,21 +79,21 @@ public class Main : MonoSingleton<Main>
                 PoolManager.DestroyGameObject(_curEmitter.gameObject, PoolType.EmitterManager);
             //LoadSceneManager.Instance.LoadSceneAsync("Level_1", null);
             GameObject go = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("GameObject"));
-            _curEmitter = ShootManager.Instance.Shoot(transform, transform.position, Vector3.right, go, E_ShootType.Parallel, 4, 3, 1, 1, 1, 0);
+            _curEmitter = ShootManager.Instance.Shoot(transform, transform.position, Vector3.right, go, E_BarrageType.Parallel, 4, 3, 1, 1, 1, 0);
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
             if (_curEmitter != null)
                 PoolManager.DestroyGameObject(_curEmitter.gameObject, PoolType.EmitterManager);
             GameObject go = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("GameObject"));
-            _curEmitter = ShootManager.Instance.Shoot(transform, transform.position, Vector3.right, go, E_ShootType.Sector, 6, 3, 0, 10, 4, 1);
+            _curEmitter = ShootManager.Instance.Shoot(transform, transform.position, Vector3.right, go, E_BarrageType.Sector, 6, 3, 0, 10, 4, 1);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
             if (_curEmitter != null)
                 PoolManager.DestroyGameObject(_curEmitter.gameObject, PoolType.EmitterManager);
             GameObject go = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("GameObject"));
-            _curEmitter = ShootManager.Instance.Shoot(transform, transform.position, Vector3.right, go, E_ShootType.Sector, 36, 3, 0.1f, 10, 1, 4);
+            _curEmitter = ShootManager.Instance.Shoot(transform, transform.position, Vector3.right, go, E_BarrageType.Sector, 36, 3, 0.1f, 10, 1, 4);
             //PlayerData.Instance.SavePlayerInfo(PlayerData.Instance.CurPlayerInfo);
         }
 

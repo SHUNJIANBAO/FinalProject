@@ -1,0 +1,3 @@
+ID,名称,跟随发射者（0否1是）,弹幕位置偏移值（x，y）,弹幕类型,每波射击数量,每波中的子弹出生间隔,子弹出生间距（距离或度数）,射击波数,射击每波间隔时间
+Id,Name,IsFollow,Offest,BarrageType,Count,BirthIntervalTime,BirthIntervalDistance,Wave,ShootIntervalTime
+1,,,,,,,,,

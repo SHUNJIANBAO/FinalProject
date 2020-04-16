@@ -17,16 +17,16 @@ public class ShootManager : Singleton<ShootManager>
     /// <param name="wave">射击波数</param>
     /// <param name="intervalTime">每波间隔</param>
     /// <returns></returns>
-    public EmitterManager Shoot(Transform parent, Vector3 pos, Vector3 dir, GameObject bullet,E_ShootType shootType,int count,float birthOffest, float birthIntervalTime, float birthIntervalDistance, int wave, float intervalTime)
+    public EmitterManager Shoot(Transform parent, Vector3 pos, Vector3 dir, GameObject bullet, float bulletDamage, BarrageConfig barrageCfg)
     {
         var emitter = CreateEmitterManager(PoolType.EmitterManager, parent, pos, dir);
-        emitter.Init(bullet, shootType, count, birthOffest, birthIntervalTime, birthIntervalDistance, wave, intervalTime);
+        emitter.Init(bullet, bulletDamage, barrageCfg);
         emitter.Enable();
 
         return emitter;
     }
 
-    EmitterManager CreateEmitterManager(PoolType pType,Transform parent, Vector3 pos, Vector3 dir)
+    EmitterManager CreateEmitterManager(PoolType pType, Transform parent, Vector3 pos, Vector3 dir)
     {
         var go = ResourceManager.Load<GameObject>(PathManager.GetEmitterPath(pType.ToString()));
         var emitterGo = PoolManager.InstantiateGameObject(go, pType);
@@ -38,7 +38,7 @@ public class ShootManager : Singleton<ShootManager>
     }
 }
 
-public enum E_ShootType
+public enum E_BarrageType
 {
     Parallel,//平行
     Sector,//扇形

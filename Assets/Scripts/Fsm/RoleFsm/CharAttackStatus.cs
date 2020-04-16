@@ -11,10 +11,10 @@ public class CharAttackStatus : CharFsmBase
     float _moveSpeed;
 
     bool _createCollider;
-    bool _createBullet;
+    bool _createBarrage;
 
-    Vector3 _blinkTarget=Vector3.zero;
-    Vector3 _tempVector=Vector3.zero;
+    Vector3 _blinkTarget = Vector3.zero;
+    Vector3 _tempVector = Vector3.zero;
 
     Action _damageCallback;
 
@@ -46,6 +46,7 @@ public class CharAttackStatus : CharFsmBase
             _damageCallback = null;
         _timeCount = 0;
         _createCollider = false;
+        _createBarrage = false;
         _skill = m_Owner.CurSkill;
         _skillName = AnimConfig.GetData(_skill.AnimId).Name;
         m_Animator.SetInteger("Index", _skill.AnimId);
@@ -57,7 +58,7 @@ public class CharAttackStatus : CharFsmBase
         }
         else
         {
-            _blinkTarget.x =- _skill.MoveDistance;
+            _blinkTarget.x = -_skill.MoveDistance;
         }
     }
 
@@ -68,7 +69,7 @@ public class CharAttackStatus : CharFsmBase
         {
             _timeCount += GameManager.DeltaTime;
 
-            CreateBullet();
+            CreateBarrage();
             CreateCollider();
             CaculateInvincible();
             CaculateMove();
@@ -117,7 +118,7 @@ public class CharAttackStatus : CharFsmBase
     }
 
     /// <summary>
-    /// 造成伤害
+    /// 造成伤害,创建碰撞器
     /// </summary>
     void CreateCollider()
     {
@@ -127,7 +128,7 @@ public class CharAttackStatus : CharFsmBase
             var collider = PoolManager.InstantiateGameObject(PathManager.ColliderPath, PoolType.Collider);
             var ctrl = collider.GetComponent<ColliderCtrl>();
             float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * _skill.DamageRatio / 100;
-            ctrl.Init(_skill.ColliderId, m_Owner, (int)damage, _skill.HitFlyForce,_skill.HitEffect,_skill.HitEffectPosType);
+            ctrl.Init(_skill.ColliderId, m_Owner, (int)damage, _skill.HitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
             _damageCallback?.Invoke();
         }
     }
@@ -135,12 +136,21 @@ public class CharAttackStatus : CharFsmBase
     /// <summary>
     /// 生成弹幕
     /// </summary>
-    void CreateBullet()
+    void CreateBarrage()
     {
-        if (!_createBullet && _skill.BulletId != 0 && _timeCount >= _skill.DamageTime)
+        if (!_createBarrage && _skill.BarrageId != 0 && _skill.BulletId != 0 && _timeCount >= _skill.DamageTime)
         {
-            _createBullet = true;
-            Debug.LogError("弹幕未完成");
+            _createBarrage = true;
+            float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * _skill.DamageRatio / 100;
+            var bulletCfg = BulletConfig.GetData(_skill.BulletId);
+            var barrageCfg = BarrageConfig.GetData(_skill.BarrageId);
+            var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + _skill.BulletId));
+            Transform parent = null;
+            if (barrageCfg.IsFollow)
+            {
+                parent = m_Owner.transform;
+            }
+            ShootManager.Instance.Shoot(parent, m_Owner.transform.position, m_Owner.transform.right, bullet, damage, barrageCfg);
         }
     }
 

@@ -7,11 +7,13 @@ public class Emitter : MonoBehaviour
     GameObject _bullet;
     int _wave;
     float _intervalTime;
+    float _bulletDamage;
 
     float _timeCount;
-    public void Init(GameObject bullet, int wave, float intervalTime)
+    public void Init(GameObject bullet,float bulletDamage, int wave, float intervalTime)
     {
         _bullet = bullet;
+        _bulletDamage = bulletDamage;
         _wave = wave;
         _intervalTime = intervalTime;
     }
@@ -26,7 +28,7 @@ public class Emitter : MonoBehaviour
         while (_wave > 0)
         {
             var bullet = PoolManager.InstantiateGameObject(_bullet, PoolType.Bullet);
-            MonoBehaviourManager.Add(bullet.GetComponent<BulletBase>());
+            MonoBehaviourManager.Add(bullet.GetComponent<BulletBase>(), _bulletDamage);
             bullet.transform.position = transform.position;
             bullet.transform.right = transform.right;
             _wave--;

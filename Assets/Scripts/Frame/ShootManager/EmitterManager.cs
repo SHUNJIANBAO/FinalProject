@@ -9,39 +9,40 @@ public class EmitterManager : MonoBehaviour
 
     GameObject _bullet;
     int _emitterCount;
-    float _createEmitterOffest;
+    Vector2 _createEmitterOffest;
+    float _bulletDamage;
     float _createEmitterIntervalTime;
     float _createEmitterIntervalDistance;
-    E_ShootType _shootType;
+    E_BarrageType _shootType;
 
     int _shootWave;
     float _shootIntervalTime;
 
-    public void Init(GameObject bullet, E_ShootType shootType, int count, float birthOffest, float birthIntervalTime, float birthIntervalDistance, int wave, float intervalTime)
+    public void Init(GameObject bullet,float bulletDamage, BarrageConfig barrageCfg)
     {
         _bullet = bullet;
-        _emitterCount = count;
-        _shootType = shootType;
-        _createEmitterOffest = birthOffest;
-        _createEmitterIntervalTime = birthIntervalTime;
-        _createEmitterIntervalDistance = birthIntervalDistance;
-        _shootIntervalTime = intervalTime;
+        _bulletDamage = bulletDamage;
+        _emitterCount = barrageCfg.Count;
+        _shootType = barrageCfg.BarrageType;
+        _createEmitterOffest = barrageCfg.Offest;
+        _createEmitterIntervalTime = barrageCfg.BirthIntervalTime;
+        _createEmitterIntervalDistance = barrageCfg.BirthIntervalDistance;
 
-        _shootWave = wave;
-        _shootIntervalTime = intervalTime;
+        _shootWave = barrageCfg.Wave;
+        _shootIntervalTime = barrageCfg.ShootIntervalTime;
     }
 
     void InitEmitters()
     {
         switch (_shootType)
         {
-            case E_ShootType.Parallel:
+            case E_BarrageType.Parallel:
                 _curCoroutine = StartCoroutine(CreateParallelEmitter(_emitterCount, _createEmitterOffest, _createEmitterIntervalTime, _createEmitterIntervalDistance));
                 break;
-            case E_ShootType.Sector:
+            case E_BarrageType.Sector:
                 _curCoroutine = StartCoroutine(CreateSectorEmitter(_emitterCount, _createEmitterOffest, _createEmitterIntervalTime, _createEmitterIntervalDistance));
                 break;
-            case E_ShootType.Recursion:
+            case E_BarrageType.Recursion:
                 _curCoroutine = StartCoroutine(CreateRecursionEmitter(_emitterCount, _createEmitterOffest, _createEmitterIntervalTime, _createEmitterIntervalDistance));
                 break;
         }
@@ -59,16 +60,16 @@ public class EmitterManager : MonoBehaviour
         return emitter;
     }
 
-    IEnumerator CreateParallelEmitter(int count, float offest, float intervalTime, float IntervalDistance)
+    IEnumerator CreateParallelEmitter(int count, Vector2 offest, float intervalTime, float IntervalDistance)
     {
         int targetCount = count;
 
         float maxInterval = (count - 1) * IntervalDistance;
-        Vector3 pos = new Vector3(0, maxInterval / 2, 0);
+        Vector2 pos = new Vector2(0, maxInterval / 2) + offest;
         while (targetCount > 0)
         {
             var emitter = CreateEmitter(pos, transform.right);
-            emitter.Init(_bullet, _shootWave, _shootIntervalTime);
+            emitter.Init(_bullet, _bulletDamage, _shootWave, _shootIntervalTime);
             emitter.ShootStart();
 
             pos.y -= IntervalDistance;
@@ -77,17 +78,16 @@ public class EmitterManager : MonoBehaviour
                 yield return new WaitForSeconds(intervalTime);
         }
     }
-    IEnumerator CreateSectorEmitter(int count, float offest, float intervalTime, float IntervalDistance)
+    IEnumerator CreateSectorEmitter(int count, Vector2 offest, float intervalTime, float IntervalDistance)
     {
         int targetCount = count;
-        Vector2 pos = new Vector2(offest, 0);
         float fullAngle = IntervalDistance * (count - 1);
         Vector3 rightDir = Quaternion.AngleAxis(fullAngle / 2, Vector3.forward) * transform.right;
         Quaternion rightQua = Quaternion.AngleAxis(-IntervalDistance, Vector3.forward);
         while (targetCount > 0)
         {
-            var emitter = CreateEmitter(pos, rightDir);
-            emitter.Init(_bullet, _shootWave, _shootIntervalTime);
+            var emitter = CreateEmitter(offest, rightDir);
+            emitter.Init(_bullet, _bulletDamage, _shootWave, _shootIntervalTime);
             emitter.ShootStart();
 
             rightDir = rightQua * rightDir;
@@ -96,14 +96,14 @@ public class EmitterManager : MonoBehaviour
                 yield return new WaitForSeconds(intervalTime);
         }
     }
-    IEnumerator CreateRecursionEmitter(int count, float offest, float intervalTime, float IntervalDistance)
+    IEnumerator CreateRecursionEmitter(int count, Vector2 offest, float intervalTime, float IntervalDistance)
     {
         int targetCount = count;
-        Vector2 pos = new Vector2(offest, 0);
+        Vector2 pos = offest;
         while (targetCount > 0)
         {
             var emitter = CreateEmitter(pos, transform.right);
-            emitter.Init(_bullet, _shootWave, _shootIntervalTime);
+            emitter.Init(_bullet, _bulletDamage, _shootWave, _shootIntervalTime);
             emitter.ShootStart();
 
             pos.x += IntervalDistance;
