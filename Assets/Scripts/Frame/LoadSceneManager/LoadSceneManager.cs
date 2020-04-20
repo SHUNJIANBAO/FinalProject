@@ -16,7 +16,6 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         {
             SceneManager.LoadScene(levelName);
             callback?.Invoke();
-            CloseTrashCamera();
             UIManager.Instance.CloseWindow<UILoadingWindow>();
         };
         UIManager.Instance.OpenWindow<UILoadingWindow>(true, uiCallback);
@@ -43,7 +42,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
             yield return null;
         }
         var asyncOperation = SceneManager.LoadSceneAsync(levelName);
-        asyncOperation.completed += (op) => { CloseTrashCamera(); onComplete?.Invoke(); };
+        asyncOperation.completed += (op) => { onComplete?.Invoke(); };
         asyncOperation.allowSceneActivation = false;
         while (asyncOperation.progress < 0.9f)
         {
@@ -60,14 +59,5 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         asyncOperation.allowSceneActivation = true;
     }
 
-    void CloseTrashCamera()
-    {
-        var cams = GameObject.FindObjectsOfType<Camera>();
-        for (int i = 0; i < cams.Length; i++)
-        {
-            if (cams[i].tag == "MainCamera" && !CameraManager.Instance.IsMainCamera(cams[i]))
-                cams[i].gameObject.SetActive(false);
-        }
-    }
 
 }

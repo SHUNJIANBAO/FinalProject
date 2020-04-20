@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CameraManager : MonoSingleton<CameraManager>
+public class CameraManager : MonoBehaviour
 {
-    Camera _mainCamera;
-    CinemachineConfiner _cameraConfiner;
-    CinemachineVirtualCamera _cinemachine;
-    CinemachineFramingTransposer _body;
+    static Camera _mainCamera;
+    static CinemachineConfiner _cameraConfiner;
+    static CinemachineVirtualCamera _cinemachine;
+    static CinemachineFramingTransposer _body;
 
 
     private void Start()
@@ -24,14 +24,15 @@ public class CameraManager : MonoSingleton<CameraManager>
                 break;
             }
         }
-        if (_body==null)
+        if (_body == null)
         {
             Debug.LogError("Body Con't Find!!!");
         }
     }
 
-    public bool IsMainCamera(Camera cam)
+    public static bool IsMainCamera(Camera cam)
     {
+        if (_mainCamera == null) return true;
         return _mainCamera == cam;
     }
 
@@ -39,8 +40,12 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// 设置摄像机活动范围
     /// </summary>
     /// <param name="collide"></param>
-    public void SetCameraConfiner(PolygonCollider2D collide)
+    public static void SetCameraConfiner(PolygonCollider2D collide)
     {
+        if (_mainCamera == null) return;
+        var trans = _cameraConfiner.gameObject;
+        Destroy(_cameraConfiner);
+        _cameraConfiner = trans.gameObject.AddComponent<CinemachineConfiner>();
         _cameraConfiner.m_BoundingShape2D = collide;
     }
 
@@ -49,8 +54,9 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// </summary>
     /// <param name="horizontal"></param>
     /// <param name="vertical"></param>
-    public void SetCameraFollowMode(bool horizontal,bool vertical)
+    public static void SetCameraFollowMode(bool horizontal, bool vertical)
     {
+        if (_mainCamera == null) return;
         if (!horizontal)
         {
             _body.m_SoftZoneWidth = 2;
@@ -75,8 +81,9 @@ public class CameraManager : MonoSingleton<CameraManager>
     /// 设置跟随目标
     /// </summary>
     /// <param name="target"></param>
-    public void SetFollowTarget(Transform target)
+    public static void SetFollowTarget(Transform target)
     {
+        if (_mainCamera == null) return;
         _cinemachine.m_Follow = target;
     }
 }

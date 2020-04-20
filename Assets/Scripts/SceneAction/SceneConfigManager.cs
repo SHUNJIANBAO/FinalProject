@@ -26,17 +26,13 @@ public class SceneConfigManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Update()
-    {
-        _moveTimeCount += Time.deltaTime;
-    }
-
     private void Start()
     {
-        _collider = GetComponent<PolygonCollider2D>();
+        CloseTrashCamera();
+        _collider = this.GetComponent<PolygonCollider2D>();
 
-        CameraManager.Instance.SetCameraConfiner(_collider);
-        CameraManager.Instance.SetCameraFollowMode(Horizontal, Vertical);
+        CameraManager.SetCameraConfiner(this._collider);
+        CameraManager.SetCameraFollowMode(Horizontal, Vertical);
     }
 
     public void PlayMoveEffect(Character owner)
@@ -60,6 +56,16 @@ public class SceneConfigManager : MonoBehaviour
         if (hit)
         {
             EffectManager.Instance.Play(JumpDownEffectName, hit.point, owner.transform.localScale.x > 0);
+        }
+    }
+
+    void CloseTrashCamera()
+    {
+        var cams = GameObject.FindObjectsOfType<Camera>();
+        for (int i = 0; i < cams.Length; i++)
+        {
+            if (cams[i].tag == "MainCamera" && !CameraManager.IsMainCamera(cams[i]))
+                cams[i].gameObject.SetActive(false);
         }
     }
 }

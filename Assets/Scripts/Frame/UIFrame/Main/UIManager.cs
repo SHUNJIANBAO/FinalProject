@@ -26,7 +26,11 @@ public class UIManager
     private UIManager()
     {
         if (MainCanvas == null)
-            MainCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        {
+            var go = GameObject.Find("Canvas");
+            if (go != null)
+                MainCanvas = go.GetComponent<Canvas>();
+        }
         if (MainCanvas == null)
             MainCanvas = GameObject.FindObjectOfType<Canvas>();
     }

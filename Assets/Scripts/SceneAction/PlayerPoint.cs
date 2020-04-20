@@ -8,7 +8,8 @@ public class PlayerPoint : MonoBehaviour
     public int PlayerId = 1010;
     private void Start()
     {
-        if(MonoBehaviourManager.GetById(PlayerId) == null)
+        var player = MonoBehaviourManager.GetById(PlayerId);
+        if (player == null)
         {
             RoleConfig rCfg = RoleConfig.GetData(PlayerId);
             string path = PathManager.RolePrefabsPath + rCfg.Name + "/" + rCfg.Name;
@@ -18,7 +19,12 @@ public class PlayerPoint : MonoBehaviour
             DontDestroyOnLoad(go);
             var character = go.GetComponent<Character>();
             MonoBehaviourManager.Add(character);
-            CameraManager.Instance.SetFollowTarget(character.transform);
+            CameraManager.SetFollowTarget(character.transform);
+        }
+        else
+        {
+            player.transform.position = transform.position;
+            //CameraManager.SetFollowTarget(player.transform);
         }
     }
 }
