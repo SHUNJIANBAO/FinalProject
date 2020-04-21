@@ -16,7 +16,7 @@ public class RoleConfig : CsvCfg<RoleConfig>
 
 public enum RoleType
 {
-    Player,
-    Enemy,
-    Boss,
+    Player = 0,
+    Enemy = 1,
+    Boss = 2,
 }

@@ -38,7 +38,7 @@ public class SceneConfigManager : MonoBehaviour
     public void PlayMoveEffect(Character owner)
     {
         if (string.IsNullOrEmpty(MoveEffectName)) return;
-        var hit = Physics2D.Raycast(owner.transform.position, Vector2.down, 3, GameConfig.Instance.Plane);
+        var hit = Physics2D.Raycast(owner.transform.position, Vector2.down, 3, GameConfig.Instance.PlaneMask);
         if (hit)
         {
             if (_moveTimeCount > MoveEffectInterval)
@@ -52,7 +52,7 @@ public class SceneConfigManager : MonoBehaviour
     public void PlayJumpDownEffect(Character owner)
     {
         if (string.IsNullOrEmpty(JumpDownEffectName)) return;
-        var hit = Physics2D.Raycast(owner.transform.position, Vector2.down, 3, GameConfig.Instance.Plane);
+        var hit = Physics2D.Raycast(owner.transform.position, Vector2.down, 3, GameConfig.Instance.PlaneMask);
         if (hit)
         {
             EffectManager.Instance.Play(JumpDownEffectName, hit.point, owner.transform.localScale.x > 0);

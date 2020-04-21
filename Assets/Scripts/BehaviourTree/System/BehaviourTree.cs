@@ -15,6 +15,9 @@ public class BehaviourTree : MonoBehaviour
         if (NodeAssets != null)
         {
             NodeAssets.RootNode.SetTree(this);
+            var owner = GetComponentInChildren<Character>();
+            if (owner == null) Debug.LogError("没有获取到Character");
+            NodeAssets.RootNode.SetCharacter(owner);
             NodeAssets.RootNode.Init();
         }
     }

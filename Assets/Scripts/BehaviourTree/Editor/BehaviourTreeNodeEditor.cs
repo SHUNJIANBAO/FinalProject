@@ -307,7 +307,7 @@ public class BehaviourTreeNodeEditor
         NodeAssets assets = ScriptableObject.CreateInstance(typeof(NodeAssets)) as NodeAssets;
         assets.RootNode = _nodeList[0];
         _curAssets = assets;
-        string assetsPath = EditorUtility.SaveFilePanelInProject("Save", "new BehaviourTree", "asset", "", "Assets/Scripts/BehaviourTree/NodeAssets");
+        string assetsPath = EditorUtility.SaveFilePanelInProject("Save", "new BehaviourTree", "asset", "", "Assets/Resources/BehaviourTreeAssets");
         if (string.IsNullOrEmpty(assetsPath)) return;
         AssetDatabase.CreateAsset(assets, assetsPath);
         for (int i = 0; i < _nodeList.Count; i++)

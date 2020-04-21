@@ -4,6 +4,7 @@ using UnityEngine;
 public abstract class CharFsmBase : FsmBase 
 {
     protected Character m_Owner;
+    protected CharacterMovement m_Movement;
     protected Animator m_Animator;
     protected AnimatorStateInfo m_CurStateInfo;
 
@@ -11,6 +12,7 @@ public abstract class CharFsmBase : FsmBase
     {
         this.m_Animator = animator;
         this.m_Owner = owner;
+        this.m_Movement = owner.GetComponent<CharacterMovement>();
     }
     protected override void OnStay()
     {

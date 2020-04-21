@@ -73,9 +73,14 @@ public class MonoEntity : MonoBehaviour
     }
     protected virtual void OnDrawGizmosUpdate() { }
 
+    private void OnDestroy()
+    {
+        OnDestory();
+    }
+
     public virtual void OnDestory()
     {
-
+        MonoBehaviourManager.Remove(this);
     }
 
     #region 属性相关

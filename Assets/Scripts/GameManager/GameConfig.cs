@@ -6,17 +6,17 @@ using UnityEngine;
 public class GameConfig : MonoSingleton<GameConfig>
 {
     [HideInInspector]
-    public LayerMask Plane;//地面层
+    public LayerMask PlaneMask;//地面层
     [HideInInspector]
-    public LayerMask Player;//玩家
+    public LayerMask PlayerMask;//玩家
     [HideInInspector]
-    public LayerMask Enemy;//敌人
+    public LayerMask EnemyMask;//敌人
 
     private void Awake()
     {
-        Plane = LayerMask.GetMask("Plane");
-        Player = LayerMask.GetMask("Player");
-        Enemy = LayerMask.GetMask("Enemy");
+        PlaneMask = LayerMask.GetMask("Plane");
+        PlayerMask = LayerMask.GetMask("Player");
+        EnemyMask = LayerMask.GetMask("Enemy");
     }
 
 #if UNITY_EDITOR

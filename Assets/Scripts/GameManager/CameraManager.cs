@@ -59,21 +59,19 @@ public class CameraManager : MonoBehaviour
         if (_mainCamera == null) return;
         if (!horizontal)
         {
-            _body.m_SoftZoneWidth = 2;
             _body.m_DeadZoneWidth = 1;
         }
         else
         {
-            _body.m_SoftZoneWidth = 0.05f;
+            _body.m_DeadZoneWidth = 0f;
         }
         if (!vertical)
         {
-            _body.m_SoftZoneHeight = 2;
             _body.m_DeadZoneHeight = 1;
         }
         else
         {
-            _body.m_SoftZoneHeight = 0.05f;
+            _body.m_DeadZoneHeight = 0f;
         }
     }
 
@@ -84,6 +82,10 @@ public class CameraManager : MonoBehaviour
     public static void SetFollowTarget(Transform target)
     {
         if (_mainCamera == null) return;
+        if (target!=null)
+        {
+            _cinemachine.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, _cinemachine.transform.position.z);
+        }
         _cinemachine.m_Follow = target;
     }
 }

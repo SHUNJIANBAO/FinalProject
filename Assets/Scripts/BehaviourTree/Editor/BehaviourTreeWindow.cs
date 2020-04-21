@@ -216,7 +216,7 @@ public class BehaviourTreeWindow : EditorWindow
     {
         if (nodeAssets==null)
         {
-            string path= EditorUtility.OpenFilePanel("Load", "Assets/Scripts/BehaviourTree/NodeAssets", "asset");
+            string path= EditorUtility.OpenFilePanel("Load", "Assets/Resources/BehaviourTreeAssets", "asset");
             path = path.Replace(Application.dataPath, "Assets");
             if (string.IsNullOrEmpty(path))
             {

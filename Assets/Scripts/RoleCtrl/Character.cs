@@ -137,12 +137,13 @@ public class Character : MonoEntity
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.Plane);
+        IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.PlaneMask);
         if (!IsGround)
         {
             if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
             {
-                ChangeStatus(E_CharacterFsmStatus.Jump);
+                System.Action<Character> act = SceneConfigManager.Instance.PlayJumpDownEffect;
+                ChangeStatus(E_CharacterFsmStatus.Jump, false,0, act);
             }
         }
         fsm.OnStay();
@@ -245,7 +246,6 @@ public class Character : MonoEntity
                 return;
         }
         TimerManager.Instance.RemoveListener(_caculateDelta);
-        MonoBehaviourManager.Remove(this);
     }
 
     protected override void OnDrawGizmosUpdate()

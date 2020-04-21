@@ -66,7 +66,7 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    void LookToTarget(Vector3 targetPos)
+    public void LookToTarget(Vector3 targetPos)
     {
         if (targetPos.x > _character.transform.position.x)
         {

@@ -233,6 +233,10 @@ public abstract class NodeBase : ScriptableObject
     {
         m_Owner = character;
         m_Movement = character.GetComponent<CharacterMovement>();
+        for (int i = 0; i < ChildList.Count; i++)
+        {
+            ChildList[i].SetCharacter(character);
+        }
     }
 
     /// <summary>

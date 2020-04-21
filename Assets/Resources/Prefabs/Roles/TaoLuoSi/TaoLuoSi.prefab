@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114165014782361354}
   - component: {fileID: 114151122193731748}
   - component: {fileID: 114860198904550024}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TaoLuoSi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 1, y: 2}
   m_EdgeRadius: 0
 --- !u!95 &95147190475253814
 Animator:
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a28a8c04e9e0ca45a3b390bc9794ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Id: 0
+  Id: 3010
   Index: 1
   RoleType: 0
   CurStatus: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b08bd3a88301549b4cbf7802930d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeAssets: {fileID: 0}
+  NodeAssets: {fileID: 11400000, guid: 748c1ea74c121364aa07d49316a43620, type: 2}
   Interval: 0.1
 --- !u!114 &114860198904550024
 MonoBehaviour:

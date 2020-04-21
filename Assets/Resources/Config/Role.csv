@@ -1,3 +1,4 @@
-﻿ID,名称,血量,蓝量,攻击力,受击飞值护盾,移动速度,角色类型
+﻿ID,名称,血量,蓝量,攻击力,受击飞值护盾,移动速度,角色类型(0玩家1怪物2Boss)
 Id,Name,Hp,Mp,Attack,HitFlyShield,MoveSpeed,RoleType
 1010,XiaoWen,100,100,5,10,5,0
+3010,TaoLuoSi,1000,,10,100,5,2
