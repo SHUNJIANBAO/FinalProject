@@ -14,6 +14,10 @@ public class PlayerCtrl : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.IsLoading)
+        {
+            return;
+        }
         Ctrl();
     }
 

@@ -62,6 +62,7 @@ public class UILoadingWindow : UIWindowBase
     public override void OnOpen(params object[] objs)
     {
         base.OnOpen(objs);
+        GameManager.IsLoading = true;
     }
 
     /// <summary>
@@ -70,11 +71,13 @@ public class UILoadingWindow : UIWindowBase
     /// <param name="objs"></param>
     public override void OnClose(params object[] objs)
     {
+        base.OnClose(objs);
         Text_LoadProgress.text = "0%";
         Image_LoadProgress.fillAmount = 0;
-        base.OnClose(objs);
         Image_LoadProgress.enabled = false;
         Text_LoadProgress.enabled = false;
+        GameManager.IsLoading = false;
+        Progress = 0;
     }
 
     /// <summary>
@@ -113,7 +116,7 @@ public class UILoadingWindow : UIWindowBase
 
     public void SetProgress(float value)
     {
-        if (Image_LoadProgress.enabled==false)
+        if (Image_LoadProgress.enabled == false)
         {
             Image_LoadProgress.enabled = true;
             Text_LoadProgress.enabled = true;
@@ -126,7 +129,8 @@ public class UILoadingWindow : UIWindowBase
         {
             if (Image_LoadProgress.fillAmount < m_Progress)
             {
-                Progress = Image_LoadProgress.fillAmount += Time.deltaTime;
+                Image_LoadProgress.fillAmount += Time.deltaTime;
+                Progress = Image_LoadProgress.fillAmount;
                 Text_LoadProgress.text = string.Format("{0}%", Mathf.CeilToInt(Image_LoadProgress.fillAmount * 100));
             }
         }

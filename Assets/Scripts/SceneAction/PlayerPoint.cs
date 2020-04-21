@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPoint : MonoBehaviour 
+public class PlayerPoint : MonoBehaviour
 {
     [HideInInspector]
     public int PlayerId = 1010;
@@ -24,7 +24,12 @@ public class PlayerPoint : MonoBehaviour
         else
         {
             player.transform.position = transform.position;
-            //CameraManager.SetFollowTarget(player.transform);
+            CameraManager.SetFollowTarget(player.transform);
         }
+    }
+
+    private void OnDestroy()
+    {
+        CameraManager.SetFollowTarget(null);
     }
 }
