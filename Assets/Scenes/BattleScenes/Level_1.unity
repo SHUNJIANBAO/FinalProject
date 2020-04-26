@@ -354,6 +354,47 @@ MonoBehaviour:
   MoveEffectName: 
   MoveEffectInterval: 1
   JumpDownEffectName: 
+--- !u!1 &193284833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 193284834}
+  - component: {fileID: 193284835}
+  m_Layer: 0
+  m_Name: "\u51FA\u602A\u70B9"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &193284834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 193284833}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5, y: -2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 723705632}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &193284835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 193284833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1457854cfa79f194aad216eb338ef0ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyId: 3010
 --- !u!1 &348979474
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,6 +885,7 @@ Transform:
   m_Children:
   - {fileID: 708187496}
   - {fileID: 1055246997}
+  - {fileID: 193284834}
   m_Father: {fileID: 102591373}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

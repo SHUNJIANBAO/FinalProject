@@ -19,4 +19,10 @@ public abstract class DecoratorNode : NodeBase
             return E_NodeStatus.Failure;
         }
     }
+
+    public override void OnComplete()
+    {
+        base.OnComplete();
+        ChildList[0].OnComplete();
+    }
 }

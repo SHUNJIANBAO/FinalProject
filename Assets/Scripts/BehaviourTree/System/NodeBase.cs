@@ -41,6 +41,8 @@ public abstract class NodeBase : ScriptableObject
     [HideInInspector]
     [SerializeField]
     public NodeEditorStyle Style;
+    [HideInInspector]
+    [SerializeField]
     protected NodeStatusStyles m_Status;
     [NonSerialized]
     GUIStyle _curStyle;

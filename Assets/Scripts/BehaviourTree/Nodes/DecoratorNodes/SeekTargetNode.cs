@@ -14,7 +14,7 @@ public class SeekTargetNode : DecoratorNode
     public override void Init()
     {
         base.Init();
-        _size = new Vector2(HorizontalDistance, VerticalDistance);
+        _size = new Vector2(HorizontalDistance*2, VerticalDistance*2);
         switch (TargetType)
         {
             case RoleType.Player:

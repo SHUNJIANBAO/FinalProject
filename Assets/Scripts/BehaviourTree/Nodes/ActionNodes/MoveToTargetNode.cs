@@ -16,6 +16,11 @@ public class MoveToTargetNode : ActionNode
     {
         
     }
+    public override void OnComplete()
+    {
+        base.OnComplete();
+        m_Owner.MoveTarget=m_Owner.transform.position;
+    }
 
     public override void OnStay()
     {

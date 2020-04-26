@@ -242,7 +242,7 @@ public class Character : MonoEntity
                 UIBattleWindow.HideBossUI();
                 break;
             case RoleType.Player:
-                LoadSceneManager.Instance.LoadScene(PlayerData.Instance.CurPlayerInfo.CurLevelId, Reborn);
+                //LoadSceneManager.Instance.LoadScene(PlayerData.Instance.CurPlayerInfo.CurLevelId, Reborn);
                 return;
         }
         TimerManager.Instance.RemoveListener(_caculateDelta);
