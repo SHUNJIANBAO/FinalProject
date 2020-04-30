@@ -10,13 +10,11 @@ public class CharAttackStatus : CharFsmBase
     string _skillName;
     float _moveSpeed;
 
-    bool _createCollider;
-    bool _createBarrage;
-
     Vector3 _blinkTarget = Vector3.zero;
-    Vector3 _tempVector = Vector3.zero;
+    //Vector3 _tempVector = Vector3.zero;
 
     Action _damageCallback;
+    int _damageIndex;
 
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
@@ -45,8 +43,7 @@ public class CharAttackStatus : CharFsmBase
         else
             _damageCallback = null;
         _timeCount = 0;
-        _createCollider = false;
-        _createBarrage = false;
+        _damageIndex = 0;
         _skill = m_Owner.CurSkill;
         _skillName = AnimConfig.GetData(_skill.AnimId).Name;
         m_Animator.SetInteger("Index", _skill.AnimId);
@@ -69,8 +66,7 @@ public class CharAttackStatus : CharFsmBase
         {
             _timeCount += GameManager.DeltaTime;
 
-            CreateBarrage();
-            CreateCollider();
+            CaculateDamageTime();
             CaculateInvincible();
             CaculateMove();
 
@@ -118,40 +114,60 @@ public class CharAttackStatus : CharFsmBase
     }
 
     /// <summary>
-    /// 造成伤害,创建碰撞器
+    /// 计算伤害时间点
     /// </summary>
-    void CreateCollider()
+    void CaculateDamageTime()
     {
-        if (!_createCollider && _skill.ColliderId != 0 && _timeCount >= _skill.DamageTime)
+        for (int i = _damageIndex; i < _skill.DamageTime.Count;)
         {
-            _createCollider = true;
-            var collider = PoolManager.InstantiateGameObject(PathManager.ColliderPath, PoolType.Collider);
-            var ctrl = collider.GetComponent<ColliderCtrl>();
-            float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * _skill.DamageRatio / 100;
-            ctrl.Init(_skill.ColliderId, m_Owner, (int)damage, _skill.HitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
-            _damageCallback?.Invoke();
+            if (_timeCount >= _skill.DamageTime[i])
+            {
+                _damageIndex++;
+                i = _damageIndex;
+                if (_skill.ColliderId.Count > 0)
+                {
+                    CreateCollider(i);
+                }
+                if (_skill.BarrageId.Count > 0 && _skill.BulletId != 0)
+                {
+                    CreateBarrage(i);
+                }
+            }
         }
     }
 
     /// <summary>
-    /// 生成弹幕
+    /// 创建碰撞器
     /// </summary>
-    void CreateBarrage()
+    void CreateCollider(int index)
     {
-        if (!_createBarrage && _skill.BarrageId != 0 && _skill.BulletId != 0 && _timeCount >= _skill.DamageTime)
+        float damageRatio = _skill.DamageRatio.Count > index ? _skill.DamageRatio[index] : _skill.DamageRatio[0];
+        float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * damageRatio / 100;
+
+        var collider = PoolManager.InstantiateGameObject(PathManager.ColliderPath, PoolType.Collider);
+        var ctrl = collider.GetComponent<ColliderCtrl>();
+        int colliderId = _skill.ColliderId.Count > index ? _skill.ColliderId[index] : _skill.ColliderId[0];
+        ctrl.Init(colliderId, m_Owner, (int)damage, _skill.HitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
+        _damageCallback?.Invoke();
+    }
+
+    /// <summary>
+    /// 创建弹幕
+    /// </summary>
+    void CreateBarrage(int index)
+    {
+        float damageRatio = _skill.DamageRatio.Count > index ? _skill.DamageRatio[index] : _skill.DamageRatio[0];
+        float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * damageRatio / 100;
+
+        int barrageId = _skill.BarrageId.Count > index ? _skill.BarrageId[index] : _skill.BarrageId[0];
+        var barrageCfg = BarrageConfig.GetData(barrageId);
+        var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + _skill.BulletId));
+        Transform parent = null;
+        if (barrageCfg.IsFollow)
         {
-            _createBarrage = true;
-            float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * _skill.DamageRatio / 100;
-            var bulletCfg = BulletConfig.GetData(_skill.BulletId);
-            var barrageCfg = BarrageConfig.GetData(_skill.BarrageId);
-            var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + _skill.BulletId));
-            Transform parent = null;
-            if (barrageCfg.IsFollow)
-            {
-                parent = m_Owner.transform;
-            }
-            ShootManager.Instance.Shoot(parent, m_Owner.transform.position, m_Owner.transform.right, bullet, damage, barrageCfg);
+            parent = m_Owner.transform;
         }
+        ShootManager.Instance.Shoot(parent, m_Owner.transform.position, m_Owner.transform.right, bullet, damage, barrageCfg);
     }
 
     protected override void OnExit()

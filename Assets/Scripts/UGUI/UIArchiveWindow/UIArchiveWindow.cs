@@ -8,7 +8,7 @@ using DG.Tweening;
 public class UIArchiveWindow : UIWindowBase
 {
     #region 参数
-    Transform Panel_ArchiveRoot;
+    //Transform Panel_ArchiveRoot;
 
     Button Button_DeletePlayerInfo;
     Button Button_CancelDelete;
@@ -28,7 +28,7 @@ public class UIArchiveWindow : UIWindowBase
     protected override void GetUIComponent()
     {
         base.GetUIComponent();
-        Panel_ArchiveRoot = GetUI<Transform>("Panel_ArchiveRoot");
+        //Panel_ArchiveRoot = GetUI<Transform>("Panel_ArchiveRoot");
 
 
         Button_DeletePlayerInfo = GetUI<Button>("Button_DeletePlayerInfo");

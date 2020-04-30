@@ -11,7 +11,7 @@ public class CreateEffectTool : EditorWindow
     Object _animClip;
 
     string _animatorControllerPath = "Assets/Editor/Demo/AnimatorController/EffectAnimatorController.controller";
-    static string _gameObjectPath = "Assets/Editor/Demo/Objects/";
+    //static string _gameObjectPath = "Assets/Editor/Demo/Objects/";
 
     [MenuItem("工具/创建特效")]
     static void OpenWindow()

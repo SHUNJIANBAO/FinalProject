@@ -6,14 +6,14 @@ public class SkillConfig : CsvCfg<SkillConfig>
 {
     public string Name { get; protected set; }
     public int AnimId { get; protected set; }
-    public int ColliderId { get; protected set; }
-    public int BarrageId { get; protected set; }
+    public List<int> ColliderId { get; protected set; }
+    public List<int> BarrageId { get; protected set; }
     public int BulletId { get; protected set; }
     public int NextSkillId { get; protected set; }
     public int UseMp { get; protected set; }
     public int HitFlyForce { get; protected set; }
-    public int DamageRatio { get; protected set; }
-    public float DamageTime { get; protected set; }
+    public List<float> DamageRatio { get; protected set; }
+    public List<float> DamageTime { get; protected set; }
     public float ComboTime { get; protected set; }
     public float CanExitTime { get; protected set; }
     public float InvincibleTime { get; protected set; }
