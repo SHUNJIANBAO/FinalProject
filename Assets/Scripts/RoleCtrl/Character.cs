@@ -29,12 +29,33 @@ public class Character : MonoEntity
     [HideInInspector]
     public Rigidbody2D Rigibody;
     protected Animator m_Animator;
-    protected BoxCollider2D m_BoxColider;
+    public AnimatorStateInfo CurStateInfo
+    {
+        get
+        {
+            return m_Animator.GetCurrentAnimatorStateInfo(0);
+        }
+    }
+    protected BoxCollider2D m_BoxCollider;
+    public BoxCollider2D BoxCollider
+    {
+        get
+        {
+            return m_BoxCollider;
+        }
+    }
 
     FsmManager fsm = new FsmManager();
     protected int m_CurSkillId;
     protected Vector2 m_TopOffest;
     protected Vector2 m_BottomOffest;
+    public Vector2 BottomOffest
+    {
+        get
+        {
+            return m_BottomOffest;
+        }
+    }
     Timer _caculateDelta;
 
     GameRangeAttribute _hp;
@@ -55,10 +76,10 @@ public class Character : MonoEntity
 
         m_Animator = GetComponent<Animator>();
         Rigibody = GetComponent<Rigidbody2D>();
-        m_BoxColider = GetComponent<BoxCollider2D>();
+        m_BoxCollider = GetComponent<BoxCollider2D>();
 
-        m_TopOffest = new Vector2(0, m_BoxColider.size.y * 0.5f);
-        m_BottomOffest = new Vector2(0, -m_BoxColider.size.y * 0.5f);
+        m_TopOffest = new Vector2(0, m_BoxCollider.size.y * 0.5f);
+        m_BottomOffest = new Vector2(0, -m_BoxCollider.size.y * 0.5f + m_BoxCollider.offset.y);
 
         RegistAttribute();
         RegistFsmStatus();
@@ -143,7 +164,7 @@ public class Character : MonoEntity
             if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
             {
                 System.Action<Character> act = SceneConfigManager.Instance.PlayJumpDownEffect;
-                ChangeStatus(E_CharacterFsmStatus.Jump, false,0, act);
+                ChangeStatus(E_CharacterFsmStatus.Jump, false, 0, act);
             }
         }
         fsm.OnStay();

@@ -29,7 +29,11 @@ public class CharJumpStatus : CharFsmBase
         //{
         //    return m_CurStateInfo.normalizedTime >1f;
         //}
-        return m_CurStateInfo.IsName(E_AnimatorIndex.JumpEnd.ToString()) && m_CurStateInfo.normalizedTime > 0.2f;
+        if (m_Owner.IsGround)
+        {
+            return m_CurStateInfo.IsName(E_AnimatorIndex.JumpEnd.ToString()) && m_CurStateInfo.normalizedTime > 0.2f;
+        }
+        return true;
     }
 
     public override bool CanInterrupt()
@@ -40,6 +44,10 @@ public class CharJumpStatus : CharFsmBase
     {
         base.OnEnter(objs);
         m_Owner.MoveTarget = m_Owner.transform.position;
+        if (!m_Owner.IsGround)
+        {
+            m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpingDown);
+        }
         if (objs != null)
         {
             if (objs.Length > 0)
@@ -53,10 +61,6 @@ public class CharJumpStatus : CharFsmBase
                 _jumpDownCallback = objs[1] as Action<Character>;
             }
         }
-        if (!m_Owner.IsGround)
-        {
-            m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpingDown);
-        }
     }
 
     protected override void OnStay()
@@ -68,6 +72,10 @@ public class CharJumpStatus : CharFsmBase
             {
                 m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpingUp);
                 m_Owner.Rigibody.velocity += new Vector2(0, _jumpForce);
+            }
+            else
+            {
+                m_Owner.Rigibody.velocity = Vector2.zero;
             }
         }
         else
