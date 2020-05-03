@@ -29,6 +29,8 @@ public class UIArchivePanel : UIPanelBase
 
     public void Init(int index, PlayerInfo info)
     {
+        Button_DeleteArchive.onClick.RemoveAllListeners();
+        Button_ClickArchive.onClick.RemoveAllListeners();
         _index = index;
         _info = info;
         if (info == null)

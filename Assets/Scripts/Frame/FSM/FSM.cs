@@ -30,6 +30,7 @@ public abstract class FsmBase
     }
     public void Interrupt()
     {
+        OnComplete?.Invoke();
         OnInterrupt();
     }
     public void Exit()

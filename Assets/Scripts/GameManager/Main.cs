@@ -24,7 +24,7 @@ public class Main : MonoSingleton<Main>
         LoadConfigs();  //加载配置
         LoadData(); //加载数据
 
-        UIManager.Instance.OpenWindow<UILogoWindow>();
+        UIManager.Instance.OpenWindow<UILogoWindow>(); 
     }
 
     void LoadAssets()

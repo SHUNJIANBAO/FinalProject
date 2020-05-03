@@ -22,6 +22,10 @@ public class TimerManager : MonoBehaviour
             return _instance;
         }
     }
+    public static TimerManager GetInstance()
+    {
+        return _instance;
+    }
     #endregion
 
     private static List<Timer> timerActions = new List<Timer>();
@@ -108,7 +112,7 @@ public class TimerManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        timerActions.Clear();
-        tempList.Clear();
+        //timerActions.Clear();
+        //tempList.Clear();
     }
 }

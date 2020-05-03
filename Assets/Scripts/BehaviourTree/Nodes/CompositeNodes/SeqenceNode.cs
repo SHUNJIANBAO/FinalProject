@@ -7,6 +7,7 @@
 [Node("顺序节点")]
 public class SeqenceNode : CompositeNode
 {
+    [System.NonSerialized]
     int _index;
     /// <summary>
     /// 中断时,运行失败时

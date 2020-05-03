@@ -1,15 +1,23 @@
 ﻿
 public abstract class DecoratorNode : NodeBase
 {
+    bool _firstEnter = true;
     public override bool CanConnectLineAsParent()
     {
         return ChildList.Count == 0;
     }
 
+    protected virtual void OnFirstEnter() { }
+
     abstract protected bool Condition();
 
     protected override E_NodeStatus Trick()
     {
+        if (_firstEnter)
+        {
+            _firstEnter = false;
+            OnFirstEnter();
+        }
         if (Condition())
         {
             return ChildList[0].GetTrick();
@@ -24,5 +32,6 @@ public abstract class DecoratorNode : NodeBase
     {
         base.OnComplete();
         ChildList[0].OnComplete();
+        _firstEnter = true;
     }
 }

@@ -72,6 +72,15 @@ public class CharJumpStatus : CharFsmBase
             {
                 m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpingUp);
                 m_Owner.Rigibody.velocity += new Vector2(0, _jumpForce);
+                if (m_Owner.IsGround)
+                {
+                    //m_Owner.Rigibody.velocity += new Vector2(0, _jumpForce);
+                }
+                else
+                {
+                    m_Owner.MoveTarget += m_Owner.IsFaceRight ? new Vector3(_jumpForce / 3, 0, 0) : new Vector3(-_jumpForce / 3, 0, 0);
+                    //m_Owner.Rigibody.velocity += m_Owner.IsFaceRight ? new Vector2(_jumpForce / 3, _jumpForce) : new Vector2(-_jumpForce / 3, _jumpForce);
+                }
             }
             else
             {
@@ -109,6 +118,7 @@ public class CharJumpStatus : CharFsmBase
                 else //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString()))
                 {
                     _jumpDownCallback?.Invoke(m_Owner);
+                    m_Owner.MoveTarget = m_Owner.transform.position;
                     m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpEnd);
                 }
             }

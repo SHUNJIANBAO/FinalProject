@@ -15,14 +15,14 @@ public class CharacterMovement : MonoBehaviour
         _character = GetComponent<Character>();
     }
 
-    public void Attack(int skillId, bool beForce = false, System.Action damageCallback = null)
+    public void Attack(int skillId, bool beForce = false, System.Action damageCallback = null, System.Action endCallback = null)
     {
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, beForce)) return;
         var skillCfg = SkillConfig.GetData(skillId);
         if (CheckCanUse(skillCfg))
         {
             _character.CurSkill = skillCfg;
-            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, damageCallback);
+            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, damageCallback, endCallback);
         }
     }
 
@@ -36,7 +36,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Jump, beForce)) return;
 
-        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce, jumpForce, jumpDownCallback);
+        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce,null, jumpForce, jumpDownCallback);
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class CharacterMovement : MonoBehaviour
     /// <param name="beForce"></param>
     public void PlayAnim(int animIndex, bool beForce = false)
     {
-        _character.ChangeStatus(E_CharacterFsmStatus.Play, beForce, animIndex);
+        _character.ChangeStatus(E_CharacterFsmStatus.Play, beForce,null, animIndex);
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (_character.IsGround && _character.CurStatus != E_CharacterFsmStatus.Move)
         {
-            _character.ChangeStatus(E_CharacterFsmStatus.Move,false, moveCallback);
+            _character.ChangeStatus(E_CharacterFsmStatus.Move,false,null, moveCallback);
         }
     }
 
@@ -91,37 +91,4 @@ public class CharacterMovement : MonoBehaviour
         _character.ResetAttributes();
     }
 
-    /// <summary>
-    /// 受击
-    /// </summary>
-    public virtual void Hurt(GameObject atkOwner, int damage, int hitForce)
-    {
-        if (_character.IsInvincible) return;
-        _character.GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
-        if (_character.CurStatus == E_CharacterFsmStatus.FallDown) return;
-        LookToTarget(atkOwner);
-        var shield = _character.GetRangeAttribute(E_Attribute.Shield.ToString());
-        shield.ChangeValue(-hitForce);
-        if (shield.Current <= shield.GetMinTotalValue())
-        {
-            shield.Reset();
-            _character.ChangeStatus(E_CharacterFsmStatus.HitFly, true);
-        }
-        else
-        {
-            _character.ChangeStatus(E_CharacterFsmStatus.Hurt, true);
-        }
-    }
-
-    void LookToTarget(GameObject target)
-    {
-        if (target.transform.position.x > transform.position.x)
-        {
-            transform.localScale = Vector3.one;
-        }
-        else
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-    }
 }

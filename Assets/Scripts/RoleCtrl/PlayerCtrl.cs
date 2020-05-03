@@ -100,7 +100,7 @@ public class PlayerCtrl : MonoBehaviour
     /// 碰撞时判断是否跳跃
     /// </summary>
     /// <param name="collision"></param>
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         var target = collision.transform.GetComponent<Character>();
         if (target != null && _character.CurStatus == E_CharacterFsmStatus.Jump)
@@ -122,6 +122,9 @@ public class PlayerCtrl : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawCube(transform.position + (Vector3)_character.BottomOffest, new Vector3(_character.BoxCollider.size.x, 0.2f, 1));
+        if (Application.isPlaying)
+        {
+            Gizmos.DrawCube(transform.position + (Vector3)_character.BottomOffest, new Vector3(_character.BoxCollider.size.x, 0.2f, 1));
+        }
     }
 }

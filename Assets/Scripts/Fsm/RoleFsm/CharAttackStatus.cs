@@ -70,10 +70,15 @@ public class CharAttackStatus : CharFsmBase
             CaculateInvincible();
             CaculateMove();
 
-            if (m_CurStateInfo.normalizedTime >= 1f)
+            if (m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 1f)
             {
                 m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
             }
+            else if (!m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.8f)
+            {
+                m_Owner.ChangeStatus(E_CharacterFsmStatus.Jump, true);
+            }
+
         }
     }
 
@@ -118,12 +123,10 @@ public class CharAttackStatus : CharFsmBase
     /// </summary>
     void CaculateDamageTime()
     {
-        for (int i = _damageIndex; i < _skill.DamageTime.Count;)
+        for (int i = _damageIndex; i < _skill.DamageTime.Count; i++)
         {
             if (_timeCount >= _skill.DamageTime[i])
             {
-                _damageIndex++;
-                i = _damageIndex;
                 if (_skill.ColliderId.Count > 0)
                 {
                     CreateCollider(i);
@@ -132,6 +135,8 @@ public class CharAttackStatus : CharFsmBase
                 {
                     CreateBarrage(i);
                 }
+                _damageIndex++;
+                i = _damageIndex;
             }
         }
     }
@@ -141,6 +146,10 @@ public class CharAttackStatus : CharFsmBase
     /// </summary>
     void CreateCollider(int index)
     {
+        if (_skill.ColliderId.Count == 0 || _skill.ColliderId.Count <= index || _skill.ColliderId[index] == 0)
+        {
+            return;
+        }
         float damageRatio = _skill.DamageRatio.Count > index ? _skill.DamageRatio[index] : _skill.DamageRatio[0];
         float damage = m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue() * damageRatio / 100;
 

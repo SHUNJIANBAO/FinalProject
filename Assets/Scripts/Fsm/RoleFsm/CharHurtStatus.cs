@@ -22,13 +22,13 @@ public class CharHurtStatus : CharFsmBase
 
     public override bool CanInterrupt()
     {
-        return false;
+        return true;
     }
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
         _isComplete = false;
-        if (m_CurStateInfo.IsName(E_AnimatorIndex.Hurt.ToString()))
+        if (m_Animator.GetInteger("Index") == (int)E_AnimatorIndex.Hurt)
             m_Animator.Play(E_AnimatorIndex.Hurt.ToString(), 0, 0);
         else
             m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Hurt);

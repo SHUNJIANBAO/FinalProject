@@ -98,13 +98,13 @@ public class Character : MonoEntity
         m_Attack = AddAttribute(_attack);
         _moveSpeed = new GameAttribute(E_Attribute.MoveSpeed.ToString(), roleCfg.MoveSpeed);
         m_MoveSpeed = AddAttribute(_moveSpeed);
-        _shield = new GameRangeAttribute(E_Attribute.Shield.ToString(), 0, roleCfg.HitFlyShield, 5);
-        m_Shield = AddRangeAttribute(_shield);
 
         _caculateDelta = TimerManager.Instance.AddListener(0, 0.02f, m_MonoAttribute.CaculateRangeDelta, null, true);
 
         RoleType = roleCfg.RoleType;
 
+        _shield = new GameRangeAttribute(E_Attribute.Shield.ToString(), 0, roleCfg.HitFlyShield, 0.02f);
+        m_Shield = AddRangeAttribute(_shield);
         switch (RoleType)
         {
             case RoleType.Player:
@@ -140,6 +140,8 @@ public class Character : MonoEntity
         fsm.AddStatus((int)E_CharacterFsmStatus.Hurt, hurtStatus);
         CharHitFlyStatus hitFlyStatus = new CharHitFlyStatus(this, m_Animator);
         fsm.AddStatus((int)E_CharacterFsmStatus.HitFly, hitFlyStatus);
+        CharFallDownStatus fallDownStatus = new CharFallDownStatus(this, m_Animator);
+        fsm.AddStatus((int)E_CharacterFsmStatus.FallDown, fallDownStatus);
         CharBlinkStatus blinkStatus = new CharBlinkStatus(this, m_Animator);
         fsm.AddStatus((int)E_CharacterFsmStatus.Blink, blinkStatus);
         CharPlayStatus playStatus = new CharPlayStatus(this, m_Animator);
@@ -164,7 +166,7 @@ public class Character : MonoEntity
             if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
             {
                 System.Action<Character> act = SceneConfigManager.Instance.PlayJumpDownEffect;
-                ChangeStatus(E_CharacterFsmStatus.Jump, false, 0, act);
+                ChangeStatus(E_CharacterFsmStatus.Jump, false, null, 0, act);
             }
         }
         fsm.OnStay();
@@ -187,12 +189,14 @@ public class Character : MonoEntity
     /// <param name="status">状态类型</param>
     /// <param name="beForce">是否强制切换</param>
     /// <returns>切换是否成功</returns>
-    public bool ChangeStatus(E_CharacterFsmStatus status, bool beForce = false, params object[] objs)
+    public bool ChangeStatus(E_CharacterFsmStatus status, bool beForce = false, System.Action onCompelte = null, params object[] objs)
     {
         bool result = fsm.ChangeStatus((int)status, beForce, objs);
         if (result)
         {
             CurStatus = status;
+            var fsmStatus = fsm.GetStatus((int)status);
+            fsmStatus.OnComplete = onCompelte;
         }
         return result;
     }
@@ -254,6 +258,42 @@ public class Character : MonoEntity
         return false;
     }
 
+
+    /// <summary>
+    /// 受击
+    /// </summary>
+    public virtual void Hurt(GameObject atkOwner, int damage, int hitForce)
+    {
+        if (IsInvincible) return;
+        GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
+        if (CurStatus == E_CharacterFsmStatus.FallDown) return;
+        LookToTarget(atkOwner);
+        var shield = GetRangeAttribute(E_Attribute.Shield.ToString());
+        shield.ChangeValue(-hitForce);
+
+        if (shield.Current <= 0)
+        {
+            ChangeStatus(E_CharacterFsmStatus.HitFly, true);
+        }
+        else if (RoleType != RoleType.Boss)
+        {
+            ChangeStatus(E_CharacterFsmStatus.Hurt, true);
+        }
+    }
+
+    void LookToTarget(GameObject target)
+    {
+        if (target.transform.position.x > transform.position.x)
+        {
+            transform.localScale = Vector3.one;
+        }
+        else
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+    }
+
+
     public override void OnDestory()
     {
         base.OnDestory();
@@ -266,7 +306,8 @@ public class Character : MonoEntity
                 //LoadSceneManager.Instance.LoadScene(PlayerData.Instance.CurPlayerInfo.CurLevelId, Reborn);
                 return;
         }
-        TimerManager.Instance.RemoveListener(_caculateDelta);
+        if (TimerManager.GetInstance() != null)
+            TimerManager.Instance.RemoveListener(_caculateDelta);
     }
 
     protected override void OnDrawGizmosUpdate()

@@ -34,18 +34,25 @@ public class ColliderCtrl : MonoBehaviour
         switch (_coliderCfg.LifeType)
         {
             case E_ColliderFollowType.None:
-                transform.position = _owner.transform.position + (Vector3)_coliderCfg.Offest;
-                break;
-            case E_ColliderFollowType.Follow:
-                transform.SetParent(_owner.transform, false);
                 if (_owner.IsFaceRight)
                 {
-                    transform.localPosition = _coliderCfg.Offest;
+                    transform.position = _owner.transform.position + (Vector3)_coliderCfg.Offest;
                 }
                 else
                 {
-                    transform.localPosition = new Vector2(-_coliderCfg.Offest.x, _coliderCfg.Offest.y);
+                    transform.position = _owner.transform.position + new Vector3(-_coliderCfg.Offest.x, _coliderCfg.Offest.y, 0);
                 }
+                break;
+            case E_ColliderFollowType.Follow:
+                transform.SetParent(_owner.transform, false);
+                //if (_owner.IsFaceRight)
+                //{
+                    transform.localPosition = _coliderCfg.Offest;
+                //}
+                //else
+                //{
+                //    transform.localPosition = new Vector2(-_coliderCfg.Offest.x, _coliderCfg.Offest.y);
+                //}
                 break;
         }
     }
@@ -94,14 +101,13 @@ public class ColliderCtrl : MonoBehaviour
 
     void Damage(Character target)
     {
-        var movement = target.GetComponent<CharacterMovement>();
         if (_coliderCfg.IsAttacker)
         {
-            movement.Hurt(gameObject, _damage, _hitForce);
+            target.Hurt(gameObject, _damage, _hitForce);
         }
         else
         {
-            movement.Hurt(_owner.gameObject, _damage, _hitForce);
+            target.Hurt(_owner.gameObject, _damage, _hitForce);
         }
 
         switch (_hitPosType)
@@ -117,6 +123,15 @@ public class ColliderCtrl : MonoBehaviour
             case E_HitEffectPosType.CharacterCenter:
                 EffectManager.Instance.Play(_hitEffect, Vector3.zero, target);
                 break;
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (RuntimeTest.Instance.DrawCollider && gameObject.activeSelf)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(transform.position, _box.size);
         }
     }
 

@@ -6,29 +6,36 @@ using UnityEngine;
 public class SkillNode : ActionNode
 {
     public int SkillId;
-    public bool BeForce=false;
+    public bool BeForce = false;
 
+
+    bool _skillEnd;
     /// <summary>
     /// 检测能否运行
     /// </summary>
     /// <returns></returns>
     protected override E_NodeStatus Trick()
     {
-        return E_NodeStatus.Success;
+        if (_skillEnd)
+        {
+            _skillEnd = false;
+            return E_NodeStatus.Success;
+        }
+        return E_NodeStatus.Running;
     }
 
     public override void OnEnter()
     {
-        m_Movement.Attack(SkillId, BeForce);
+        _skillEnd = false;
+        m_Movement.Attack(SkillId, BeForce, () => _skillEnd = true);
     }
 
     public override void OnStay()
     {
-        
+
     }
 
     public override void OnExit()
     {
-
     }
 }
