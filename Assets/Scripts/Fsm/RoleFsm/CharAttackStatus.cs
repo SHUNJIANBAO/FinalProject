@@ -70,7 +70,7 @@ public class CharAttackStatus : CharFsmBase
             CaculateInvincible();
             CaculateMove();
 
-            if (m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 1f)
+            if (m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.8f)
             {
                 m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
             }
@@ -176,7 +176,14 @@ public class CharAttackStatus : CharFsmBase
         {
             parent = m_Owner.transform;
         }
-        ShootManager.Instance.Shoot(parent, m_Owner.transform.position, m_Owner.transform.right, bullet, damage, barrageCfg);
+        if (m_Owner.RoleType == RoleType.Player)
+        {
+            ShootManager.Instance.Shoot(parent, m_Owner.gameObject, bullet, damage, barrageCfg, GameConfig.Instance.EnemyLayer);
+        }
+        else
+        {
+            ShootManager.Instance.Shoot(parent, m_Owner.gameObject, bullet, damage, barrageCfg, GameConfig.Instance.PlayerLayer);
+        }
     }
 
     protected override void OnExit()

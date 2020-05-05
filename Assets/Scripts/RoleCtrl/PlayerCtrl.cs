@@ -6,6 +6,7 @@ public class PlayerCtrl : MonoBehaviour
 {
     CharacterMovement _moment;
     Character _character;
+    bool _jumpAttack = false;
     private void Awake()
     {
         _moment = GetComponent<CharacterMovement>();
@@ -31,6 +32,10 @@ public class PlayerCtrl : MonoBehaviour
         //{
 
         //}
+        if (_character.IsGround)
+        {
+            _jumpAttack = false;
+        }
         if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)))
         {
             _moment.MoveToPoint(transform.position + Vector3.left, SceneConfigManager.Instance.PlayMoveEffect);
@@ -48,7 +53,44 @@ public class PlayerCtrl : MonoBehaviour
 
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Attack)))
         {
-            int skillId = 1010001;
+            int skillId = 0;
+            if (_character.IsGround)
+            {
+                skillId = 1010001;
+            }
+            else
+            {
+                if (_jumpAttack == false)
+                {
+                    _jumpAttack = true;
+                    skillId = 1010010;
+                }
+                else
+                {
+                    return;
+                }
+            }
+            if (_character.CanCombo(skillId))
+            {
+                skillId = _character.CurSkill.NextSkillId;
+                _moment.Attack(skillId, true);
+            }
+            else
+            {
+                _moment.Attack(skillId, false);
+            }
+        }
+        if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.LongAttack)))
+        {
+            int skillId = 0;
+            if (_character.IsGround)
+            {
+                skillId = 1010005;
+            }
+            else
+            {
+                return;
+            }
             if (_character.CanCombo(skillId))
             {
                 skillId = _character.CurSkill.NextSkillId;
@@ -58,10 +100,6 @@ public class PlayerCtrl : MonoBehaviour
             {
                 _moment.Attack(skillId);
             }
-        }
-        if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.LongAttack)))
-        {
-
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Skill)))
         {
@@ -106,7 +144,7 @@ public class PlayerCtrl : MonoBehaviour
         if (target != null && _character.CurStatus == E_CharacterFsmStatus.Jump)
         {
             var hit = Physics2D.BoxCast((Vector2)transform.position + _character.BottomOffest, new Vector2(_character.BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
-            if (hit&&CanJumpHead(target) )
+            if (hit && CanJumpHead(target))
             {
                 _moment.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
             }

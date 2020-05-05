@@ -17,30 +17,83 @@ public class ShootManager : Singleton<ShootManager>
     /// <param name="wave">射击波数</param>
     /// <param name="intervalTime">每波间隔</param>
     /// <returns></returns>
-    public EmitterManager Shoot(Transform parent, Vector3 pos, Vector3 dir, GameObject bullet, float bulletDamage, BarrageConfig barrageCfg)
+    public EmitterManager Shoot(Transform parent, Vector3 pos, GameObject bullet, float bulletDamage, BarrageConfig barrageCfg, int targetLayer)
     {
-        var emitter = CreateEmitterManager(PoolType.EmitterManager, parent, pos, dir);
-        emitter.Init(bullet, bulletDamage, barrageCfg);
+        Vector3 dir = Vector3.zero;
+        switch (barrageCfg.Direction)
+        {
+            case E_Direction.Up:
+                dir = Vector3.up;
+                break;
+            case E_Direction.Down:
+                dir = Vector3.down;
+                break;
+            case E_Direction.Left:
+                dir = Vector3.left;
+                break;
+            case E_Direction.Right:
+                dir = Vector3.right;
+                break;
+        }
+        var emitter = CreateEmitterManager(PoolType.EmitterManager, parent, pos);
+        emitter.Init(bullet, dir, bulletDamage, barrageCfg, targetLayer);
         emitter.Enable();
 
         return emitter;
     }
 
-    EmitterManager CreateEmitterManager(PoolType pType, Transform parent, Vector3 pos, Vector3 dir)
+    public EmitterManager Shoot(Transform parent, GameObject owner, GameObject bullet, float bulletDamage, BarrageConfig barrageCfg, int targetLayer)
+    {
+        Vector3 dir = Vector3.zero;
+        switch (barrageCfg.Direction)
+        {
+            case E_Direction.Up:
+                dir = Vector3.up;
+                break;
+            case E_Direction.Down:
+                dir = Vector3.down;
+                break;
+            case E_Direction.Left:
+                if (owner.transform.localScale.x > 0)
+                {
+                    dir = Vector3.left;
+                }
+                else
+                {
+                    dir = Vector3.right;
+                }
+                break;
+            case E_Direction.Right:
+                if (owner.transform.localScale.x > 0)
+                {
+                    dir = Vector3.right;
+                }
+                else
+                {
+                    dir = Vector3.left;
+                }
+                break;
+        }
+        var emitter = CreateEmitterManager(PoolType.EmitterManager, parent, owner.transform.position);
+        emitter.Init(bullet, dir, bulletDamage, barrageCfg, targetLayer);
+        emitter.Enable();
+        return emitter;
+    }
+
+    EmitterManager CreateEmitterManager(PoolType pType, Transform parent, Vector3 pos)
     {
         var go = ResourceManager.Load<GameObject>(PathManager.GetEmitterPath(pType.ToString()));
         var emitterGo = PoolManager.InstantiateGameObject(go, pType);
         var emitter = emitterGo.GetComponent<EmitterManager>();
-        emitter.transform.SetParent(parent);
-        emitter.transform.position = pos;
-        emitter.transform.right = dir;
+        emitter.transform.SetParent(parent, false);
+        emitter.transform.localPosition = pos;
         return emitter;
     }
 }
 
 public enum E_BarrageType
 {
-    Parallel,//平行
+    Parallel = 0,//平行
     Sector,//扇形
     Recursion,//递归
 }

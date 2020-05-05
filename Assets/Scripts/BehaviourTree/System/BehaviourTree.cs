@@ -7,7 +7,7 @@ public class BehaviourTree : MonoBehaviour
     public NodeAssets NodeAssets;
     ActionNode _curNode;
 
-    public float Interval = 0.1f;
+    public float Interval = 0f;
     float _timeCount;
 
     private void Start()
@@ -24,7 +24,11 @@ public class BehaviourTree : MonoBehaviour
 
     private void Update()
     {
-        if (NodeAssets!=null)
+        if (RuntimeTest.Instance.CloseAI)
+        {
+            return;
+        }
+        if (NodeAssets != null)
         {
             if (NodeAssets.RootNode == null) return;
             _timeCount += Time.deltaTime;

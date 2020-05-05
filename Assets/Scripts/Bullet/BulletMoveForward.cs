@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BulletMoveForward : BulletBase
 {
-    protected override void Move()
+    public override void Move()
     {
-        transform.Translate(Vector3.right * 10 * Time.deltaTime);
+        transform.Translate(Vector3.right * m_BulletCfg.MoveSpeed * Time.deltaTime);
     }
+
 }

@@ -8,15 +8,24 @@ public class GameConfig : MonoSingleton<GameConfig>
     [HideInInspector]
     public LayerMask PlaneMask;//地面层
     [HideInInspector]
+    public int PlaneLayer;//地面层
+    [HideInInspector]
     public LayerMask PlayerMask;//玩家
     [HideInInspector]
+    public int PlayerLayer;//玩家
+    [HideInInspector]
     public LayerMask EnemyMask;//敌人
+    [HideInInspector]
+    public int EnemyLayer;//敌人
 
     private void Awake()
     {
         PlaneMask = LayerMask.GetMask("Plane");
+        PlaneLayer = LayerMask.NameToLayer("Plane");
         PlayerMask = LayerMask.GetMask("Player");
+        PlayerLayer = LayerMask.NameToLayer("Player");
         EnemyMask = LayerMask.GetMask("Enemy");
+        EnemyLayer = LayerMask.NameToLayer("Enemy");
     }
 
 #if UNITY_EDITOR

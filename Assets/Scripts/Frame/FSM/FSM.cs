@@ -172,3 +172,10 @@ public enum E_CharacterFsmStatus
     
     Max
 }
+
+public enum E_BulletFsmStatus
+{
+    Start,
+    Running,
+    End
+}

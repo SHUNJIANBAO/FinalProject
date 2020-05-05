@@ -42,6 +42,7 @@ public class Main : MonoSingleton<Main>
         SkillConfig.LoadCsvCfg();
         LevelConfig.LoadCsvCfg();
         BulletConfig.LoadCsvCfg();
+        BarrageConfig.LoadCsvCfg();
         ColliderConfig.LoadCsvCfg();
 
     }

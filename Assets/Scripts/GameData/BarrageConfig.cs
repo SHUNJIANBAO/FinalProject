@@ -13,6 +13,7 @@ public class BarrageConfig : CsvCfg<BarrageConfig>
     public float BirthIntervalDistance { get; protected set; }
     public int Wave { get; protected set; }
     public float ShootIntervalTime { get; protected set; }
+    public E_Direction Direction { get; protected set; }
 
     public static string FilePath = "Config/Barrage";
 }
