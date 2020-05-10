@@ -94,7 +94,10 @@ public class CharJumpStatus : CharFsmBase
                 //跳跃时做x轴的位移，到指定点
                 m_Owner.MoveTarget.y = m_Owner.transform.position.y;
                 m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _jumpMoveSpeedRatio * GameManager.DeltaTime);
-                m_Movement.LookToTarget(m_Owner.MoveTarget);
+                if (Mathf.Abs(m_Owner.transform.position.x-m_Owner.MoveTarget.x)>0.1f)
+                {
+                    m_Owner.LookToTarget(m_Owner.MoveTarget);
+                }
 
 
                 _isJumping = true;

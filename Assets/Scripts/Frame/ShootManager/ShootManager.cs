@@ -36,7 +36,7 @@ public class ShootManager : Singleton<ShootManager>
                 break;
         }
         var emitter = CreateEmitterManager(PoolType.EmitterManager, parent, pos);
-        emitter.Init(bullet, dir, bulletDamage, barrageCfg, targetLayer);
+        emitter.Init(bullet, false, dir, bulletDamage, barrageCfg, targetLayer);
         emitter.Enable();
 
         return emitter;
@@ -75,7 +75,7 @@ public class ShootManager : Singleton<ShootManager>
                 break;
         }
         var emitter = CreateEmitterManager(PoolType.EmitterManager, parent, owner.transform.position);
-        emitter.Init(bullet, dir, bulletDamage, barrageCfg, targetLayer);
+        emitter.Init(bullet, owner.transform.localScale.x > 0, dir, bulletDamage, barrageCfg, targetLayer);
         emitter.Enable();
         return emitter;
     }
@@ -86,7 +86,7 @@ public class ShootManager : Singleton<ShootManager>
         var emitterGo = PoolManager.InstantiateGameObject(go, pType);
         var emitter = emitterGo.GetComponent<EmitterManager>();
         emitter.transform.SetParent(parent, false);
-        emitter.transform.localPosition = pos;
+        emitter.transform.position = pos;
         return emitter;
     }
 }

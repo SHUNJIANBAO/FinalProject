@@ -7,7 +7,10 @@ public class EmitterManager : MonoBehaviour
     Coroutine _curCoroutine;
     List<Emitter> _emitterList = new List<Emitter>();
 
+    public System.Action OnUpdate;
+
     GameObject _bullet;
+    bool _isFaceRight;
     Vector3 _bulletDir;
     int _emitterCount;
     Vector2 _createEmitterOffest;
@@ -20,10 +23,11 @@ public class EmitterManager : MonoBehaviour
     int _shootWave;
     float _shootIntervalTime;
 
-    public void Init(GameObject bullet, Vector3 bulletDir, float bulletDamage, BarrageConfig barrageCfg, int targetLayer)
+    public void Init(GameObject bullet, bool isFaceRight, Vector3 bulletDir, float bulletDamage, BarrageConfig barrageCfg, int targetLayer)
     {
         _bullet = bullet;
         _bulletDir = bulletDir;
+        _isFaceRight = isFaceRight;
         _targetLayer = targetLayer;
         _bulletDamage = bulletDamage;
         _emitterCount = barrageCfg.Count;
@@ -71,7 +75,7 @@ public class EmitterManager : MonoBehaviour
         Vector2 pos = Vector2.zero;
         if (transform.parent == null)
         {
-            if (_bulletDir.x >= 0)
+            if (_isFaceRight)
             {
                 pos = new Vector2(0, maxInterval / 2) + offest;
             }
@@ -107,6 +111,10 @@ public class EmitterManager : MonoBehaviour
             }
             yield return null;
         } while (!shootEnd);
+        for (int i = 0; i < emitterList.Count; i++)
+        {
+            PoolManager.DestroyGameObject(emitterList[i].transform.parent.gameObject, PoolType.Emitter);
+        }
         PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
     }
     IEnumerator CreateSectorEmitter(int count, Vector2 offest, float intervalTime, float IntervalDistance)
@@ -138,7 +146,10 @@ public class EmitterManager : MonoBehaviour
             }
             yield return null;
         } while (!shootEnd);
-        PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
+        for (int i = 0; i < emitterList.Count; i++)
+        {
+            PoolManager.DestroyGameObject(emitterList[i].transform.parent.gameObject, PoolType.Emitter);
+        }
         PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
     }
     IEnumerator CreateRecursionEmitter(int count, Vector2 offest, float intervalTime, float IntervalDistance)
@@ -168,6 +179,10 @@ public class EmitterManager : MonoBehaviour
             }
             yield return null;
         } while (!shootEnd);
+        for (int i = 0; i < emitterList.Count; i++)
+        {
+            PoolManager.DestroyGameObject(emitterList[i].transform.parent.gameObject, PoolType.Emitter);
+        }
         PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
     }
 
@@ -189,5 +204,14 @@ public class EmitterManager : MonoBehaviour
         {
             _emitterList[i].ShootStop();
         }
+    }
+
+    private void Update()
+    {
+        OnUpdate?.Invoke();
+    }
+    private void OnDisable()
+    {
+        OnUpdate = null;
     }
 }

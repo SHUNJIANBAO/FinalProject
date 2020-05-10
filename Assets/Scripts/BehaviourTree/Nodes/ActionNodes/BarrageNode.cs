@@ -12,9 +12,16 @@ public class BarrageNode : ActionNode
 
     public float Delay;
 
+
+    [System.NonSerialized]
+    EmitterManager _emitterManager;
+    [System.NonSerialized]
+    Vector3 _pos = Vector3.zero;
+
     public enum TargetPos
     {
         敌人位置,
+        敌人X轴位置,
         固定位置,
     }
 
@@ -32,7 +39,7 @@ public class BarrageNode : ActionNode
 
     public override void OnEnter()
     {
-
+        _pos = Offest;
     }
 
     public override void OnExit()
@@ -44,27 +51,39 @@ public class BarrageNode : ActionNode
         if (!_enter)
         {
             _enter = true;
-            Vector3 pos = Offest;
             Transform parent = null;
-            switch (TargetPosType)
-            {
-                case TargetPos.敌人位置:
-                    parent = m_Owner.AttackTarget.transform;
-                    break;
-                case TargetPos.固定位置:
-                    break;
-            }
             BarrageConfig bCfg = BarrageConfig.GetData(BarrageId);
             var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + BulletId));
             TimerManager.Instance.AddListener(Delay, () =>
             {
+                switch (TargetPosType)
+                {
+                    case TargetPos.敌人位置:
+                        parent = m_Owner.AttackTarget.transform;
+                        break;
+                    case TargetPos.固定位置:
+                        break;
+                    case TargetPos.敌人X轴位置:
+                        _pos.x = m_Owner.AttackTarget.transform.position.x;
+                        _pos.y = Offest.y;
+                        break;
+                }
                 if (m_Owner.RoleType == RoleType.Player)
                 {
-                    ShootManager.Instance.Shoot(parent, pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.EnemyLayer);
+                    _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.EnemyLayer);
                 }
                 else
                 {
-                    ShootManager.Instance.Shoot(parent, pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.PlayerLayer);
+                    _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.PlayerLayer);
+                }
+                if (TargetPosType==TargetPos.敌人X轴位置)
+                {
+                    _emitterManager.OnUpdate += () =>
+                    {
+                        _pos.x = m_Owner.AttackTarget.transform.position.x;
+                        _pos.y = Offest.y;
+                        _emitterManager.transform.position = _pos;
+                    };
                 }
             });
         }

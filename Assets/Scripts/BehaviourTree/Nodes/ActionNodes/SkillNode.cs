@@ -27,7 +27,7 @@ public class SkillNode : ActionNode
     public override void OnEnter()
     {
         _skillEnd = false;
-        m_Movement.Attack(SkillId, BeForce, () => _skillEnd = true);
+        m_Movement.Attack(SkillId, BeForce, null, () => _skillEnd = true);
     }
 
     public override void OnStay()

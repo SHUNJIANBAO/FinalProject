@@ -32,6 +32,7 @@ public class CharHitFlyStatus : CharFsmBase
         _isFly = false;
         m_Owner.IsInvincible = true;
         m_Animator.SetInteger("Index", (int)E_AnimatorIndex.HurtFlyStart);
+        Physics2D.IgnoreLayerCollision(GameConfig.Instance.PlayerLayer, GameConfig.Instance.EnemyLayer, true);
     }
 
     protected override void OnStay()
@@ -65,6 +66,7 @@ public class CharHitFlyStatus : CharFsmBase
     {
         base.OnExit();
         m_Owner.IsInvincible = false;
+        Physics2D.IgnoreLayerCollision(GameConfig.Instance.PlayerLayer, GameConfig.Instance.EnemyLayer, false);
     }
 
 }

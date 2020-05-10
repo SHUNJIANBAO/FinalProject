@@ -10,11 +10,12 @@ public class CharAttackStatus : CharFsmBase
     string _skillName;
     float _moveSpeed;
 
-    Vector3 _blinkTarget = Vector3.zero;
+    //Vector3 _blinkTarget = Vector3.zero;
     //Vector3 _tempVector = Vector3.zero;
 
     Action _damageCallback;
     int _damageIndex;
+    int _blinkIndex;
 
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
@@ -33,10 +34,19 @@ public class CharAttackStatus : CharFsmBase
 
     public override bool CanInterrupt()
     {
+        Debug.Log(_timeCount + "|" + _skill.ComboTime);
         return _timeCount >= _skill.ComboTime;
     }
+
+    protected override void OnInterrupt()
+    {
+        base.OnInterrupt();
+        Debug.LogError(_timeCount + "|" + _skill.ComboTime);
+    }
+
     protected override void OnEnter(params object[] objs)
     {
+        Debug.LogError("Enter");
         base.OnEnter(objs);
         if (objs != null && objs.Length > 0)
             _damageCallback = (Action)objs[0];
@@ -44,19 +54,25 @@ public class CharAttackStatus : CharFsmBase
             _damageCallback = null;
         _timeCount = 0;
         _damageIndex = 0;
+        _blinkIndex = 0;
         _skill = m_Owner.CurSkill;
         _skillName = AnimConfig.GetData(_skill.AnimId).Name;
         m_Animator.SetInteger("Index", _skill.AnimId);
-        _moveSpeed = _skill.MoveDistance / _skill.MoveDuration;
         m_Owner.GetRangeAttribute(E_Attribute.Mp.ToString()).ChangeValue(-_skill.UseMp);
-        if (m_Owner.IsFaceRight)
+
+        if (m_Owner.AttackTarget != null)
         {
-            _blinkTarget.x = _skill.MoveDistance;
+            m_Owner.LookToTarget(m_Owner.AttackTarget.transform.position);
         }
-        else
-        {
-            _blinkTarget.x = -_skill.MoveDistance;
-        }
+        //_moveSpeed = _skill.MoveDistance / _skill.MoveDuration;
+        //if (m_Owner.IsFaceRight)
+        //{
+        //    _blinkTarget.x = _skill.MoveDistance;
+        //}
+        //else
+        //{
+        //    _blinkTarget.x = -_skill.MoveDistance;
+        //}
     }
 
     protected override void OnStay()
@@ -70,11 +86,11 @@ public class CharAttackStatus : CharFsmBase
             CaculateInvincible();
             CaculateMove();
 
-            if (m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.8f)
+            if (m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.9f)
             {
                 m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
             }
-            else if (!m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.8f)
+            else if (!m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.9f)
             {
                 m_Owner.ChangeStatus(E_CharacterFsmStatus.Jump, true);
             }
@@ -103,19 +119,48 @@ public class CharAttackStatus : CharFsmBase
     /// </summary>
     void CaculateMove()
     {
-        if (_skill.MoveDistance == 0 || _skill.MoveDuration == 0) return;
-        if (_timeCount >= _skill.MoveStartTime && _timeCount < _skill.MoveStartTime + _skill.MoveDuration)
+        for (int i = _blinkIndex; i < _skill.MoveStartTime.Count; i++)
         {
-            m_Owner.Rigibody.velocity = Vector2.zero;
-            if (m_Owner.transform.localScale.x > 0)
+            if (_timeCount >= _skill.MoveStartTime[i])
             {
-                m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
-            }
-            else
-            {
-                m_Owner.transform.Translate(Vector3.left * _moveSpeed * GameManager.DeltaTime);
+                if (_skill.MoveDistance[i] == 0 || _skill.MoveDuration[i] == 0) return;
+                _moveSpeed = _skill.MoveDistance[i] / _skill.MoveDuration[i];
+                if (m_CurStateInfo.normalizedTime < 0.7f)
+                {
+                    m_Owner.Rigibody.velocity = Vector2.zero;
+                }
+                else
+                {
+                    _moveSpeed -= _moveSpeed * (1 - m_CurStateInfo.normalizedTime);
+                }
+                if (m_Owner.transform.localScale.x > 0)
+                {
+                    m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
+                }
+                else
+                {
+                    m_Owner.transform.Translate(Vector3.left * _moveSpeed * GameManager.DeltaTime);
+                }
+                if (_timeCount > _skill.MoveStartTime[i] + _skill.MoveDuration[i])
+                {
+                    _blinkIndex++;
+                    i = _blinkIndex;
+                }
             }
         }
+        //if (_skill.MoveDistance == 0 || _skill.MoveDuration == 0) return;
+        //if (_timeCount >= _skill.MoveStartTime && _timeCount < _skill.MoveStartTime + _skill.MoveDuration)
+        //{
+        //    m_Owner.Rigibody.velocity = Vector2.zero;
+        //    if (m_Owner.transform.localScale.x > 0)
+        //    {
+        //        m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
+        //    }
+        //    else
+        //    {
+        //        m_Owner.transform.Translate(Vector3.left * _moveSpeed * GameManager.DeltaTime);
+        //    }
+        //}
     }
 
     /// <summary>
@@ -156,7 +201,8 @@ public class CharAttackStatus : CharFsmBase
         var collider = PoolManager.InstantiateGameObject(PathManager.ColliderPath, PoolType.Collider);
         var ctrl = collider.GetComponent<ColliderCtrl>();
         int colliderId = _skill.ColliderId.Count > index ? _skill.ColliderId[index] : _skill.ColliderId[0];
-        ctrl.Init(colliderId, m_Owner, (int)damage, _skill.HitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
+        int hitFlyForce = _skill.HitFlyForce.Count > index ? _skill.HitFlyForce[index] : _skill.HitFlyForce[0];
+        ctrl.Init(colliderId, m_Owner, (int)damage, hitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
         _damageCallback?.Invoke();
     }
 

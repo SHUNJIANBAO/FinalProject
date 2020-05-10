@@ -32,7 +32,7 @@ public class CharMoveStatus : CharFsmBase
     protected override void OnEnter(params object[] objs)
     {
         base.OnEnter(objs);
-        if (objs!=null&&objs.Length>0)
+        if (objs != null && objs.Length > 0)
         {
             _moveCallback = (Action<Character>)objs[0];
         }
@@ -47,14 +47,23 @@ public class CharMoveStatus : CharFsmBase
     protected override void OnStay()
     {
         base.OnStay();
-        if (Vector2.Distance(m_Owner.transform.position, m_Owner.MoveTarget) < 0.1f)
+        if (Mathf.Abs(m_Owner.transform.position.x - m_Owner.MoveTarget.x) < 0.1f)
         {
             m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
         }
         else
         {
             _moveCallback?.Invoke(m_Owner);
-            m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+            if (m_Owner.IsFaceRight)
+            {
+                m_Owner.transform.Translate(Vector3.right * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+            }
+            else
+            {
+                m_Owner.transform.Translate(Vector3.left * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+            }
+
+            //m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
         }
     }
 }

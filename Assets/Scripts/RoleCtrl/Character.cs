@@ -267,7 +267,7 @@ public class Character : MonoEntity
         if (IsInvincible) return;
         GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
         if (CurStatus == E_CharacterFsmStatus.FallDown) return;
-        LookToTarget(atkOwner);
+        LookToTarget(atkOwner.transform.position);
         var shield = GetRangeAttribute(E_Attribute.Shield.ToString());
         shield.ChangeValue(-hitForce);
 
@@ -281,9 +281,9 @@ public class Character : MonoEntity
         }
     }
 
-    void LookToTarget(GameObject target)
+    public void LookToTarget(Vector3 target)
     {
-        if (target.transform.position.x > transform.position.x)
+        if (target.x > transform.position.x)
         {
             transform.localScale = Vector3.one;
         }

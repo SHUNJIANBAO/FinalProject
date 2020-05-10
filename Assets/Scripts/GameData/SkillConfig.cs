@@ -11,16 +11,16 @@ public class SkillConfig : CsvCfg<SkillConfig>
     public int BulletId { get; protected set; }
     public int NextSkillId { get; protected set; }
     public int UseMp { get; protected set; }
-    public int HitFlyForce { get; protected set; }
+    public List<int> HitFlyForce { get; protected set; }
     public List<float> DamageRatio { get; protected set; }
     public List<float> DamageTime { get; protected set; }
     public float ComboTime { get; protected set; }
     public float CanExitTime { get; protected set; }
     public float InvincibleTime { get; protected set; }
     public float InvincibleDuration { get; protected set; }
-    public float MoveDistance { get; protected set; }
-    public float MoveStartTime { get; protected set; }
-    public float MoveDuration { get; protected set; }
+    public List<float> MoveDistance { get; protected set; }
+    public List<float> MoveStartTime { get; protected set; }
+    public List<float> MoveDuration { get; protected set; }
     public RoleType RoleType { get; protected set; }
     public string HitEffect { get; protected set; }
     public E_HitEffectPosType HitEffectPosType { get; protected set; }

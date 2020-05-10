@@ -7,6 +7,7 @@ public class PlayerCtrl : MonoBehaviour
     CharacterMovement _moment;
     Character _character;
     bool _jumpAttack = false;
+    bool _jumpBlink = false;
     private void Awake()
     {
         _moment = GetComponent<CharacterMovement>();
@@ -35,6 +36,7 @@ public class PlayerCtrl : MonoBehaviour
         if (_character.IsGround)
         {
             _jumpAttack = false;
+            _jumpBlink = false;
         }
         if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)))
         {
@@ -112,7 +114,33 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Blink)))
         {
-            _moment.Attack(1010011, true);
+            if (_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack,true))
+            {
+                if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)))
+                {
+                    _character.LookToTarget(_character.transform.position + Vector3.left);
+                }
+                if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Rigth)))
+                {
+                    _character.LookToTarget(_character.transform.position + Vector3.right);
+                }
+                if (_character.IsGround)
+                {
+                    _moment.Attack(1010011, true);
+                }
+                else
+                {
+                    if (!_jumpBlink)
+                    {
+                        _jumpBlink = true;
+                        _moment.Attack(1010011, true);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
             //if (_character.CanInterruptStatus())
             //{
 

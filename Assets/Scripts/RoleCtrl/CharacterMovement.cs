@@ -22,7 +22,8 @@ public class CharacterMovement : MonoBehaviour
         if (CheckCanUse(skillCfg))
         {
             _character.CurSkill = skillCfg;
-            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, damageCallback, endCallback);
+
+            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, endCallback, damageCallback );
         }
     }
 
@@ -58,7 +59,7 @@ public class CharacterMovement : MonoBehaviour
         _character.MoveTarget = targetPos;
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Move)) return;
 
-        LookToTarget(targetPos);
+        _character.LookToTarget(targetPos);
 
         if (_character.IsGround && _character.CurStatus != E_CharacterFsmStatus.Move)
         {
@@ -66,17 +67,6 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    public void LookToTarget(Vector3 targetPos)
-    {
-        if (targetPos.x > _character.transform.position.x)
-        {
-            _character.transform.localScale = _right;
-        }
-        if (targetPos.x < _character.transform.position.x)
-        {
-            _character.transform.localScale = _left;
-        }
-    }
 
     public void MoveEnd()
     {
