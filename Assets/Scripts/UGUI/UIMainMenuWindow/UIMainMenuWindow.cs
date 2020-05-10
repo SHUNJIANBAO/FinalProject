@@ -87,7 +87,7 @@ public class UIMainMenuWindow : UIWindowBase
     public override void OnOpen(params object[] objs)
     {
         base.OnOpen(objs);
-        AudioManager.Instance.PlayBGM("B");
+        AudioManager.Instance.PlayBGM("Dirtmouth");
         foreach (var btn in m_ButtonList)
         {
             btn.DOLocalMoveX(600, 0);

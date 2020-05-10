@@ -34,19 +34,16 @@ public class CharAttackStatus : CharFsmBase
 
     public override bool CanInterrupt()
     {
-        Debug.Log(_timeCount + "|" + _skill.ComboTime);
         return _timeCount >= _skill.ComboTime;
     }
 
     protected override void OnInterrupt()
     {
         base.OnInterrupt();
-        Debug.LogError(_timeCount + "|" + _skill.ComboTime);
     }
 
     protected override void OnEnter(params object[] objs)
     {
-        Debug.LogError("Enter");
         base.OnEnter(objs);
         if (objs != null && objs.Length > 0)
             _damageCallback = (Action)objs[0];

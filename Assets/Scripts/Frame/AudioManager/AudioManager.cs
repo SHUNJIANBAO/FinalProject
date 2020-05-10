@@ -133,6 +133,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
+            if (bgmSource.clip.name == bgmName) return;
             StopAllCoroutines();
             StartCoroutine(BgmChange(tempClip, beForce));
         }

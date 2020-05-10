@@ -12,9 +12,14 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
     {
         PlayerData.Instance.CurPlayerInfo.CurLevelId = levelId;
         string levelName = "Level_" + levelId;
+        var levelCfg = LevelConfig.GetData(levelId);
         UICallBack uiCallback = (args) =>
         {
             SceneManager.LoadScene(levelName);
+            if (!string.IsNullOrEmpty(levelCfg.BGM))
+            {
+                AudioManager.Instance.PlayBGM(levelCfg.BGM);
+            }
             callback?.Invoke();
             UIManager.Instance.CloseWindow<UILoadingWindow>();
         };
@@ -24,13 +29,13 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
     public void LoadSceneAsync(int levelId, Action onComplete = null)
     {
         PlayerData.Instance.CurPlayerInfo.CurLevelId = levelId;
-        string levelName = "Level_" + levelId;
         UIManager.Instance.CloseAllWindow();
-        StartCoroutine(LoadSceneAsyncIE(levelName, onComplete));
+        StartCoroutine(LoadSceneAsyncIE(levelId, onComplete));
     }
 
-    IEnumerator LoadSceneAsyncIE(string levelName, Action onComplete)
+    IEnumerator LoadSceneAsyncIE(int levelId, Action onComplete)
     {
+        string levelName= "Level_" + levelId;
         bool complete = false;
         UICallBack callback = (objs) =>
         {
@@ -57,6 +62,11 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         yield return new WaitForSeconds(LoadCompleteDelay);
         UIManager.Instance.CloseWindow(loadingWindow);
         asyncOperation.allowSceneActivation = true;
+        var levelCfg = LevelConfig.GetData(levelId);
+        if (!string.IsNullOrEmpty(levelCfg.BGM))
+        {
+            AudioManager.Instance.PlayBGM(levelCfg.BGM);
+        }
     }
 
 
