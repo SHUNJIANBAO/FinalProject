@@ -23,10 +23,9 @@ GameObject:
   - component: {fileID: 95223747878970244}
   - component: {fileID: 50351724709476822}
   - component: {fileID: 61670228075384408}
+  - component: {fileID: 114296741619162730}
   - component: {fileID: 114310719118492350}
   - component: {fileID: 114062434599463330}
-  - component: {fileID: 114651656175193548}
-  - component: {fileID: 114169136975656622}
   m_Layer: 10
   m_Name: TaoLuoSi
   m_TagString: Untagged
@@ -121,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a22e142cb111c3b4bb41b19751bf21e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114169136975656622
+--- !u!114 &114296741619162730
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,42 +128,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1837804671112726}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a22e142cb111c3b4bb41b19751bf21e2, type: 3}
+  m_Script: {fileID: 11500000, guid: c07bb64c1fd750d4d8b7956c43958b55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Id: 3010
+  Index: 1
+  CurStatus: 0
+  IsGround: 0
+  IsInvincible: 0
+  m_AttackTarget: {fileID: 0}
+  MoveTarget: {x: 0, y: 0, z: 0}
+  Rigibody: {fileID: 0}
 --- !u!114 &114310719118492350
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1837804671112726}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68b08bd3a88301549b4cbf7802930d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   NodeAssets: {fileID: 11400000, guid: 748c1ea74c121364aa07d49316a43620, type: 2}
   Interval: 0
---- !u!114 &114651656175193548
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1837804671112726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a28a8c04e9e0ca45a3b390bc9794ac9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Id: 3010
-  Index: 1
-  RoleType: 0
-  CurStatus: 0
-  IsGround: 0
-  IsInvincible: 0
-  AttackTarget: {fileID: 0}
-  MoveTarget: {x: 0, y: 0, z: 0}
-  Rigibody: {fileID: 0}
 --- !u!212 &212969705961373918
 SpriteRenderer:
   m_ObjectHideFlags: 1

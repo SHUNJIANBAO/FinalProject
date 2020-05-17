@@ -27,6 +27,8 @@ public class BarrageNode : ActionNode
 
     [System.NonSerialized]
     bool _enter;
+    [System.NonSerialized]
+    Transform TargetTrans;
     protected override E_NodeStatus Trick()
     {
         if (_enter)
@@ -40,6 +42,7 @@ public class BarrageNode : ActionNode
     public override void OnEnter()
     {
         _pos = Offest;
+        TargetTrans = m_Owner.AttackTarget.transform;
     }
 
     public override void OnExit()
@@ -59,16 +62,16 @@ public class BarrageNode : ActionNode
                 switch (TargetPosType)
                 {
                     case TargetPos.敌人位置:
-                        parent = m_Owner.AttackTarget.transform;
+                        parent = TargetTrans;
                         break;
                     case TargetPos.固定位置:
                         break;
                     case TargetPos.敌人X轴位置:
-                        _pos.x = m_Owner.AttackTarget.transform.position.x;
+                        _pos.x = TargetTrans.position.x;
                         _pos.y = Offest.y;
                         break;
                 }
-                if (m_Owner.RoleType == RoleType.Player)
+                if (m_Owner==GameConfig.Player)
                 {
                     _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.EnemyLayer);
                 }
@@ -80,7 +83,7 @@ public class BarrageNode : ActionNode
                 {
                     _emitterManager.OnUpdate += () =>
                     {
-                        _pos.x = m_Owner.AttackTarget.transform.position.x;
+                        _pos.x = TargetTrans.position.x;
                         _pos.y = Offest.y;
                         _emitterManager.transform.position = _pos;
                     };

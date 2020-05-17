@@ -7,8 +7,8 @@ public class CharacterMovement : MonoBehaviour
 {
     Character _character;
 
-    Vector3 _right = Vector3.one;
-    Vector3 _left = new Vector3(-1, 1, 1);
+    //Vector3 _right = Vector3.one;
+    //Vector3 _left = new Vector3(-1, 1, 1);
 
     private void Awake()
     {

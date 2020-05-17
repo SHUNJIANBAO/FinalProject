@@ -62,11 +62,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         yield return new WaitForSeconds(LoadCompleteDelay);
         UIManager.Instance.CloseWindow(loadingWindow);
         asyncOperation.allowSceneActivation = true;
-        var levelCfg = LevelConfig.GetData(levelId);
-        if (!string.IsNullOrEmpty(levelCfg.BGM))
-        {
-            AudioManager.Instance.PlayBGM(levelCfg.BGM);
-        }
+        GameConfig.CurLevelId = levelId;
     }
 
 

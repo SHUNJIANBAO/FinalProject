@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CsvCfg<T> where T : CsvCfg<T>, new()
+public abstract class CsvCfg<T> where T : new()
 {
     public int Id { get; protected set; }
     static Dictionary<int, T> dataMap;

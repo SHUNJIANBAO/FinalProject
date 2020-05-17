@@ -10,8 +10,6 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterMovement))]
 public class Character : MonoEntity
 {
-    [Header("角色类型")]
-    public RoleType RoleType;
     [Header("角色当前状态")]
     public E_CharacterFsmStatus CurStatus;
     [Header("是否在地面上")]
@@ -19,7 +17,18 @@ public class Character : MonoEntity
     [Header("是否无敌")]
     public bool IsInvincible;
     [Header("攻击目标")]
-    public Character AttackTarget;
+    public Character m_AttackTarget;
+    public Character AttackTarget
+    {
+        get
+        {
+            return m_AttackTarget;
+        }
+        set
+        {
+            m_AttackTarget = value;
+        }
+    }
     [Header("移动目标点")]
     public Vector3 MoveTarget;
     //是否面向右
@@ -28,6 +37,7 @@ public class Character : MonoEntity
     public SkillConfig CurSkill;
     [HideInInspector]
     public Rigidbody2D Rigibody;
+    protected BehaviourTree m_Tree;
     protected Animator m_Animator;
     public AnimatorStateInfo CurStateInfo
     {
@@ -56,17 +66,11 @@ public class Character : MonoEntity
             return m_BottomOffest;
         }
     }
-    Timer _caculateDelta;
+    protected Timer m_CaculateDelta;
 
-    GameRangeAttribute _hp;
-    GameRangeAttribute _mp;
-    GameRangeAttribute _shield;
-    GameAttribute _attack;
-    GameAttribute _moveSpeed;
 
     protected GameRangeAttributeInstance m_Hp;
     protected GameRangeAttributeInstance m_Mp;
-    protected GameRangeAttributeInstance m_Shield;
     protected GameAttributeInstance m_Attack;
     protected GameAttributeInstance m_MoveSpeed;
 
@@ -77,6 +81,7 @@ public class Character : MonoEntity
         m_Animator = GetComponent<Animator>();
         Rigibody = GetComponent<Rigidbody2D>();
         m_BoxCollider = GetComponent<BoxCollider2D>();
+        m_Tree = GetComponent<BehaviourTree>();
 
         m_TopOffest = new Vector2(0, m_BoxCollider.size.y * 0.5f);
         m_BottomOffest = new Vector2(0, -m_BoxCollider.size.y * 0.5f + m_BoxCollider.offset.y);
@@ -84,43 +89,12 @@ public class Character : MonoEntity
         RegistAttribute();
         RegistFsmStatus();
         Reborn();
+        m_Tree.enabled = true;
     }
 
-    void RegistAttribute()
+    protected virtual void RegistAttribute()
     {
-        RoleConfig roleCfg = RoleConfig.GetData(Id);
-        gameObject.name = roleCfg.Name;
-        _hp = new GameRangeAttribute(E_Attribute.Hp.ToString(), 0, roleCfg.Hp);
-        m_Hp = AddRangeAttribute(_hp);
-        _mp = new GameRangeAttribute(E_Attribute.Mp.ToString(), 0, roleCfg.Mp, 0.1f);
-        m_Mp = AddRangeAttribute(_mp);
-        _attack = new GameAttribute(E_Attribute.Atk.ToString(), roleCfg.Attack);
-        m_Attack = AddAttribute(_attack);
-        _moveSpeed = new GameAttribute(E_Attribute.MoveSpeed.ToString(), roleCfg.MoveSpeed);
-        m_MoveSpeed = AddAttribute(_moveSpeed);
 
-        _caculateDelta = TimerManager.Instance.AddListener(0, 0.02f, m_MonoAttribute.CaculateRangeDelta, null, true);
-
-        RoleType = roleCfg.RoleType;
-
-        _shield = new GameRangeAttribute(E_Attribute.Shield.ToString(), 0, roleCfg.HitFlyShield, 0.02f);
-        m_Shield = AddRangeAttribute(_shield);
-        switch (RoleType)
-        {
-            case RoleType.Player:
-                UIBattleWindow.OnPlayerHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue());
-                UIBattleWindow.OnPlayerMpChange(m_Mp.Current, m_Mp.GetMinTotalValue(), m_Mp.GetMaxTotalValue());
-                GetRangeAttribute(E_Attribute.Hp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnPlayerHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue()); };
-                GetRangeAttribute(E_Attribute.Mp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnPlayerMpChange(m_Mp.Current, m_Mp.GetMinTotalValue(), m_Mp.GetMaxTotalValue()); };
-                break;
-            case RoleType.Boss:
-                UIBattleWindow.ShowBossUI();
-                UIBattleWindow.OnBossHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue());
-                UIBattleWindow.OnBossShieldChange(m_Shield.Current, m_Shield.GetMinTotalValue(), m_Shield.GetMaxTotalValue());
-                GetRangeAttribute(E_Attribute.Hp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnBossHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue()); };
-                GetRangeAttribute(E_Attribute.Shield.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnBossShieldChange(m_Shield.Current, m_Shield.GetMinTotalValue(), m_Shield.GetMaxTotalValue()); };
-                break;
-        }
     }
 
     /// <summary>
@@ -228,7 +202,7 @@ public class Character : MonoEntity
     {
         if (CurStatus == E_CharacterFsmStatus.Attack)
         {
-            if (fsm.GetStatus((int)CurStatus).CanInterrupt())
+            if ((fsm.GetStatus((int)CurStatus)as CharAttackStatus ).CanCombo())
             {
                 return IsSubSkill(skillId);
             }
@@ -258,6 +232,10 @@ public class Character : MonoEntity
         return false;
     }
 
+    void Hit(int damage)
+    {
+        GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
+    }
 
     /// <summary>
     /// 受击
@@ -265,20 +243,8 @@ public class Character : MonoEntity
     public virtual void Hurt(GameObject atkOwner, int damage, int hitForce)
     {
         if (IsInvincible) return;
-        GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
-        if (CurStatus == E_CharacterFsmStatus.FallDown) return;
-        LookToTarget(atkOwner.transform.position);
-        var shield = GetRangeAttribute(E_Attribute.Shield.ToString());
-        shield.ChangeValue(-hitForce);
 
-        if (shield.Current <= 0)
-        {
-            ChangeStatus(E_CharacterFsmStatus.HitFly, true);
-        }
-        else if (RoleType != RoleType.Boss)
-        {
-            ChangeStatus(E_CharacterFsmStatus.Hurt, true);
-        }
+        Hit(damage);
     }
 
     public void LookToTarget(Vector3 target)
@@ -297,17 +263,8 @@ public class Character : MonoEntity
     public override void OnDestory()
     {
         base.OnDestory();
-        switch (RoleType)
-        {
-            case RoleType.Boss:
-                UIBattleWindow.HideBossUI();
-                break;
-            case RoleType.Player:
-                //LoadSceneManager.Instance.LoadScene(PlayerData.Instance.CurPlayerInfo.CurLevelId, Reborn);
-                return;
-        }
         if (TimerManager.GetInstance() != null)
-            TimerManager.Instance.RemoveListener(_caculateDelta);
+            TimerManager.Instance.RemoveListener(m_CaculateDelta);
     }
 
     protected override void OnDrawGizmosUpdate()

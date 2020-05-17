@@ -34,6 +34,11 @@ public class CharAttackStatus : CharFsmBase
 
     public override bool CanInterrupt()
     {
+        return true;
+    }
+
+    public bool CanCombo()
+    {
         return _timeCount >= _skill.ComboTime;
     }
 
@@ -219,7 +224,7 @@ public class CharAttackStatus : CharFsmBase
         {
             parent = m_Owner.transform;
         }
-        if (m_Owner.RoleType == RoleType.Player)
+        if (m_Owner==GameConfig.Player)
         {
             ShootManager.Instance.Shoot(parent, m_Owner.gameObject, bullet, damage, barrageCfg, GameConfig.Instance.EnemyLayer);
         }

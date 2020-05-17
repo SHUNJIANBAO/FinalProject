@@ -37,7 +37,9 @@ public class Main : MonoSingleton<Main>
 
         ItemConfig.LoadCsvCfg();
         AnimConfig.LoadCsvCfg();
-        RoleConfig.LoadCsvCfg();
+        PlayerConfig.LoadCsvCfg();
+        MonsterConfig.LoadCsvCfg();
+        BossConfig.LoadCsvCfg();
         BuffConfig.LoadCsvCfg();
         SkillConfig.LoadCsvCfg();
         LevelConfig.LoadCsvCfg();

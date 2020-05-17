@@ -23,10 +23,22 @@ public static class PoolManager
         {
             m_PoolDict.Add(pType, new Dictionary<string, PoolSpawn>());
         }
-        if (!m_PoolDict[pType].ContainsKey(go.name))
+        try
         {
-            var pool = new PoolSpawn(go);
-            m_PoolDict[pType].Add(go.name, pool);
+            if (!m_PoolDict[pType].ContainsKey(go.name))
+            {
+                var pool = new PoolSpawn(go);
+                m_PoolDict[pType].Add(go.name, pool);
+            }
+        }
+        catch (System.Exception)
+        {
+
+            Debug.LogError(go.name);
+            foreach (var item in m_PoolDict)
+            {
+                Debug.LogError(item);
+            }
         }
         return m_PoolDict[pType][go.name].GetGameObject();
     }

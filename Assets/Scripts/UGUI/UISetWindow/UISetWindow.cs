@@ -116,7 +116,7 @@ public class UISetWindow : UIWindowBase
     void ShowVolumes(AudioVolumeInfo info)
     {
         Slider_MasterVolume.value = info.MasterVolume;
-        Slider_MusicVolume.value = info.MusicVoulume;
+        Slider_MusicVolume.value = info.BGMVoulume;
         Slider_AudioVolume.value = info.AudioVolume;
     }
 
@@ -134,7 +134,7 @@ public class UISetWindow : UIWindowBase
     public void OnSliderChangeMusicVolume(float value)
     {
         GameData.Instance.SetAudioVolume(E_AudioType.Music, value);
-        AudioManager.Instance.MusicVolume = value;
+        AudioManager.Instance.BGMVolume = value;
     }
     public void OnSliderChangeAudioVolume(float value)
     {

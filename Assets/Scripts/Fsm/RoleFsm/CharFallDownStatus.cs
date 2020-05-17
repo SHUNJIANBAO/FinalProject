@@ -48,6 +48,6 @@ public class CharFallDownStatus : CharFsmBase
     {
         base.OnExit();
         var shield = m_Owner.GetRangeAttribute(E_Attribute.Shield.ToString());
-        shield.Reset();
+        shield?.Reset();
     }
 }

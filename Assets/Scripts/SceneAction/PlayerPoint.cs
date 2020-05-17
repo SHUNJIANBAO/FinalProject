@@ -11,7 +11,7 @@ public class PlayerPoint : MonoBehaviour
         var player = MonoBehaviourManager.GetById(PlayerId);
         if (player == null)
         {
-            RoleConfig rCfg = RoleConfig.GetData(PlayerId);
+            PlayerConfig rCfg = PlayerConfig.GetData(PlayerId);
             string path = PathManager.RolePrefabsPath + rCfg.Name + "/" + rCfg.Name;
             var obj = ResourceManager.Load<GameObject>(path);
             var go = GameObject.Instantiate(obj);

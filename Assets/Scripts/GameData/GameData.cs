@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class AudioVolumeInfo
 {
-    public float MusicVoulume = 1;
+    public float BGMVoulume = 1;
     public float AudioVolume = 1;
     public float MasterVolume = 1;
 }
@@ -29,7 +29,7 @@ public class GameData : Data<GameData>
         if (AudioVolumeInfo != null)
         {
             AudioManager.Instance.MasterVolume = AudioVolumeInfo.MasterVolume;
-            AudioManager.Instance.MusicVolume = AudioVolumeInfo.MusicVoulume;
+            AudioManager.Instance.BGMVolume = AudioVolumeInfo.BGMVoulume;
             AudioManager.Instance.AudioVolume = AudioVolumeInfo.AudioVolume;
         }
         else
@@ -59,7 +59,7 @@ public class GameData : Data<GameData>
                 AudioVolumeInfo.MasterVolume = value;
                 break;
             case E_AudioType.Music:
-                AudioVolumeInfo.MusicVoulume = value;
+                AudioVolumeInfo.BGMVoulume = value;
                 break;
             case E_AudioType.Audio:
                 AudioVolumeInfo.AudioVolume = value;

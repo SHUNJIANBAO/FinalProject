@@ -21,7 +21,6 @@ public class SkillConfig : CsvCfg<SkillConfig>
     public List<float> MoveDistance { get; protected set; }
     public List<float> MoveStartTime { get; protected set; }
     public List<float> MoveDuration { get; protected set; }
-    public RoleType RoleType { get; protected set; }
     public string HitEffect { get; protected set; }
     public E_HitEffectPosType HitEffectPosType { get; protected set; }
     public static string FilePath = "Config/Skill";
