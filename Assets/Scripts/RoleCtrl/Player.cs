@@ -33,8 +33,14 @@ public class Player : Character
         GameConfig.Player = this;
     }
 
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+    }
+
     public override void Hurt(GameObject atkOwner, int damage, int hitForce)
     {
+        if (IsInvincible) return;
         if (CurStatus == E_CharacterFsmStatus.FallDown) return;
         base.Hurt(atkOwner, damage, hitForce);
         LookToTarget(atkOwner.transform.position);

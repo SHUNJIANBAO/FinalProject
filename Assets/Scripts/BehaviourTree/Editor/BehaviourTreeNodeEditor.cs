@@ -67,7 +67,12 @@ public class BehaviourTreeNodeEditor
         {
             _nodeList[i].Reset();
         }
-        _nodeList[0].Reload(ReloadLine);
+        for (int i = 0; i < _nodeList.Count; i++)
+        {
+            _nodeList[i].Reload(ReloadLine);
+
+        }
+        //_nodeList[0].Reload(ReloadLine);
         _window.Repaint();
     }
 
@@ -166,6 +171,12 @@ public class BehaviourTreeNodeEditor
                     CurNode.SetNodePosition(_window.GetPosition(_window.GetXYCount(CurNode.Position)));
                     _isDrag = false;
                     _window.Repaint();
+                }
+                break;
+            case EventType.KeyDown:
+                if (e.keyCode==KeyCode.Delete||e.keyCode==KeyCode.Backspace)
+                {
+                    DestroyNode(CurNode);
                 }
                 break;
                 //case EventType.ScrollWheel:
@@ -306,7 +317,7 @@ public class BehaviourTreeNodeEditor
     {
         NodeAssets assets = ScriptableObject.CreateInstance(typeof(NodeAssets)) as NodeAssets;
         assets.RootNode = _nodeList[0];
-        _curAssets = assets;
+        //_curAssets = assets;
         string assetsPath = EditorUtility.SaveFilePanelInProject("Save", "new BehaviourTree", "asset", "", "Assets/Resources/BehaviourTreeAssets");
         if (string.IsNullOrEmpty(assetsPath)) return;
         AssetDatabase.CreateAsset(assets, assetsPath);

@@ -6,6 +6,10 @@ public class EffectManager : Singleton<EffectManager>
 {
     public GameObject Play(string effName, Vector3 offest, Transform parent, float lifeTime = 0)
     {
+        if (string.IsNullOrEmpty(effName))
+        {
+            return null;
+        }
         string effPath = PathManager.GetEffectPath(effName);
         var eff = PoolManager.InstantiateGameObject(effPath, PoolType.Effect);
         eff.transform.SetParent(parent);
@@ -26,8 +30,12 @@ public class EffectManager : Singleton<EffectManager>
         return eff;
     }
 
-    public GameObject Play(string effName, Vector3 pos,bool isFaceRight, float lifeTime = 0)
+    public GameObject Play(string effName, Vector3 pos, bool isFaceRight, float lifeTime = 0)
     {
+        if (string.IsNullOrEmpty(effName))
+        {
+            return null;
+        }
         string effPath = PathManager.GetEffectPath(effName);
         var eff = PoolManager.InstantiateGameObject(effPath, PoolType.Effect);
         eff.transform.position = pos;

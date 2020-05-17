@@ -34,6 +34,7 @@ public class ColliderCtrl : MonoBehaviour
         switch (_coliderCfg.LifeType)
         {
             case E_ColliderFollowType.None:
+                transform.SetParent(null);
                 if (_owner.IsFaceRight)
                 {
                     transform.position = _owner.transform.position + (Vector3)_coliderCfg.Offest;

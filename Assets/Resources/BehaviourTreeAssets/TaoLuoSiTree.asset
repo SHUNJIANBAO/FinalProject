@@ -1041,7 +1041,7 @@ MonoBehaviour:
   m_Name: "\u6280\u80FD\u8282\u70B9"
   m_EditorClassIdentifier: 
   Description: 
-  _parentNode: {fileID: 114912336462857758}
+  _parentNode: {fileID: 0}
   _childNodesList: []
   Style:
     NodeName: "\u6280\u80FD\u8282\u70B9"
@@ -2544,7 +2544,7 @@ MonoBehaviour:
   m_Name: "\u6280\u80FD\u8282\u70B9"
   m_EditorClassIdentifier: 
   Description: 
-  _parentNode: {fileID: 114912336462857758}
+  _parentNode: {fileID: 0}
   _childNodesList: []
   Style:
     NodeName: "\u6280\u80FD\u8282\u70B9"
@@ -3689,8 +3689,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 537
-      y: 602
+      x: 540
+      y: 600
       width: 200
       height: 50
     XYCount: {x: 38, y: 20}
@@ -4032,8 +4032,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 697
-      y: 612
+      x: 700
+      y: 610
       width: 20
       height: 20
   SkillId: 3010006
@@ -5054,7 +5054,7 @@ MonoBehaviour:
   m_Name: "\u987A\u5E8F\u8282\u70B9"
   m_EditorClassIdentifier: 
   Description: 
-  _parentNode: {fileID: 114912336462857758}
+  _parentNode: {fileID: 0}
   _childNodesList:
   - {fileID: 114061814890868506}
   - {fileID: 114430665579415200}
@@ -5555,7 +5555,7 @@ MonoBehaviour:
   m_Name: "\u6280\u80FD\u8282\u70B9"
   m_EditorClassIdentifier: 
   Description: 
-  _parentNode: {fileID: 114912336462857758}
+  _parentNode: {fileID: 0}
   _childNodesList: []
   Style:
     NodeName: "\u6280\u80FD\u8282\u70B9"
@@ -6559,11 +6559,7 @@ MonoBehaviour:
   Description: 
   _parentNode: {fileID: 114322256029091950}
   _childNodesList:
-  - {fileID: 114731212711583608}
   - {fileID: 114586092644412564}
-  - {fileID: 114088751601991964}
-  - {fileID: 114331824579719612}
-  - {fileID: 114803817634067518}
   Style:
     NodeName: "\u968F\u673A\u9009\u62E9\u8282\u70B9"
     NormalStyle:

@@ -53,12 +53,12 @@ public class Boss : Character
     public override void Hurt(GameObject atkOwner, int damage, int hitForce)
     {
         base.Hurt(atkOwner, damage, hitForce);
-        LookToTarget(atkOwner.transform.position);
         var shield = GetRangeAttribute(E_Attribute.Shield.ToString());
         shield.ChangeValue(-hitForce);
 
         if (shield.Current <= 0 && CurStatus != E_CharacterFsmStatus.FallDown)
         {
+            LookToTarget(atkOwner.transform.position);
             ChangeStatus(E_CharacterFsmStatus.HitFly, true);
         }
     }

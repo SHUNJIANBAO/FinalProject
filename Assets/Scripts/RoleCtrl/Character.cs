@@ -135,14 +135,14 @@ public class Character : MonoEntity
     {
         base.OnUpdate();
         IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.PlaneMask);
-        if (!IsGround)
-        {
-            if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
-            {
-                System.Action<Character> act = SceneConfigManager.Instance.PlayJumpDownEffect;
-                ChangeStatus(E_CharacterFsmStatus.Jump, false, null, 0, act);
-            }
-        }
+        //if (!IsGround)
+        //{
+        //    if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
+        //    {
+        //        System.Action<Character> act = SceneConfigManager.Instance.PlayJumpDownEffect;
+        //        ChangeStatus(E_CharacterFsmStatus.Jump, false, null, 0, act);
+        //    }
+        //}
         fsm.OnStay();
     }
 
@@ -198,11 +198,11 @@ public class Character : MonoEntity
     /// </summary>
     /// <param name="skillId"></param>
     /// <returns></returns>
-    public bool CanCombo(int skillId)
+    public bool CanComboSkill(int skillId)
     {
         if (CurStatus == E_CharacterFsmStatus.Attack)
         {
-            if ((fsm.GetStatus((int)CurStatus)as CharAttackStatus ).CanCombo())
+            if (CanCombo())
             {
                 return IsSubSkill(skillId);
             }
@@ -212,6 +212,11 @@ public class Character : MonoEntity
             }
         }
         return false;
+    }
+
+    public bool CanCombo()
+    {
+        return (fsm.GetStatus((int)E_CharacterFsmStatus.Attack) as CharAttackStatus).CanCombo();
     }
 
     /// <summary>
@@ -242,7 +247,6 @@ public class Character : MonoEntity
     /// </summary>
     public virtual void Hurt(GameObject atkOwner, int damage, int hitForce)
     {
-        if (IsInvincible) return;
 
         Hit(damage);
     }

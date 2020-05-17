@@ -116,6 +116,7 @@ public class CharJumpStatus : CharFsmBase
                     if (m_CurStateInfo.normalizedTime >= 1f)
                     {
                         m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
+                        _isJumping = false;
                     }
                 }
                 else //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString()))
@@ -131,6 +132,5 @@ public class CharJumpStatus : CharFsmBase
     protected override void OnExit()
     {
         base.OnExit();
-        _isJumping = false;
     }
 }

@@ -173,7 +173,7 @@ public abstract class NodeBase : ScriptableObject
         for (int i = 0; i < ChildList.Count; i++)
         {
             createLineFunc?.Invoke(this, ChildList[i]);
-            ChildList[i].Reload(createLineFunc);
+            //ChildList[i].Reload(createLineFunc);
         }
     }
 

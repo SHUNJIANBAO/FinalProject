@@ -56,6 +56,7 @@ public class PlayerCtrl : MonoBehaviour
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Attack)))
         {
             int skillId = 0;
+            bool beForce = false;
             if (_character.IsGround)
             {
                 skillId = 1010001;
@@ -66,20 +67,22 @@ public class PlayerCtrl : MonoBehaviour
                 {
                     _jumpAttack = true;
                     skillId = 1010010;
+                    beForce = true;
                 }
                 else
                 {
                     return;
                 }
             }
-            if (_character.CanCombo(skillId))
+            if (_character.CanComboSkill(skillId))
             {
+                beForce = true;
                 skillId = _character.CurSkill.NextSkillId;
-                _moment.Attack(skillId, true);
+                _moment.Attack(skillId, beForce);
             }
             else
             {
-                _moment.Attack(skillId, false);
+                _moment.Attack(skillId, beForce);
             }
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.LongAttack)))
@@ -93,7 +96,7 @@ public class PlayerCtrl : MonoBehaviour
             {
                 return;
             }
-            if (_character.CanCombo(skillId))
+            if (_character.CanComboSkill(skillId))
             {
                 skillId = _character.CurSkill.NextSkillId;
                 _moment.Attack(skillId, true);
@@ -110,35 +113,49 @@ public class PlayerCtrl : MonoBehaviour
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Jump)))
         {
             if (_character.IsGround)
-                _moment.Jump(15, false, SceneConfigManager.Instance.PlayJumpDownEffect);
+            {
+                if (_character.CurStatus==E_CharacterFsmStatus.Attack)
+                {
+                    _moment.Jump(15, _character.CanCombo(), SceneConfigManager.Instance.PlayJumpDownEffect);
+                }
+                else
+                {
+                    _moment.Jump(15, false, SceneConfigManager.Instance.PlayJumpDownEffect);
+                }
+            }
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Blink)))
         {
-            if (_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack,true))
+            if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, true)) return;
+            if (_character.CurStatus == E_CharacterFsmStatus.Attack)
             {
-                if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)))
+                if (!_character.CanCombo())
                 {
-                    _character.LookToTarget(_character.transform.position + Vector3.left);
+                    return;
                 }
-                if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Rigth)))
+            }
+            if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Left)))
+            {
+                _character.LookToTarget(_character.transform.position + Vector3.left);
+            }
+            if (Input.GetKey(GameData.Instance.GetKey(E_InputKey.Rigth)))
+            {
+                _character.LookToTarget(_character.transform.position + Vector3.right);
+            }
+            if (_character.IsGround)
+            {
+                _moment.Attack(1010011, true);
+            }
+            else
+            {
+                if (!_jumpBlink)
                 {
-                    _character.LookToTarget(_character.transform.position + Vector3.right);
-                }
-                if (_character.IsGround)
-                {
+                    _jumpBlink = true;
                     _moment.Attack(1010011, true);
                 }
                 else
                 {
-                    if (!_jumpBlink)
-                    {
-                        _jumpBlink = true;
-                        _moment.Attack(1010011, true);
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
             //if (_character.CanInterruptStatus())
@@ -159,25 +176,42 @@ public class PlayerCtrl : MonoBehaviour
         {
 
         }
-    }
 
+        CheckJumpOnHead();
+    }
 
     /// <summary>
     /// 碰撞时判断是否跳跃
     /// </summary>
-    /// <param name="collision"></param>
-    private void OnCollisionStay2D(Collision2D collision)
+    void CheckJumpOnHead()
     {
-        var target = collision.transform.GetComponent<Character>();
-        if (target != null && _character.CurStatus == E_CharacterFsmStatus.Jump)
+        var hit = Physics2D.BoxCast((Vector2)transform.position + _character.BottomOffest, new Vector2(_character.BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
+        if (hit)
         {
-            var hit = Physics2D.BoxCast((Vector2)transform.position + _character.BottomOffest, new Vector2(_character.BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
-            if (hit && CanJumpHead(target))
+            var target = hit.transform.GetComponent<Character>();
+            if (CanJumpHead(target))
             {
                 _moment.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
             }
         }
     }
+
+    /// <summary>
+    /// 碰撞时判断是否跳跃
+    /// </summary>
+    /// <param name="collision"></param>
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    var target = collision.transform.GetComponent<Character>();
+    //    if (target != null && _character.CurStatus == E_CharacterFsmStatus.Jump)
+    //    {
+    //        var hit = Physics2D.BoxCast((Vector2)transform.position + _character.BottomOffest, new Vector2(_character.BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
+    //        if (hit && CanJumpHead(target))
+    //        {
+    //            _moment.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
+    //        }
+    //    }
+    //}
 
     bool CanJumpHead(Character target)
     {

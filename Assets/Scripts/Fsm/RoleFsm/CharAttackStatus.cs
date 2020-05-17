@@ -105,13 +105,15 @@ public class CharAttackStatus : CharFsmBase
     /// </summary>
     void CaculateInvincible()
     {
-        if (_skill.InvincibleTime == 0 || _skill.InvincibleDuration == 0) return;
+        if ( _skill.InvincibleDuration == 0) return;
         if (_timeCount >= _skill.InvincibleTime && _timeCount < _skill.InvincibleTime + _skill.InvincibleDuration)
         {
             m_Owner.IsInvincible = true;
+            Physics2D.IgnoreLayerCollision(GameConfig.Instance.PlayerLayer, GameConfig.Instance.EnemyLayer, true);
         }
         else
         {
+            Physics2D.IgnoreLayerCollision(GameConfig.Instance.PlayerLayer, GameConfig.Instance.EnemyLayer, false);
             m_Owner.IsInvincible = false;
         }
     }
@@ -224,7 +226,7 @@ public class CharAttackStatus : CharFsmBase
         {
             parent = m_Owner.transform;
         }
-        if (m_Owner==GameConfig.Player)
+        if (m_Owner == GameConfig.Player)
         {
             ShootManager.Instance.Shoot(parent, m_Owner.gameObject, bullet, damage, barrageCfg, GameConfig.Instance.EnemyLayer);
         }
@@ -239,5 +241,7 @@ public class CharAttackStatus : CharFsmBase
         base.OnExit();
         _timeCount = 0;
         _damageCallback = null;
+        Physics2D.IgnoreLayerCollision(GameConfig.Instance.PlayerLayer, GameConfig.Instance.EnemyLayer, false);
+        m_Owner.IsInvincible = false;
     }
 }
