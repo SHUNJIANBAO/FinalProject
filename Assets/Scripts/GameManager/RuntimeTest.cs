@@ -12,4 +12,12 @@ public class RuntimeTest : MonoSingleton<RuntimeTest>
     [Header("时间速率")]
     [Range(0, 1)]
     public float TimeScale = 1;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            CameraManager.ShakeCamera();
+        }
+    }
 }

@@ -49,11 +49,17 @@ public class Player : Character
         {
             if (CurStatus == E_CharacterFsmStatus.Attack)
             {
+                if (!GameManager.IsTimeStop)
+                {
+                    GameManager.StopOtherTime(null, true);
+                    Util.RunLater(this, () => { GameManager.StopOtherTime(null, false); }, GameConfig.Instance.HitTimeStop);
+                }
                 CameraManager.Ripple(transform.position);
+                CameraManager.ShakeCamera();
             }
             return;
         }
-        if (CurStatus == E_CharacterFsmStatus.FallDown) return;
+        //if (CurStatus == E_CharacterFsmStatus.FallDown) return;
         base.Hurt(atkOwner, damage, hitForce);
         LookToTarget(atkOwner.transform.position);
 

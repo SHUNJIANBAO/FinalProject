@@ -9,6 +9,7 @@ public class CameraManager : MonoBehaviour
     static CinemachineConfiner _cameraConfiner;
     static CinemachineVirtualCamera _cinemachine;
     static CinemachineFramingTransposer _body;
+    static CinemachineImpulseSource _impulse;
     static RippleEffect _cameraRippleEffect;
 
     private void Start()
@@ -17,6 +18,7 @@ public class CameraManager : MonoBehaviour
         _cameraConfiner = GetComponentInChildren<CinemachineConfiner>();
         _cinemachine = GetComponentInChildren<CinemachineVirtualCamera>();
         _cameraRippleEffect = GetComponentInChildren<RippleEffect>();
+        _impulse = GetComponentInChildren<CinemachineImpulseSource>();
         foreach (var script in _cinemachine.GetComponentPipeline())
         {
             if (script is CinemachineFramingTransposer)
@@ -35,6 +37,33 @@ public class CameraManager : MonoBehaviour
     {
         _cameraRippleEffect.Emit(_mainCamera.WorldToViewportPoint(pos));
     }
+
+    /// <summary>
+    /// 振动摄像机
+    /// </summary>
+    /// <param name="intervalTime">振动频率</param>
+    /// <param name="totalTime">振动时长</param>
+    /// <param name="range">振动幅度</param>
+    public static void ShakeCamera(float velocity=2)
+    {
+        _impulse.GenerateImpulse(Vector2.one * velocity);
+        //Vector3 pos = _mainCamera.transform.position;
+        //_cinemachine.enabled = false;
+        //TimerManager.Instance.AddListener(totalTime, intervalTime, () =>
+        //{
+        //    _mainCamera.transform.position = GetRandomPos(pos, range);
+        //}, () =>
+        //{
+        //    _mainCamera.transform.position = pos;
+        //    _cinemachine.enabled = true;
+        //});
+    }
+    static Vector3 GetRandomPos(Vector3 pos, float range)
+    {
+        Vector3 tempPos = pos + (Vector3)Random.insideUnitCircle * range;
+        return tempPos;
+    }
+
 
     public static bool IsMainCamera(Camera cam)
     {
@@ -88,7 +117,7 @@ public class CameraManager : MonoBehaviour
     public static void SetFollowTarget(Transform target)
     {
         if (_mainCamera == null) return;
-        if (target!=null)
+        if (target != null)
         {
             _cinemachine.transform.position = new Vector3(target.transform.position.x, target.transform.position.y, _cinemachine.transform.position.z);
         }

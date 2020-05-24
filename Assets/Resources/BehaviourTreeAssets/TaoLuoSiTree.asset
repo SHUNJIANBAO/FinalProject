@@ -180,8 +180,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 551
-      y: 735
+      x: 560
+      y: 740
       width: 200
       height: 50
     XYCount: {x: 27, y: 24}
@@ -523,8 +523,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 711
-      y: 745
+      x: 720
+      y: 750
       width: 20
       height: 20
   SkillId: 3010003
@@ -1181,8 +1181,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1028
-      y: 509
+      x: 1020
+      y: 500
       width: 200
       height: 50
     XYCount: {x: 37, y: 28}
@@ -1524,8 +1524,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1188
-      y: 519
+      x: 1180
+      y: 510
       width: 20
       height: 20
   SkillId: 3010002
@@ -2047,6 +2047,7 @@ MonoBehaviour:
   - {fileID: 114316027774980388}
   - {fileID: 114629441296975742}
   - {fileID: 114912336462857758}
+  - {fileID: 114731212711583608}
   Style:
     NodeName: "\u987A\u5E8F\u8282\u70B9"
     NormalStyle:
@@ -2543,7 +2544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad30df7d38fc2b34cba16313539ef041, type: 3}
   m_Name: "\u6280\u80FD\u8282\u70B9"
   m_EditorClassIdentifier: 
-  Description: 
+  Description: "\u626B\u5C3E"
   _parentNode: {fileID: 114912336462857758}
   _childNodesList: []
   Style:
@@ -2684,8 +2685,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1168
-      y: 429
+      x: 1160
+      y: 420
       width: 200
       height: 50
     XYCount: {x: 47, y: 24}
@@ -3027,8 +3028,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1328
-      y: 439
+      x: 1320
+      y: 430
       width: 20
       height: 20
   SkillId: 3010001
@@ -3689,8 +3690,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 887
-      y: 565
+      x: 880
+      y: 560
       width: 200
       height: 50
     XYCount: {x: 38, y: 20}
@@ -4032,8 +4033,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1047
-      y: 575
+      x: 1040
+      y: 570
       width: 20
       height: 20
   SkillId: 3010006
@@ -5054,7 +5055,7 @@ MonoBehaviour:
   m_Name: "\u987A\u5E8F\u8282\u70B9"
   m_EditorClassIdentifier: 
   Description: 
-  _parentNode: {fileID: 114912336462857758}
+  _parentNode: {fileID: 114322256029091950}
   _childNodesList:
   - {fileID: 114061814890868506}
   - {fileID: 114430665579415200}
@@ -5695,8 +5696,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1168
-      y: 349
+      x: 1160
+      y: 340
       width: 200
       height: 50
     XYCount: {x: 45, y: 24}
@@ -6038,8 +6039,8 @@ MonoBehaviour:
       m_StretchHeight: 0
     Rect:
       serializedVersion: 2
-      x: 1328
-      y: 359
+      x: 1320
+      y: 350
       width: 20
       height: 20
   SkillId: 3010004
@@ -6559,10 +6560,9 @@ MonoBehaviour:
   Description: 
   _parentNode: {fileID: 114322256029091950}
   _childNodesList:
-  - {fileID: 114586092644412564}
-  - {fileID: 114731212711583608}
-  - {fileID: 114088751601991964}
   - {fileID: 114331824579719612}
+  - {fileID: 114586092644412564}
+  - {fileID: 114088751601991964}
   - {fileID: 114803817634067518}
   Style:
     NodeName: "\u968F\u673A\u9009\u62E9\u8282\u70B9"

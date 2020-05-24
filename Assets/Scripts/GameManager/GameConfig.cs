@@ -19,6 +19,7 @@ public class GameConfig : MonoSingleton<GameConfig>
     public int EnemyLayer;//敌人
 
     public float CollisionDamageWaitTime = 1f;
+    public float HitTimeStop = 0.02f;
 
 
     private void Awake()

@@ -37,6 +37,7 @@ public class CharHurtStatus : CharFsmBase
     protected override void OnStay()
     {
         base.OnStay();
+        m_Owner.transform.Translate((m_Owner.IsFaceRight ? Vector3.left : Vector3.right) * 4 * m_Animator.speed * Time.deltaTime);
         if (m_CurStateInfo.IsName(E_AnimatorIndex.Hurt.ToString()) && m_CurStateInfo.normalizedTime >= 1f)
         {
             _isComplete = true;

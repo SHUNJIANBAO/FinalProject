@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 52065662}
   - component: {fileID: 52065664}
   - component: {fileID: 52065663}
+  - component: {fileID: 52065665}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -196,6 +197,20 @@ MonoBehaviour:
         Culture=neutral, PublicKeyToken=null
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1708801834}
+--- !u!114 &52065665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 52065661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ChannelMask: -1
+  m_Gain: 1
+  m_Use2DDistance: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,6 +697,7 @@ GameObject:
   - component: {fileID: 1935426824}
   - component: {fileID: 1935426825}
   - component: {fileID: 1935426826}
+  - component: {fileID: 1935426827}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -741,6 +757,7 @@ MonoBehaviour:
     m_Bits: 1024
   EnemyLayer: 10
   CollisionDamageWaitTime: 0.5
+  HitTimeStop: 0.02
   Texture: {fileID: 2800000, guid: bb13ec488b81fa44eab626c024661258, type: 3}
   ClickTexture: {fileID: 2800000, guid: 3fe3b0de0817fbf49a3d95b1f6a44639, type: 3}
 --- !u!114 &1935426824
@@ -779,3 +796,61 @@ MonoBehaviour:
   DrawCollider: 0
   CloseAI: 0
   TimeScale: 1
+--- !u!114 &1935426827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1935426820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: -1
+    m_RawSignal: {fileID: 11400000, guid: 852c9d47840c00143aa605ec4ca6db4e, type: 2}
+    m_AmplitudeGain: 0.2
+    m_FrequencyGain: 100
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.2
+      m_DecayTime: 0
+      m_ScaleWithImpact: 0
+      m_HoldForever: 0
+    m_ImpactRadius: 1
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 1000
