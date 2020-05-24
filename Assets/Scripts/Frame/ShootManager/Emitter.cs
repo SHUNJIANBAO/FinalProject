@@ -14,7 +14,7 @@ public class Emitter : MonoBehaviour
     int _targetLayer;
 
     float _timeCount;
-    public void Init(GameObject bullet,Vector3 bulletDir, float bulletDamage, int wave, float intervalTime,int targetLayer)
+    public void Init(GameObject bullet, Vector3 bulletDir, float bulletDamage, int wave, float intervalTime, int targetLayer)
     {
         ShootEnd = false;
         _bullet = bullet;
@@ -39,7 +39,16 @@ public class Emitter : MonoBehaviour
             bullet.transform.position = transform.position;
             bullet.transform.right = _bulletDir;
             _wave--;
-            yield return new WaitForSeconds(_intervalTime);
+            if (_intervalTime != 0)
+            {
+                float timeCount = 0;
+                while (timeCount < _intervalTime)
+                {
+                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    yield return null;
+                }
+            }
+            //yield return new WaitForSeconds(_intervalTime);
         }
         ShootEnd = true;
     }

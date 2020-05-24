@@ -9,13 +9,14 @@ public class CameraManager : MonoBehaviour
     static CinemachineConfiner _cameraConfiner;
     static CinemachineVirtualCamera _cinemachine;
     static CinemachineFramingTransposer _body;
-
+    static RippleEffect _cameraRippleEffect;
 
     private void Start()
     {
         _mainCamera = GetComponentInChildren<Camera>();
         _cameraConfiner = GetComponentInChildren<CinemachineConfiner>();
         _cinemachine = GetComponentInChildren<CinemachineVirtualCamera>();
+        _cameraRippleEffect = GetComponentInChildren<RippleEffect>();
         foreach (var script in _cinemachine.GetComponentPipeline())
         {
             if (script is CinemachineFramingTransposer)
@@ -28,6 +29,11 @@ public class CameraManager : MonoBehaviour
         {
             Debug.LogError("Body Con't Find!!!");
         }
+    }
+
+    public static void Ripple(Vector3 pos)
+    {
+        _cameraRippleEffect.Emit(_mainCamera.WorldToViewportPoint(pos));
     }
 
     public static bool IsMainCamera(Camera cam)

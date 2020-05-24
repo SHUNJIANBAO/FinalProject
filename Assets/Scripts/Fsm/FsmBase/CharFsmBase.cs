@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class CharFsmBase : FsmBase 
 {
-    protected Character m_Owner;
+    public Character m_Owner;
     protected CharacterMovement m_Movement;
     protected Animator m_Animator;
     protected AnimatorStateInfo m_CurStateInfo;

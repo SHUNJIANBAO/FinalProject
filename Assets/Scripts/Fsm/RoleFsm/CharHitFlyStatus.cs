@@ -52,7 +52,7 @@ public class CharHitFlyStatus : CharFsmBase
             else if (m_CurStateInfo.normalizedTime > 0.2f)
             {
                 _isFly = true;
-                m_Owner.transform.Translate((m_Owner.IsFaceRight ? Vector3.left : Vector3.right) * 5 * GameManager.DeltaTime);
+                m_Owner.transform.Translate((m_Owner.IsFaceRight ? Vector3.left : Vector3.right) * 5 * m_Animator.speed * Time.deltaTime);
             }
         }
         else if (m_CurStateInfo.IsName(E_AnimatorIndex.HurtFlyEnd.ToString()) && m_CurStateInfo.normalizedTime >= 1f)

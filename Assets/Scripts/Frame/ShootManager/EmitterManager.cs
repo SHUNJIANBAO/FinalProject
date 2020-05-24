@@ -5,7 +5,7 @@ using UnityEngine;
 public class EmitterManager : MonoBehaviour
 {
     Coroutine _curCoroutine;
-    List<Emitter> _emitterList = new List<Emitter>();
+    List<Emitter> _emitterList;
 
     public System.Action OnUpdate;
 
@@ -88,32 +88,40 @@ public class EmitterManager : MonoBehaviour
         {
             pos = new Vector2(0, maxInterval / 2) + offest;
         }
-        List<Emitter> emitterList = new List<Emitter>();
+        _emitterList = new List<Emitter>();
         while (targetCount > 0)
         {
             var emitter = CreateEmitter(pos);
             emitter.Init(_bullet, _bulletDir, _bulletDamage, _shootWave, _shootIntervalTime, _targetLayer);
             emitter.ShootStart();
-            emitterList.Add(emitter);
+            _emitterList.Add(emitter);
 
             pos.y -= IntervalDistance;
             targetCount--;
             if (intervalTime != 0)
-                yield return new WaitForSeconds(intervalTime);
+            {
+                float timeCount = 0;
+                while (timeCount < intervalTime)
+                {
+                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    yield return null;
+                }
+            }
+            //yield return new WaitForSeconds(intervalTime);
         }
         bool shootEnd = false;
         do
         {
-            var emitter = emitterList.Find(e => e.ShootEnd == false);
+            var emitter = _emitterList.Find(e => e.ShootEnd == false);
             if (emitter == null)
             {
                 shootEnd = true;
             }
             yield return null;
         } while (!shootEnd);
-        for (int i = 0; i < emitterList.Count; i++)
+        for (int i = 0; i < _emitterList.Count; i++)
         {
-            PoolManager.DestroyGameObject(emitterList[i].transform.parent.gameObject, PoolType.Emitter);
+            PoolManager.DestroyGameObject(_emitterList[i].transform.parent.gameObject, PoolType.Emitter);
         }
         PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
     }
@@ -123,32 +131,40 @@ public class EmitterManager : MonoBehaviour
         float fullAngle = IntervalDistance * (count - 1);
         Vector3 rightDir = Quaternion.AngleAxis(fullAngle / 2, Vector3.forward) * transform.right;
         Quaternion rightQua = Quaternion.AngleAxis(-IntervalDistance, Vector3.forward);
-        List<Emitter> emitterList = new List<Emitter>();
+        _emitterList = new List<Emitter>();
         while (targetCount > 0)
         {
             var emitter = CreateEmitter(offest);
             emitter.Init(_bullet, _bulletDir, _bulletDamage, _shootWave, _shootIntervalTime, _targetLayer);
             emitter.ShootStart();
-            emitterList.Add(emitter);
+            _emitterList.Add(emitter);
 
             rightDir = rightQua * rightDir;
             targetCount--;
             if (intervalTime != 0)
-                yield return new WaitForSeconds(intervalTime);
+            {
+                float timeCount = 0;
+                while (timeCount < intervalTime)
+                {
+                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    yield return null;
+                }
+            }
+            //yield return new WaitForSeconds(intervalTime);
         }
         bool shootEnd = false;
         do
         {
-            var emitter = emitterList.Find(e => e.ShootEnd == false);
+            var emitter = _emitterList.Find(e => e.ShootEnd == false);
             if (emitter == null)
             {
                 shootEnd = true;
             }
             yield return null;
         } while (!shootEnd);
-        for (int i = 0; i < emitterList.Count; i++)
+        for (int i = 0; i < _emitterList.Count; i++)
         {
-            PoolManager.DestroyGameObject(emitterList[i].transform.parent.gameObject, PoolType.Emitter);
+            PoolManager.DestroyGameObject(_emitterList[i].transform.parent.gameObject, PoolType.Emitter);
         }
         PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
     }
@@ -156,32 +172,40 @@ public class EmitterManager : MonoBehaviour
     {
         int targetCount = count;
         Vector2 pos = offest;
-        List<Emitter> emitterList = new List<Emitter>();
+        _emitterList = new List<Emitter>();
         while (targetCount > 0)
         {
             var emitter = CreateEmitter(pos);
             emitter.Init(_bullet, _bulletDir, _bulletDamage, _shootWave, _shootIntervalTime, _targetLayer);
             emitter.ShootStart();
-            emitterList.Add(emitter);
+            _emitterList.Add(emitter);
 
             pos.x += IntervalDistance;
             targetCount--;
             if (intervalTime != 0)
-                yield return new WaitForSeconds(intervalTime);
+            {
+                float timeCount = 0;
+                while (timeCount < intervalTime)
+                {
+                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    yield return null;
+                }
+            }
+            //yield return new WaitForSeconds(intervalTime);
         }
         bool shootEnd = false;
         do
         {
-            var emitter = emitterList.Find(e => e.ShootEnd == false);
+            var emitter = _emitterList.Find(e => e.ShootEnd == false);
             if (emitter == null)
             {
                 shootEnd = true;
             }
             yield return null;
         } while (!shootEnd);
-        for (int i = 0; i < emitterList.Count; i++)
+        for (int i = 0; i < _emitterList.Count; i++)
         {
-            PoolManager.DestroyGameObject(emitterList[i].transform.parent.gameObject, PoolType.Emitter);
+            PoolManager.DestroyGameObject(_emitterList[i].transform.parent.gameObject, PoolType.Emitter);
         }
         PoolManager.DestroyGameObject(gameObject, PoolType.EmitterManager);
     }

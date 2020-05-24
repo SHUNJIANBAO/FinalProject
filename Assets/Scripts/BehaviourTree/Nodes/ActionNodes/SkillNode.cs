@@ -8,8 +8,10 @@ public class SkillNode : ActionNode
     public int SkillId;
     public bool BeForce = false;
 
-
+    [System.NonSerialized]
     bool _skillEnd;
+    [System.NonSerialized]
+    bool _enter;
     /// <summary>
     /// 检测能否运行
     /// </summary>
@@ -19,7 +21,11 @@ public class SkillNode : ActionNode
         if (_skillEnd)
         {
             _skillEnd = false;
+            _enter = false;
             return E_NodeStatus.Success;
+        }else if (!_enter&&!m_Owner.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, BeForce))
+        {
+            return E_NodeStatus.Failure;
         }
         return E_NodeStatus.Running;
     }
@@ -27,7 +33,11 @@ public class SkillNode : ActionNode
     public override void OnEnter()
     {
         _skillEnd = false;
-        m_Movement.Attack(SkillId, BeForce, null, () => _skillEnd = true);
+        _enter = true;
+        m_Movement.Attack(SkillId, BeForce,null, null, () =>
+        {
+            _skillEnd = true;
+        });
     }
 
     public override void OnStay()

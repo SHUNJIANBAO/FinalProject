@@ -46,7 +46,7 @@ public class Boss : EnemyBase
         base.OnUpdate();
         if (AttackTarget == null)
         {
-            AttackTarget = GameConfig.Player;
+            AttackTarget = GameManager.Player;
         }
     }
 

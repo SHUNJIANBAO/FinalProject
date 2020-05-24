@@ -62,7 +62,7 @@ public class LoadSceneManager : MonoSingleton<LoadSceneManager>
         yield return new WaitForSeconds(LoadCompleteDelay);
         UIManager.Instance.CloseWindow(loadingWindow);
         asyncOperation.allowSceneActivation = true;
-        GameConfig.CurLevelId = levelId;
+        GameManager.CurLevelId = levelId;
     }
 
 

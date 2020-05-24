@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class SceneConfigManager : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class SceneConfigManager : MonoBehaviour
 
     public static SceneConfigManager Instance;
 
+    Renderer[] _renderArray;
+    Material _default;
+
     float _moveTimeCount;
     private void Awake()
     {
@@ -30,9 +34,30 @@ public class SceneConfigManager : MonoBehaviour
     {
         CloseTrashCamera();
         _collider = this.GetComponent<PolygonCollider2D>();
+        _renderArray = this.GetComponentsInChildren<Renderer>();
+        _default = _renderArray[0].material;
+        GameManager.CurSceneManager = this;
 
         CameraManager.SetCameraConfiner(this._collider);
         CameraManager.SetCameraFollowMode(Horizontal, Vertical);
+    }
+
+    public void SetSceneGray(bool value)
+    {
+        if (value)
+        {
+            for (int i = 0; i < _renderArray.Length; i++)
+            {
+                _renderArray[i].material = ResourceManager.Load<Material>("Materials/Gray");
+            }
+        }
+        else
+        {
+            for (int i = 0; i < _renderArray.Length; i++)
+            {
+                _renderArray[i].material = _default;
+            }
+        }
     }
 
     public void PlayMoveEffect(Character owner)

@@ -17,7 +17,7 @@ public class PortalPoint : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var character = collision.GetComponent<Character>();
-        if (character != null && character == GameConfig.Player)
+        if (character != null && character == GameManager.Player)
         {
             if (!IsLoading)
             {

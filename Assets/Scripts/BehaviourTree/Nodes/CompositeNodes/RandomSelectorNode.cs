@@ -49,9 +49,10 @@ public class RandomSelectorNode : CompositeNode
                 case E_NodeStatus.Failure:
                     if (!_nodesList.Contains(_randomList[i]))
                         _nodesList.Add(_randomList[i]);
-                    break;
+                    continue;
             }
         }
-        throw new System.Exception("未知错误");
+        return E_NodeStatus.Failure;
+        //throw new System.Exception("未知错误");
     }
 }

@@ -82,7 +82,7 @@ public class CharAttackStatus : CharFsmBase
         base.OnStay();
         if (m_CurStateInfo.IsName(_skillName))
         {
-            _timeCount += GameManager.DeltaTime;
+            _timeCount += m_Animator.speed * Time.deltaTime;
 
             CaculateDamageTime();
             CaculateInvincible();
@@ -139,11 +139,11 @@ public class CharAttackStatus : CharFsmBase
                 }
                 if (m_Owner.transform.localScale.x > 0)
                 {
-                    m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
+                    m_Owner.transform.Translate(Vector3.right * _moveSpeed * m_Animator.speed * Time.deltaTime);
                 }
                 else
                 {
-                    m_Owner.transform.Translate(Vector3.left * _moveSpeed * GameManager.DeltaTime);
+                    m_Owner.transform.Translate(Vector3.left * _moveSpeed * m_Animator.speed * Time.deltaTime);
                 }
                 if (_timeCount > _skill.MoveStartTime[i] + _skill.MoveDuration[i])
                 {
@@ -158,11 +158,11 @@ public class CharAttackStatus : CharFsmBase
         //    m_Owner.Rigibody.velocity = Vector2.zero;
         //    if (m_Owner.transform.localScale.x > 0)
         //    {
-        //        m_Owner.transform.Translate(Vector3.right * _moveSpeed * GameManager.DeltaTime);
+        //        m_Owner.transform.Translate(Vector3.right * _moveSpeed * m_Animator.speed * Time.deltaTime);
         //    }
         //    else
         //    {
-        //        m_Owner.transform.Translate(Vector3.left * _moveSpeed * GameManager.DeltaTime);
+        //        m_Owner.transform.Translate(Vector3.left * _moveSpeed * m_Animator.speed * Time.deltaTime);
         //    }
         //}
     }
@@ -195,6 +195,7 @@ public class CharAttackStatus : CharFsmBase
     /// </summary>
     void CreateCollider(int index)
     {
+        _damageCallback?.Invoke();
         if (_skill.ColliderId.Count == 0 || _skill.ColliderId.Count <= index || _skill.ColliderId[index] == 0)
         {
             return;
@@ -207,7 +208,6 @@ public class CharAttackStatus : CharFsmBase
         int colliderId = _skill.ColliderId.Count > index ? _skill.ColliderId[index] : _skill.ColliderId[0];
         int hitFlyForce = _skill.HitFlyForce.Count > index ? _skill.HitFlyForce[index] : _skill.HitFlyForce[0];
         ctrl.Init(colliderId, m_Owner, (int)damage, hitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
-        _damageCallback?.Invoke();
     }
 
     /// <summary>
@@ -226,7 +226,7 @@ public class CharAttackStatus : CharFsmBase
         {
             parent = m_Owner.transform;
         }
-        if (m_Owner == GameConfig.Player)
+        if (m_Owner == GameManager.Player)
         {
             ShootManager.Instance.Shoot(parent, m_Owner.gameObject, bullet, damage, barrageCfg, GameConfig.Instance.EnemyLayer);
         }

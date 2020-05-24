@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 
-public class MonoEntity : MonoBehaviour 
+public class MonoEntity : MonoBehaviour
 {
     public int Id;
     /// <summary>
     /// 排序下标，越大越先执行
     /// </summary>
-    public int Index=1;
+    public int Index = 1;
+    protected Animator m_Animator;
     //属性
     protected MonoAttribute m_MonoAttribute;
 
@@ -59,7 +60,7 @@ public class MonoEntity : MonoBehaviour
 
     protected virtual void OnLateUpdate()
     {
-        
+
     }
     public void CellLateUpdate()
     {
@@ -92,7 +93,7 @@ public class MonoEntity : MonoBehaviour
     /// <returns></returns>
     public GameAttributeInstance AddAttribute(GameAttribute attribute)
     {
-        var attributeInstance= m_MonoAttribute.AddAttribute(attribute);
+        var attributeInstance = m_MonoAttribute.AddAttribute(attribute);
         return attributeInstance;
     }
 
@@ -114,7 +115,7 @@ public class MonoEntity : MonoBehaviour
     /// <returns></returns>
     public GameAttributeInstance GetAttribute(string name)
     {
-       return m_MonoAttribute.GetAttribute(name);
+        return m_MonoAttribute.GetAttribute(name);
     }
     /// <summary>
     /// 得到有最大最小值的属性
@@ -131,7 +132,7 @@ public class MonoEntity : MonoBehaviour
     /// </summary>
     /// <param name="attribute"></param>
     /// <param name="modifier"></param>
-    public void AddModifier(GameAttributeInstance attribute,GameAttributeModifier modifier)
+    public void AddModifier(GameAttributeInstance attribute, GameAttributeModifier modifier)
     {
         attribute.AddModifier(modifier);
     }
@@ -242,4 +243,10 @@ public class MonoEntity : MonoBehaviour
         m_MonoAttribute.Reset();
     }
     #endregion
+
+    public void SetAnimatorSpeed(float speed)
+    {
+        if (m_Animator != null)
+            m_Animator.speed  = speed;
+    }
 }

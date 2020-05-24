@@ -39,7 +39,6 @@ public class Character : MonoEntity
     public Rigidbody2D Rigibody;
     public CharacterMovement Movement { get; private set; }
     protected BehaviourTree m_Tree;
-    protected Animator m_Animator;
     public AnimatorStateInfo CurStateInfo
     {
         get

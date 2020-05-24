@@ -179,6 +179,11 @@ public class Util
         return randomList;
     }
 
+    public static bool HaveLayer(LayerMask mask,int layer)
+    {
+        return (layer & mask) == layer;
+    }
+
     public static void RunLater(MonoBehaviour mono,Action callback,float waitTime)
     {
         mono.StartCoroutine(RunLater(callback,waitTime));

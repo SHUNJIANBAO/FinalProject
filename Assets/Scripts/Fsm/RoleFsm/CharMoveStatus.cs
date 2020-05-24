@@ -56,28 +56,28 @@ public class CharMoveStatus : CharFsmBase
             _moveCallback?.Invoke(m_Owner);
             if (m_Owner.IsFaceRight)
             {
-                if (m_Owner == GameConfig.Player)
+                if (m_Owner == GameManager.Player)
                 {
-                    m_Owner.Rigibody.MovePosition(m_Owner.transform.position + Vector3.right * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+                    m_Owner.Rigibody.MovePosition(m_Owner.transform.position + Vector3.right * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * m_Animator.speed * Time.deltaTime);
                 }
                 else
                 {
-                    m_Owner.transform.Translate(Vector3.right * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+                    m_Owner.transform.Translate(Vector3.right * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * m_Animator.speed * Time.deltaTime);
                 }
             }
             else
             {
-                if (m_Owner == GameConfig.Player)
+                if (m_Owner == GameManager.Player)
                 {
-                    m_Owner.Rigibody.MovePosition(m_Owner.transform.position + Vector3.left * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+                    m_Owner.Rigibody.MovePosition(m_Owner.transform.position + Vector3.left * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * m_Animator.speed * Time.deltaTime);
                 }
                 else
                 {
-                    m_Owner.transform.Translate(Vector3.left * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+                    m_Owner.transform.Translate(Vector3.left * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * m_Animator.speed * Time.deltaTime);
                 }
             }
 
-            //m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * GameManager.DeltaTime);
+            //m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * m_Animator.speed * Time.deltaTime);
         }
     }
 }

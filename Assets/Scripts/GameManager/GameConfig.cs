@@ -20,26 +20,6 @@ public class GameConfig : MonoSingleton<GameConfig>
 
     public float CollisionDamageWaitTime = 1f;
 
-    public static Player Player { get; set; }
-
-    private static int _curLevelId;
-    public static int CurLevelId
-    {
-        get
-        {
-            return _curLevelId;
-        }
-        set
-        {
-            _curLevelId = value;
-            var levelCfg = LevelConfig.GetData(_curLevelId);
-            if (!string.IsNullOrEmpty(levelCfg.BGM))
-            {
-                AudioManager.Instance.PlayBGM(levelCfg.BGM);
-            }
-
-        }
-    }
 
     private void Awake()
     {

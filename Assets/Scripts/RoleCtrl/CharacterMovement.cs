@@ -15,15 +15,15 @@ public class CharacterMovement : MonoBehaviour
         _character = GetComponent<Character>();
     }
 
-    public void Attack(int skillId, bool beForce = false, System.Action damageCallback = null, System.Action endCallback = null)
+    public void Attack(int skillId, bool beForce = false,System.Action enterCallback=null, System.Action damageCallback = null, System.Action endCallback = null)
     {
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, beForce)) return;
         var skillCfg = SkillConfig.GetData(skillId);
         if (CheckCanUse(skillCfg))
         {
             _character.CurSkill = skillCfg;
-
-            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, endCallback, damageCallback );
+            enterCallback?.Invoke();
+            _character.ChangeStatus(E_CharacterFsmStatus.Attack, beForce, endCallback, damageCallback);
         }
     }
 
@@ -37,7 +37,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if (!_character.CheckCanChangeStatus(E_CharacterFsmStatus.Jump, beForce)) return;
 
-        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce,null, jumpForce, jumpDownCallback);
+        _character.ChangeStatus(E_CharacterFsmStatus.Jump, beForce, null, jumpForce, jumpDownCallback);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class CharacterMovement : MonoBehaviour
     /// <param name="beForce"></param>
     public void PlayAnim(int animIndex, bool beForce = false)
     {
-        _character.ChangeStatus(E_CharacterFsmStatus.Play, beForce,null, animIndex);
+        _character.ChangeStatus(E_CharacterFsmStatus.Play, beForce, null, animIndex);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (_character.IsGround && _character.CurStatus != E_CharacterFsmStatus.Move)
         {
-            _character.ChangeStatus(E_CharacterFsmStatus.Move,false,null, moveCallback);
+            _character.ChangeStatus(E_CharacterFsmStatus.Move, false, null, moveCallback);
         }
     }
 
@@ -71,6 +71,8 @@ public class CharacterMovement : MonoBehaviour
     public void MoveEnd()
     {
         _character.MoveTarget = _character.transform.position;
+        if (_character.IsGround)
+            _character.ChangeStatus(E_CharacterFsmStatus.Idle);
     }
 
     /// <summary>

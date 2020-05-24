@@ -6,7 +6,6 @@ public abstract class BulletBase : MonoEntity
 {
     public E_BulletFsmStatus CurStatus;
     protected FsmManager m_Fsm;
-    protected Animator m_Animator;
     protected int _damage;
     protected int _targetLayer;
 
@@ -44,7 +43,7 @@ public abstract class BulletBase : MonoEntity
         base.OnUpdate();
         m_Fsm.OnStay();
 
-        _timeCount += Time.deltaTime;
+        _timeCount += Time.deltaTime * m_Animator.speed;
         if (_timeCount >= m_BulletCfg.Life && CurStatus == E_BulletFsmStatus.Running)
         {
             _timeCount = 0;

@@ -30,12 +30,10 @@ public abstract class FsmBase
     }
     public void Interrupt()
     {
-        OnComplete?.Invoke();
         OnInterrupt();
     }
     public void Exit()
     {
-        OnComplete?.Invoke();
         OnExit();
     }
 
@@ -56,13 +54,16 @@ public abstract class FsmBase
     /// </summary>
     protected virtual void OnInterrupt()
     {
-
+        OnComplete?.Invoke();
+        OnComplete = null;
     }
     /// <summary>
     /// 退出时调用
     /// </summary>
     protected virtual void OnExit()
     {
+        OnComplete?.Invoke();
+        OnComplete = null;
     }
 }
 
@@ -103,7 +104,7 @@ public class FsmManager
         {
             if (beForce)
             {
-                if (fsm[CurrentStatus].CanExit()|| fsm[CurrentStatus].CanInterrupt())
+                if (fsm[CurrentStatus].CanExit() || fsm[CurrentStatus].CanInterrupt())
                     return fsm[status].CanEnter();
                 else
                     return false;
@@ -123,7 +124,7 @@ public class FsmManager
     {
         if (!CheckCanChangeStatus(status, beForce)) return false;
 
-        if (CurrentStatus!=-1)
+        if (CurrentStatus != -1)
         {
             if (beForce)
             {
@@ -169,7 +170,7 @@ public enum E_CharacterFsmStatus
 
     Born,
     Die,
-    
+
     Max
 }
 

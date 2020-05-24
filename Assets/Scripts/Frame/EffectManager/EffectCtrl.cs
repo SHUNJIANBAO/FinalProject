@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EffectCtrl : MonoEntity 
 {
-    Animator _anim;
     AnimatorStateInfo _curState;
 
     EffectConfig _cfg;
@@ -14,7 +13,7 @@ public class EffectCtrl : MonoEntity
     protected override void OnAwake()
     {
         base.OnAwake();
-        _anim = GetComponent<Animator>();
+        m_Animator = GetComponent<Animator>();
     }
 
     protected override void OnInit(params object[] objs)
@@ -22,7 +21,7 @@ public class EffectCtrl : MonoEntity
         base.OnInit(objs);
         _timeCount = 0;
         _cfg = (EffectConfig)objs[0];
-        _anim.Play("Play", 0, 0);
+        m_Animator.Play("Play", 0, 0);
     }
 
     protected override void OnUpdate()
@@ -30,7 +29,7 @@ public class EffectCtrl : MonoEntity
         base.OnUpdate();
         if (_cfg.LifeTime!=0)
         {
-            _timeCount += GameManager.DeltaTime;
+            _timeCount += Time.deltaTime* m_Animator.speed * Time.deltaTime;
             if (_timeCount>_cfg.LifeTime)
             {
                 Destroy();
@@ -38,7 +37,7 @@ public class EffectCtrl : MonoEntity
         }
         else
         {
-            _curState = _anim.GetCurrentAnimatorStateInfo(0);
+            _curState = m_Animator.GetCurrentAnimatorStateInfo(0);
             if (_curState.normalizedTime >= 1f)
             {
                 Destroy();

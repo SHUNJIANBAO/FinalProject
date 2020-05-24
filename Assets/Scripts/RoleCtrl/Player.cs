@@ -31,17 +31,28 @@ public class Player : Character
         GetRangeAttribute(E_Attribute.Hp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnPlayerHpChange(m_Hp.Current, m_Hp.GetMinTotalValue(), m_Hp.GetMaxTotalValue()); };
         GetRangeAttribute(E_Attribute.Mp.ToString()).OnValueChanged += (delta) => { UIBattleWindow.OnPlayerMpChange(m_Mp.Current, m_Mp.GetMinTotalValue(), m_Mp.GetMaxTotalValue()); };
 
-        GameConfig.Player = this;
+        GameManager.Player = this;
     }
 
     protected override void OnUpdate()
     {
         base.OnUpdate();
+        if (IsGround)
+        {
+            _jumpOnHead = false;
+        }
     }
 
     public override void Hurt(GameObject atkOwner, int damage, int hitForce)
     {
-        if (IsInvincible) return;
+        if (IsInvincible)
+        {
+            if (CurStatus == E_CharacterFsmStatus.Attack)
+            {
+                CameraManager.Ripple(transform.position);
+            }
+            return;
+        }
         if (CurStatus == E_CharacterFsmStatus.FallDown) return;
         base.Hurt(atkOwner, damage, hitForce);
         LookToTarget(atkOwner.transform.position);
@@ -64,10 +75,13 @@ public class Player : Character
             _jumpOnHead = true;
             Movement.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
         }
-        else 
+        else
         {
-            if (_jumpOnHead)
-                _jumpOnHead = false;
+            if (!_jumpOnHead && !IsGround)
+            {
+                return;
+            }
+            _jumpOnHead = false;
             Hurt(atkOwner, Mathf.CeilToInt(m_Hp.GetMaxTotalValue() * 0.2f), 5);
         }
     }

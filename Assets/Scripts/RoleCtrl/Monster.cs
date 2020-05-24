@@ -23,7 +23,7 @@ public class Monster : EnemyBase
         m_MoveSpeed = AddAttribute(_moveSpeed);
 
         m_CaculateDelta = TimerManager.Instance.AddListener(0, 0.02f, m_MonoAttribute.CaculateRangeDelta, null, true);
-        AttackTarget = GameConfig.Player;
+        AttackTarget = GameManager.Player;
 
     }
 
@@ -32,7 +32,7 @@ public class Monster : EnemyBase
         base.OnUpdate();
         if (AttackTarget == null)
         {
-            AttackTarget = GameConfig.Player;
+            AttackTarget = GameManager.Player;
         }
     }
 

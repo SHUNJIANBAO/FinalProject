@@ -1,3 +1,3 @@
 ﻿ID,名称,血量,蓝量,攻击力,受击飞值护盾,移动速度,战斗音乐
 Id,Name,Hp,Mp,Attack,Shield,MoveSpeed,FightBGM
-3010,TaoLuoSi,1000,,10,100,5,BossBattle
+3010,TaoLuoSi,500,,10,100,5,BossBattle

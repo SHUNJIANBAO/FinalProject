@@ -71,7 +71,7 @@ public class BarrageNode : ActionNode
                         _pos.y = Offest.y;
                         break;
                 }
-                if (m_Owner==GameConfig.Player)
+                if (m_Owner==GameManager.Player)
                 {
                     _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.EnemyLayer);
                 }

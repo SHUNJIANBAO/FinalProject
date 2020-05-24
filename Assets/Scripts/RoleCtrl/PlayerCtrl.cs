@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
 {
+    public Vector3 SkillOffest;
+
     CharacterMovement _moment;
     Character _character;
     bool _jumpAttack = false;
@@ -108,13 +110,40 @@ public class PlayerCtrl : MonoBehaviour
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Skill)))
         {
+            if (GameManager.IsTimeStop || !_character.CheckCanChangeStatus(E_CharacterFsmStatus.Attack, true)) return;
+            if (_character.CurStatus == E_CharacterFsmStatus.Attack)
+            {
+                if (!_character.CanCombo())
+                {
+                    return;
+                }
+            }
+            if (_character.IsGround)
+            {
+                SkillOffest.x = _character.IsFaceRight ? SkillOffest.x : -SkillOffest.x;
 
+                _moment.Attack(1010020, true, ()=>
+                {
+                    GameManager.StopOtherTime(_character, true);
+                    GameManager.TimeRatio = 0;
+                    Util.RunLater(_character, () =>
+                    {
+                        GameManager.TimeRatio = 1;
+                        GameManager.SetCurSceneGray(false);
+                        GameManager.StopOtherTime(_character, false);
+                    }, 5);
+                }, () =>
+                 {
+                     CameraManager.Ripple(_character.transform.position + SkillOffest);
+                     GameManager.SetCurSceneGray(true);
+                 });
+            }
         }
         if (Input.GetKeyDown(GameData.Instance.GetKey(E_InputKey.Jump)))
         {
             if (_character.IsGround)
             {
-                if (_character.CurStatus==E_CharacterFsmStatus.Attack)
+                if (_character.CurStatus == E_CharacterFsmStatus.Attack)
                 {
                     _moment.Jump(15, _character.CanCombo(), SceneConfigManager.Instance.PlayJumpDownEffect);
                 }
