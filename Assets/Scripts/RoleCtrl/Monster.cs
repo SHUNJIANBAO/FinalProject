@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Monster : Character
+public class Monster : EnemyBase
 {
     MonsterConfig _cfg;
     public float SeekDistance;

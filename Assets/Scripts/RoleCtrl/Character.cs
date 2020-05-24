@@ -37,6 +37,7 @@ public class Character : MonoEntity
     public SkillConfig CurSkill;
     [HideInInspector]
     public Rigidbody2D Rigibody;
+    public CharacterMovement Movement { get; private set; }
     protected BehaviourTree m_Tree;
     protected Animator m_Animator;
     public AnimatorStateInfo CurStateInfo
@@ -82,6 +83,7 @@ public class Character : MonoEntity
         Rigibody = GetComponent<Rigidbody2D>();
         m_BoxCollider = GetComponent<BoxCollider2D>();
         m_Tree = GetComponent<BehaviourTree>();
+        Movement = GetComponent<CharacterMovement>();
 
         m_TopOffest = new Vector2(0, m_BoxCollider.size.y * 0.5f);
         m_BottomOffest = new Vector2(0, -m_BoxCollider.size.y * 0.5f + m_BoxCollider.offset.y);

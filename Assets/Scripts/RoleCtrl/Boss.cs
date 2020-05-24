@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : Character
+public class Boss : EnemyBase
 {
     BossConfig _cfg;
 

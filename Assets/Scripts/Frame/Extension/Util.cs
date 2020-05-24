@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -178,4 +179,14 @@ public class Util
         return randomList;
     }
 
+    public static void RunLater(MonoBehaviour mono,Action callback,float waitTime)
+    {
+        mono.StartCoroutine(RunLater(callback,waitTime));
+    }
+
+    static IEnumerator RunLater(Action callback,float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        callback?.Invoke();
+    }
 }

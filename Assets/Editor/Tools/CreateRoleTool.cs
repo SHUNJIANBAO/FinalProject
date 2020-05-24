@@ -7,8 +7,16 @@ using System.IO;
 
 public class CreateRoleTool : EditorWindow
 {
+    enum RoleType
+    {
+        小怪,
+        Boss,
+        主角,
+    }
+
     GUIContent _roleNameTitle;
     string _roleName;
+    RoleType _roleType;
 
     string _animatorControllerPath = "Assets/Editor/Demo/AnimatorController/AnimatorControllerDemo.controller";
 
@@ -29,6 +37,7 @@ public class CreateRoleTool : EditorWindow
     private void OnGUI()
     {
         _roleName = EditorGUILayout.TextField(_roleNameTitle, _roleName);
+        _roleType = (RoleType)EditorGUILayout.EnumPopup("角色类型", _roleType);
 
         if (GUILayout.Button("创建"))
         {
@@ -49,16 +58,32 @@ public class CreateRoleTool : EditorWindow
         var controller= CreateAnimatorController(GetAnimatorPath(name), savePath);
 
         GameObject go = new GameObject(name);
-        go.AddComponent<Character>();
+        var rigi = go.GetComponent<Rigidbody2D>();
+        switch (_roleType)
+        {
+            case RoleType.小怪:
+                go.AddComponent<Monster>();
+                rigi.bodyType = RigidbodyType2D.Kinematic;
+                break;
+            case RoleType.Boss:
+                rigi.bodyType = RigidbodyType2D.Kinematic;
+                go.AddComponent<Boss>();
+                break;
+            case RoleType.主角:
+                rigi.gravityScale = 4;
+                rigi.constraints = RigidbodyConstraints2D.FreezeRotation;
+                go.AddComponent<Player>();
+                break;
+            default:
+                go.AddComponent<Character>();
+                break;
+        }
         var sr = go.GetComponent<SpriteRenderer>();
         sr.sprite = GetRoleIdleSprite(name);
         sr.sortingOrder = 10;
         go.GetComponent<BoxCollider2D>().size = Vector2.one*2;
         go.GetComponent<Animator>().runtimeAnimatorController = controller;
         go.AddComponent<CharacterMovement>();
-        var rigi = go.GetComponent<Rigidbody2D>();
-        rigi.gravityScale = 4;
-        rigi.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         GameObject prefab= PrefabUtility.CreatePrefab(GetNewPrefabPath(name), go);
         PrefabUtility.ConnectGameObjectToPrefab(go, prefab);

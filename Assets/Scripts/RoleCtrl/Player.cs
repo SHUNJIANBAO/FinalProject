@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : Character
 {
     PlayerConfig _cfg;
+    bool _jumpOnHead;
 
     protected override void RegistAttribute()
     {
@@ -55,4 +56,52 @@ public class Player : Character
         }
 
     }
+
+    public void HurtOnCollision(GameObject atkOwner)
+    {
+        if (CheckJumpOnHead() && !_jumpOnHead)
+        {
+            _jumpOnHead = true;
+            Movement.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
+        }
+        else 
+        {
+            if (_jumpOnHead)
+                _jumpOnHead = false;
+            Hurt(atkOwner, Mathf.CeilToInt(m_Hp.GetMaxTotalValue() * 0.2f), 5);
+        }
+    }
+
+    /// <summary>
+    /// 碰撞时判断是否跳跃
+    /// </summary>
+    bool CheckJumpOnHead()
+    {
+        var hit = Physics2D.BoxCast((Vector2)transform.position + BottomOffest, new Vector2(BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
+        if (hit)
+        {
+            var target = hit.transform.GetComponent<Character>();
+            if (CanJumpHead(target))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool CanJumpHead(Character target)
+    {
+        bool onHead = transform.position.y - target.transform.position.y > target.BoxCollider.size.y - 0.2f;
+        bool isJumpDown = CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString());
+        return onHead && isJumpDown;
+    }
+
+    protected override void OnDrawGizmosUpdate()
+    {
+        if (Application.isPlaying)
+        {
+            Gizmos.DrawCube(transform.position + (Vector3)BottomOffest, new Vector3(BoxCollider.size.x, 0.2f, 1));
+        }
+    }
+
 }

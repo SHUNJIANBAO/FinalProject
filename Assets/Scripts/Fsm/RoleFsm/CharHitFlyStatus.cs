@@ -40,7 +40,7 @@ public class CharHitFlyStatus : CharFsmBase
         base.OnStay();
         if (m_CurStateInfo.IsName(E_AnimatorIndex.HurtFlyStart.ToString()) && m_CurStateInfo.normalizedTime >= 1f)
         {
-            m_Owner.Rigibody.velocity = m_Owner.IsFaceRight ? new Vector2(-3, 10) : new Vector2(3, 10);
+            m_Owner.Rigibody.velocity = Vector2.up * 10;
             m_Animator.SetInteger("Index", (int)E_AnimatorIndex.HurtFlying);
         }
         else if (m_CurStateInfo.IsName(E_AnimatorIndex.HurtFlying.ToString()))
@@ -52,6 +52,7 @@ public class CharHitFlyStatus : CharFsmBase
             else if (m_CurStateInfo.normalizedTime > 0.2f)
             {
                 _isFly = true;
+                m_Owner.transform.Translate((m_Owner.IsFaceRight ? Vector3.left : Vector3.right) * 5 * GameManager.DeltaTime);
             }
         }
         else if (m_CurStateInfo.IsName(E_AnimatorIndex.HurtFlyEnd.ToString()) && m_CurStateInfo.normalizedTime >= 1f)

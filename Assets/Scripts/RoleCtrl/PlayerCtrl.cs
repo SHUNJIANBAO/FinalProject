@@ -177,54 +177,6 @@ public class PlayerCtrl : MonoBehaviour
 
         }
 
-        CheckJumpOnHead();
     }
 
-    /// <summary>
-    /// 碰撞时判断是否跳跃
-    /// </summary>
-    void CheckJumpOnHead()
-    {
-        var hit = Physics2D.BoxCast((Vector2)transform.position + _character.BottomOffest, new Vector2(_character.BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
-        if (hit)
-        {
-            var target = hit.transform.GetComponent<Character>();
-            if (CanJumpHead(target))
-            {
-                _moment.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
-            }
-        }
-    }
-
-    /// <summary>
-    /// 碰撞时判断是否跳跃
-    /// </summary>
-    /// <param name="collision"></param>
-    //private void OnCollisionStay2D(Collision2D collision)
-    //{
-    //    var target = collision.transform.GetComponent<Character>();
-    //    if (target != null && _character.CurStatus == E_CharacterFsmStatus.Jump)
-    //    {
-    //        var hit = Physics2D.BoxCast((Vector2)transform.position + _character.BottomOffest, new Vector2(_character.BoxCollider.size.x + 0.1f, 0.2f), 0, Vector2.right, 0, GameConfig.Instance.EnemyMask);
-    //        if (hit && CanJumpHead(target))
-    //        {
-    //            _moment.Jump(15, true, SceneConfigManager.Instance.PlayJumpDownEffect);
-    //        }
-    //    }
-    //}
-
-    bool CanJumpHead(Character target)
-    {
-        bool onHead = _character.transform.position.y - target.transform.position.y > target.BoxCollider.size.y - 0.2f;
-        bool isJumpDown = _character.CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString());
-        return onHead && isJumpDown;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (Application.isPlaying)
-        {
-            Gizmos.DrawCube(transform.position + (Vector3)_character.BottomOffest, new Vector3(_character.BoxCollider.size.x, 0.2f, 1));
-        }
-    }
 }

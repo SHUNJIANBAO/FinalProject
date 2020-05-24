@@ -18,6 +18,8 @@ public class GameConfig : MonoSingleton<GameConfig>
     [HideInInspector]
     public int EnemyLayer;//敌人
 
+    public float CollisionDamageWaitTime = 1f;
+
     public static Player Player { get; set; }
 
     private static int _curLevelId;
