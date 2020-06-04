@@ -240,11 +240,6 @@ public class Character : MonoEntity
 
     void Hit(int damage)
     {
-        if (!GameManager.IsTimeStop)
-        {
-            GameManager.StopOtherTime(null, true);
-            Util.RunLater(this, () => { GameManager.StopOtherTime(null, false); }, GameConfig.Instance.HitTimeStop);
-        }
         GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
     }
 

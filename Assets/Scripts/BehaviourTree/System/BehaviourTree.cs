@@ -31,7 +31,7 @@ public class BehaviourTree : MonoBehaviour
         if (NodeAssets != null)
         {
             if (NodeAssets.RootNode == null) return;
-            _timeCount += Time.deltaTime;
+            _timeCount += GameManager.DeltaTime;
             if (_timeCount > Interval)
             {
                 _timeCount = 0;

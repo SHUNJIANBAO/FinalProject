@@ -44,7 +44,7 @@ public class Emitter : MonoBehaviour
                 float timeCount = 0;
                 while (timeCount < _intervalTime)
                 {
-                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    timeCount += GameManager.DeltaTime;
                     yield return null;
                 }
             }

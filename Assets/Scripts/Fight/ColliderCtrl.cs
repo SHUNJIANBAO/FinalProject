@@ -60,14 +60,14 @@ public class ColliderCtrl : MonoBehaviour
 
     private void Update()
     {
-        _timeCount += Time.deltaTime;
+        _timeCount += GameManager.DeltaTime;
         if (_timeCount > _coliderCfg.LifeTime)
         {
             Destroy();
         }
         if (_coliderCfg.DamageType == E_DamageType.Repeat && _coliderCfg.DamageInterval != 0)
         {
-            _intervalTimeCount += Time.deltaTime;
+            _intervalTimeCount += GameManager.DeltaTime;
             if (_intervalTimeCount > _coliderCfg.DamageInterval)
             {
                 _intervalTimeCount = 0;
