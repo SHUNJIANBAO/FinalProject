@@ -32,12 +32,13 @@ public class CharHurtStatus : CharFsmBase
             m_Animator.Play(E_AnimatorIndex.Hurt.ToString(), 0, 0);
         else
             m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Hurt);
+        m_Owner.Rigibody.velocity = Vector2.up * 7;
     }
 
     protected override void OnStay()
     {
         base.OnStay();
-        m_Owner.transform.Translate((m_Owner.IsFaceRight ? Vector3.left : Vector3.right) * 4 * m_Animator.speed * Time.deltaTime);
+        m_Owner.transform.Translate((m_Owner.IsFaceRight ? Vector3.left : Vector3.right) * 5 * m_Animator.speed * Time.deltaTime);
         if (m_CurStateInfo.IsName(E_AnimatorIndex.Hurt.ToString()) && m_CurStateInfo.normalizedTime >= 1f)
         {
             _isComplete = true;

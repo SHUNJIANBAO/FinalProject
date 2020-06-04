@@ -16,6 +16,7 @@ public abstract class BulletBase : MonoEntity
     {
         base.OnInit(objs);
         m_Animator = GetComponent<Animator>();
+        m_Animator.speed = 1;
         _damage = int.Parse(objs[0].ToString());
         _targetLayer = int.Parse(objs[1].ToString());
         m_BulletCfg = BulletConfig.GetData(Id);

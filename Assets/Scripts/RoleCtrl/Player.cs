@@ -80,10 +80,10 @@ public class Player : Character
         //    ChangeStatus(E_CharacterFsmStatus.HitFly, true);
         //}
         //else
-        //{
-        ChangeStatus(E_CharacterFsmStatus.Hurt, true);
+        //{ 
         IsInvincible = true;
-        Glint(9, 0.15f, () => IsInvincible = false);
+        StartCoroutine(Glint(12, 0.1f, () => IsInvincible = false));
+        ChangeStatus(E_CharacterFsmStatus.Hurt, true);
         //}
 
     }
