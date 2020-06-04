@@ -103,7 +103,7 @@ public class EmitterManager : MonoBehaviour
                 float timeCount = 0;
                 while (timeCount < intervalTime)
                 {
-                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    timeCount += GameManager.DeltaTime;
                     yield return null;
                 }
             }
@@ -146,7 +146,7 @@ public class EmitterManager : MonoBehaviour
                 float timeCount = 0;
                 while (timeCount < intervalTime)
                 {
-                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    timeCount += GameManager.DeltaTime;
                     yield return null;
                 }
             }
@@ -187,7 +187,7 @@ public class EmitterManager : MonoBehaviour
                 float timeCount = 0;
                 while (timeCount < intervalTime)
                 {
-                    timeCount += Time.deltaTime * (GameManager.IsTimeStop ? 0 : 1);
+                    timeCount += GameManager.DeltaTime;
                     yield return null;
                 }
             }

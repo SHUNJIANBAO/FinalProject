@@ -6,6 +6,13 @@ public class Player : Character
 {
     PlayerConfig _cfg;
     bool _jumpOnHead;
+    protected SpriteRenderer m_SpriteRender;
+
+    protected override void OnInit(params object[] objs)
+    {
+        base.OnInit(objs);
+        m_SpriteRender = GetComponent<SpriteRenderer>();
+    }
 
     protected override void RegistAttribute()
     {
@@ -63,14 +70,20 @@ public class Player : Character
         base.Hurt(atkOwner, damage, hitForce);
         LookToTarget(atkOwner.transform.position);
 
-        if (hitForce > 0)
-        {
-            ChangeStatus(E_CharacterFsmStatus.HitFly, true);
-        }
-        else
-        {
-            ChangeStatus(E_CharacterFsmStatus.Hurt, true);
-        }
+
+        BattleHandles.HitFeel(this, GameConfig.Instance.HitTimeStop);
+
+
+        //if (hitForce > 0)
+        //{
+        //    ChangeStatus(E_CharacterFsmStatus.HitFly, true);
+        //}
+        //else
+        //{
+        ChangeStatus(E_CharacterFsmStatus.Hurt, true);
+        IsInvincible = true;
+        Glint(9, 0.15f, () => IsInvincible = false);
+        //}
 
     }
 
@@ -122,6 +135,26 @@ public class Player : Character
         {
             Gizmos.DrawCube(transform.position + (Vector3)BottomOffest, new Vector3(BoxCollider.size.x, 0.2f, 1));
         }
+    }
+
+    IEnumerator Glint(int count, float interval, System.Action callback = null)
+    {
+        int isClear = count % 2 == 0 ? 1 : 0;
+        while (count > 0)
+        {
+            count--;
+            if (count % 2 == isClear)
+            {
+                m_SpriteRender.color = Color.clear;
+            }
+            else
+            {
+                m_SpriteRender.color = Color.white;
+            }
+            yield return new WaitForSeconds(interval);
+        }
+        m_SpriteRender.color = Color.white;
+        callback?.Invoke();
     }
 
 }

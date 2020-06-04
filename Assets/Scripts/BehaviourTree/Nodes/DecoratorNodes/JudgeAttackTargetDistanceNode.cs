@@ -6,13 +6,13 @@ public class JudgeAttackTargetDistanceNode : DecoratorNode
     public E_JudgeCondition ConditionType;
     public float Horizontal;
     public float Vertical;
-    [System.NonSerialized]
-    float _curDistance;
+    //[System.NonSerialized]
+    //float _curDistance;
 
     protected override bool Condition()
     {
         if (m_Owner.AttackTarget == null) return false;
-        _curDistance = Vector3.Distance(m_Owner.AttackTarget.transform.position, m_Owner.transform.position);
+        //_curDistance = Vector3.Distance(m_Owner.AttackTarget.transform.position, m_Owner.transform.position);
         switch (ConditionType)
         {
             case E_JudgeCondition.Less:

@@ -25,7 +25,7 @@ public class IdleNode : ActionNode
     {
         if (m_Owner.CurStatus == E_CharacterFsmStatus.Idle)
         {
-            timeCount += Time.deltaTime;
+            timeCount += GameManager.DeltaTime;
         }
         if (m_Owner.CurStatus != E_CharacterFsmStatus.Idle)
         {

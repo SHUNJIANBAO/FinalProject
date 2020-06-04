@@ -71,6 +71,11 @@ public static class MonoBehaviourManager
         }
     }
 
+    public static void SetAnimatorSpeed(MonoEntity entity,float speed)
+    {
+        entity.SetAnimatorSpeed(speed);
+    }
+
     public static void SetOtherAnimatorSpeed(MonoEntity entity, float speed)
     {
         for (int i = 0; i < m_CellList.Count; i++)

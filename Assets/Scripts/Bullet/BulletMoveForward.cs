@@ -6,7 +6,7 @@ public class BulletMoveForward : BulletBase
 {
     public override void Move()
     {
-        transform.Translate(Vector3.right * m_BulletCfg.MoveSpeed * Time.deltaTime * m_Animator.speed);
+        transform.Translate(Vector3.right * m_BulletCfg.MoveSpeed * GameManager.DeltaTime);
     }
 
 }

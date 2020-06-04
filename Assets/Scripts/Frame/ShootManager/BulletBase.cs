@@ -43,7 +43,7 @@ public abstract class BulletBase : MonoEntity
         base.OnUpdate();
         m_Fsm.OnStay();
 
-        _timeCount += Time.deltaTime * m_Animator.speed;
+        _timeCount += GameManager.DeltaTime;
         if (_timeCount >= m_BulletCfg.Life && CurStatus == E_BulletFsmStatus.Running)
         {
             _timeCount = 0;
