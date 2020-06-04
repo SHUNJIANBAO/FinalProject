@@ -4,11 +4,15 @@ public class SelectorNode : CompositeNode
 {
     protected override E_NodeStatus Trick()
     {
+#if UNITY_EDITOR
         CheckResetNodeStatus();
+#endif
         for (int i = 0; i < ChildList.Count; i++)
         {
             E_NodeStatus result = ChildList[i].GetTrick();
+#if UNITY_EDITOR
             SetAfterNodesNotWork(i);
+#endif
             switch (result)
             {
                 case E_NodeStatus.Running:

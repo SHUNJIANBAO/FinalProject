@@ -5,17 +5,11 @@ public abstract class CompositeNode : NodeBase
     //是否运行过一次，如果为true则在开始时重置所有节点状态
     protected bool m_IsDirty;
 
+#if UNITY_EDITOR
     public override bool CanConnectLineAsParent()
     {
         return true;
     }
-
-    public override void OnComplete()
-    {
-        base.OnComplete();
-        m_IsDirty = true;
-    }
-
     /// <summary>
     /// 检查是否运行过节点，非第一次进入时会先把所有节点状态清空
     /// </summary>
@@ -51,4 +45,12 @@ public abstract class CompositeNode : NodeBase
                 ChildList[i].SetNodeNotWork();
         }
     }
+#endif
+
+    public override void OnComplete()
+    {
+        base.OnComplete();
+        m_IsDirty = true;
+    }
+
 }

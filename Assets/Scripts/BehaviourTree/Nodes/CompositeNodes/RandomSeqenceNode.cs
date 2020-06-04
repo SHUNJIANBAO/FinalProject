@@ -44,11 +44,15 @@ public class RandomSeqenceNode : CompositeNode
 
     protected override E_NodeStatus Trick()
     {
+#if UNITY_EDITOR
         CheckResetNodeStatus();
+#endif
         for (int i = _index; i < _randomList.Count;)
         {
             E_NodeStatus result = _randomList[i].GetTrick();
+#if UNITY_EDITOR
             SetOtherNodesNotWork(_nodesList);
+#endif
             switch (result)
             {
                 case E_NodeStatus.Running:

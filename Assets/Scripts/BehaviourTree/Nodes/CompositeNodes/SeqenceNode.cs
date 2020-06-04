@@ -20,11 +20,15 @@ public class SeqenceNode : CompositeNode
 
     protected override E_NodeStatus Trick()
     {
+#if UNITY_EDITOR
         CheckResetNodeStatus();
+#endif
         for (int i = _index; i < ChildList.Count;)
         {
             E_NodeStatus result = ChildList[i].GetTrick();
+#if UNITY_EDITOR
             SetAfterNodesNotWork(i);
+#endif
             switch (result)
             {
                 case E_NodeStatus.Running:

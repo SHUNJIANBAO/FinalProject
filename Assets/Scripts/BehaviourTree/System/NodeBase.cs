@@ -88,6 +88,29 @@ public abstract class NodeBase : ScriptableObject
     /// </summary>
     public static Action Repaint;
 
+    /// <summary>
+    /// 添加子节点
+    /// </summary>
+    /// <param name="node"></param>
+    public void AddChildNode(NodeBase node)
+    {
+        _childNodesList.Add(node);
+    }
+
+    /// <summary>
+    /// 移除子节点
+    /// </summary>
+    /// <param name="node"></param>
+    public void RemoveChildNode(NodeBase node)
+    {
+        if (_childNodesList.Contains(node))
+        {
+            _childNodesList.Remove(node);
+        }
+        else
+            Debug.LogError("子节点列表中不包含：" + node.Name);
+    }
+
     public void InitEditorNode(NodeEditorStyle style)
     {
         this.Style = style;
@@ -186,6 +209,41 @@ public abstract class NodeBase : ScriptableObject
         }
         return ParentNode == null;
     }
+    /// <summary>
+    /// 改变节点状态显示
+    /// </summary>
+    /// <param name="status"></param>
+    public void ChangeNodeStatus(GUIStyle status)
+    {
+        if (_curStatus != status)
+        {
+            Repaint?.Invoke();
+            _curStatus = status;
+        }
+    }
+
+    /// <summary>
+    /// 将自身和所有子节点设为不活动状态
+    /// </summary>
+    public void SetNodeNotWork()
+    {
+        ChangeNodeStatus(m_Status.NotWork);
+        for (int i = 0; i < ChildList.Count; i++)
+        {
+            ChildList[i].SetNodeNotWork();
+        }
+    }
+    /// <summary>
+    /// 重置该节点和其子节点的状态
+    /// </summary>
+    public void ResetStatus()
+    {
+        ChangeNodeStatus(m_Status.NotWork);
+        for (int i = 0; i < ChildList.Count; i++)
+        {
+            ChildList[i].ChangeNodeStatus(m_Status.NotWork);
+        }
+    }
 
     //todo
     //public void OnScollWheel(float ratio, float gridSize, Vector2 windowCenter)
@@ -241,53 +299,6 @@ public abstract class NodeBase : ScriptableObject
         }
     }
 
-    /// <summary>
-    /// 添加子节点
-    /// </summary>
-    /// <param name="node"></param>
-    public void AddChildNode(NodeBase node)
-    {
-        _childNodesList.Add(node);
-    }
-
-    /// <summary>
-    /// 移除子节点
-    /// </summary>
-    /// <param name="node"></param>
-    public void RemoveChildNode(NodeBase node)
-    {
-        if (_childNodesList.Contains(node))
-        {
-            _childNodesList.Remove(node);
-        }
-        else
-            Debug.LogError("子节点列表中不包含：" + node.Name);
-    }
-
-    /// <summary>
-    /// 改变节点状态显示
-    /// </summary>
-    /// <param name="status"></param>
-    public void ChangeNodeStatus(GUIStyle status)
-    {
-        if (_curStatus != status)
-        {
-            Repaint?.Invoke();
-            _curStatus = status;
-        }
-    }
-
-    /// <summary>
-    /// 将自身和所有子节点设为不活动状态
-    /// </summary>
-    public void SetNodeNotWork()
-    {
-        ChangeNodeStatus(m_Status.NotWork);
-        for (int i = 0; i < ChildList.Count; i++)
-        {
-            ChildList[i].SetNodeNotWork();
-        }
-    }
 
     /// <summary>
     /// 初始化节点
@@ -307,6 +318,7 @@ public abstract class NodeBase : ScriptableObject
     public E_NodeStatus GetTrick()
     {
         E_NodeStatus status = Trick();
+#if UNITY_EDITOR
         switch (status)
         {
             case E_NodeStatus.NotWork:
@@ -322,7 +334,7 @@ public abstract class NodeBase : ScriptableObject
                 ChangeNodeStatus(m_Status.Failure);
                 break;
         }
-
+#endif
         return status;
     }
 
@@ -340,17 +352,6 @@ public abstract class NodeBase : ScriptableObject
 
     }
 
-    /// <summary>
-    /// 重置该节点和其子节点的状态
-    /// </summary>
-    public void ResetStatus()
-    {
-        ChangeNodeStatus(m_Status.NotWork);
-        for (int i = 0; i < ChildList.Count; i++)
-        {
-            ChildList[i].ChangeNodeStatus(m_Status.NotWork);
-        }
-    }
 }
 
 public enum E_NodeStatus

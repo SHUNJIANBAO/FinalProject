@@ -4,10 +4,12 @@ using UnityEngine;
 
 public abstract class ActionNode : NodeBase 
 {
+#if UNITY_EDITOR
     public override bool CanConnectLineAsParent()
     {
         return false;
     }
+#endif
 
     public override void OnComplete()
     {

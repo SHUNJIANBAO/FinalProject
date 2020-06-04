@@ -2,10 +2,12 @@
 public abstract class DecoratorNode : NodeBase
 {
     bool _firstEnter = true;
+#if UNITY_EDITOR
     public override bool CanConnectLineAsParent()
     {
         return ChildList.Count == 0;
     }
+#endif
 
     protected virtual void OnFirstEnter() { }
 

@@ -61,6 +61,7 @@ public class Player : Character
         }
         //if (CurStatus == E_CharacterFsmStatus.FallDown) return;
         base.Hurt(atkOwner, damage, hitForce);
+        CameraManager.ShakeCamera();
         LookToTarget(atkOwner.transform.position);
 
         if (hitForce > 0)

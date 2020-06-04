@@ -26,14 +26,18 @@ public class BarrageNode : ActionNode
     }
 
     [System.NonSerialized]
-    bool _enter;
+    bool _completed;
+    //bool _enter;
     [System.NonSerialized]
     Transform TargetTrans;
+    [System.NonSerialized]
+    float timeCount;
+
     protected override E_NodeStatus Trick()
     {
-        if (_enter)
+        if (_completed)
         {
-            _enter = false;
+            _completed = false;
             return E_NodeStatus.Success;
         }
         return E_NodeStatus.Running;
@@ -43,6 +47,8 @@ public class BarrageNode : ActionNode
     {
         _pos = Offest;
         TargetTrans = m_Owner.AttackTarget.transform;
+        timeCount = 0;
+        _completed = false;
     }
 
     public override void OnExit()
@@ -51,14 +57,14 @@ public class BarrageNode : ActionNode
 
     public override void OnStay()
     {
-        if (!_enter)
+        if (!_completed)
         {
-            _enter = true;
-            Transform parent = null;
-            BarrageConfig bCfg = BarrageConfig.GetData(BarrageId);
-            var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + BulletId));
-            TimerManager.Instance.AddListener(Delay, () =>
+            timeCount +=  GameManager.DeltaTime;
+            if (timeCount>Delay)
             {
+                Transform parent = null;
+                BarrageConfig bCfg = BarrageConfig.GetData(BarrageId);
+                var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + BulletId));
                 switch (TargetPosType)
                 {
                     case TargetPos.敌人位置:
@@ -71,7 +77,7 @@ public class BarrageNode : ActionNode
                         _pos.y = Offest.y;
                         break;
                 }
-                if (m_Owner==GameManager.Player)
+                if (m_Owner == GameManager.Player)
                 {
                     _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.EnemyLayer);
                 }
@@ -79,7 +85,7 @@ public class BarrageNode : ActionNode
                 {
                     _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.PlayerLayer);
                 }
-                if (TargetPosType==TargetPos.敌人X轴位置)
+                if (TargetPosType == TargetPos.敌人X轴位置)
                 {
                     _emitterManager.OnUpdate += () =>
                     {
@@ -88,7 +94,47 @@ public class BarrageNode : ActionNode
                         _emitterManager.transform.position = _pos;
                     };
                 }
-            });
+                _completed = true;
+            }
         }
+        //if (!_enter)
+        //{
+        //    _enter = true;
+            //Transform parent = null;
+            //BarrageConfig bCfg = BarrageConfig.GetData(BarrageId);
+            //var bullet = ResourceManager.Load<GameObject>(PathManager.GetBulletPath("Bullet_" + BulletId));
+            //TimerManager.Instance.AddListener(Delay, () =>
+            //{
+            //    switch (TargetPosType)
+            //    {
+            //        case TargetPos.敌人位置:
+            //            parent = TargetTrans;
+            //            break;
+            //        case TargetPos.固定位置:
+            //            break;
+            //        case TargetPos.敌人X轴位置:
+            //            _pos.x = TargetTrans.position.x;
+            //            _pos.y = Offest.y;
+            //            break;
+            //    }
+            //    if (m_Owner==GameManager.Player)
+            //    {
+            //        _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.EnemyLayer);
+            //    }
+            //    else
+            //    {
+            //        _emitterManager = ShootManager.Instance.Shoot(parent, _pos, bullet, m_Owner.GetAttribute(E_Attribute.Atk.ToString()).GetTotalValue(), bCfg, GameConfig.Instance.PlayerLayer);
+            //    }
+            //    if (TargetPosType==TargetPos.敌人X轴位置)
+            //    {
+            //        _emitterManager.OnUpdate += () =>
+            //        {
+            //            _pos.x = TargetTrans.position.x;
+            //            _pos.y = Offest.y;
+            //            _emitterManager.transform.position = _pos;
+            //        };
+            //    }
+            //});
+    //    }
     }
 }

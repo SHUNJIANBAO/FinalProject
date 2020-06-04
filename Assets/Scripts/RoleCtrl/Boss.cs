@@ -55,7 +55,10 @@ public class Boss : EnemyBase
         base.Hurt(atkOwner, damage, hitForce);
         var shield = GetRangeAttribute(E_Attribute.Shield.ToString());
         shield.ChangeValue(-hitForce);
-
+        if (hitForce>5)
+        {
+            CameraManager.ShakeCamera();
+        }
         if (shield.Current <= 0 && CurStatus != E_CharacterFsmStatus.FallDown)
         {
             LookToTarget(atkOwner.transform.position);

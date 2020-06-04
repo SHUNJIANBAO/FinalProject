@@ -245,7 +245,6 @@ public class Character : MonoEntity
             GameManager.StopOtherTime(null, true);
             Util.RunLater(this, () => { GameManager.StopOtherTime(null, false); }, GameConfig.Instance.HitTimeStop);
         }
-        CameraManager.ShakeCamera();
         GetRangeAttribute(E_Attribute.Hp.ToString()).ChangeValue(-damage);
     }
 
