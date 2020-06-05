@@ -8,7 +8,15 @@ using UnityEditor.Animations;
 public class CreateEffectTool : EditorWindow
 {
     string _effName;
-    Object _animClip;
+    EffectType _effType;
+    AnimationClip _animClip;
+    ParticleSystem _particle;
+
+    public enum EffectType
+    {
+        动画特效,
+        粒子特效
+    }
 
     string _animatorControllerPath = "Assets/Editor/Demo/AnimatorController/EffectAnimatorController.controller";
     //static string _gameObjectPath = "Assets/Editor/Demo/Objects/";
@@ -24,7 +32,16 @@ public class CreateEffectTool : EditorWindow
     private void OnGUI()
     {
         _effName = EditorGUILayout.TextField("特效名", _effName);
-        _animClip = EditorGUILayout.ObjectField("动画", _animClip, typeof(AnimationClip), true);
+        _effType = (EffectType)EditorGUILayout.EnumPopup("特效类型", _effType);
+        switch (_effType)
+        {
+            case EffectType.动画特效:
+                _animClip = (AnimationClip)EditorGUILayout.ObjectField("动画", _animClip, typeof(AnimationClip), true);
+                break;
+            case EffectType.粒子特效:
+                _particle = (ParticleSystem)EditorGUILayout.ObjectField("粒子", _particle, typeof(ParticleSystem), true);
+                break;
+        }
         if (GUILayout.Button("创建"))
         {
             if (string.IsNullOrEmpty(_effName))
@@ -32,29 +49,49 @@ public class CreateEffectTool : EditorWindow
                 Debug.LogError("名称不能为空");
                 return;
             }
-            if (_animClip == null)
+            switch (_effType)
             {
-                Debug.LogError("动画不能为空");
-                return;
+                case EffectType.动画特效:
+                    if (_animClip == null)
+                    {
+                        Debug.LogError("动画不能为空");
+                        return;
+                    }
+                    break;
+                case EffectType.粒子特效:
+                    if (_particle == null)
+                    {
+                        Debug.LogError("粒子不能为空");
+                        return;
+                    }
+                    break;
             }
-            CreateEffect();
+            CreateEffect(_effType);
         }
     }
 
-    void CreateEffect()
+    void CreateEffect(EffectType effType)
     {
         CreatTargetDirectory(_effName);
 
+        switch (effType)
+        {
+            case EffectType.动画特效:
+                GameObject go = new GameObject(_effName);
+                var sr = go.AddComponent<SpriteRenderer>();
+                sr.sortingOrder = 20;
+                var controller = CreateAnimatorController(GetAnimatorPath(_effName), GetNewAnimatorPath(_effName));
+                go.AddComponent<Animator>().runtimeAnimatorController = controller;
+                go.AddComponent<EffectCtrl>();
+                GameObject prefab = PrefabUtility.CreatePrefab(GetNewPrefabPath(_effName), go);
+                PrefabUtility.ConnectGameObjectToPrefab(go, prefab);
+                break;
+            case EffectType.粒子特效:
+                PrefabUtility.CreatePrefab(GetNewPrefabPath(_effName), _particle.gameObject);
+                break;
+        }
 
-        GameObject go = new GameObject(_effName);
-        var sr = go.AddComponent<SpriteRenderer>();
-        sr.sortingOrder = 20;
-        var controller = CreateAnimatorController(GetAnimatorPath(_effName), GetNewAnimatorPath(_effName));
-        go.AddComponent<Animator>().runtimeAnimatorController = controller;
-        go.AddComponent<EffectCtrl>();
 
-        GameObject prefab = PrefabUtility.CreatePrefab(GetNewPrefabPath(_effName), go);
-        PrefabUtility.ConnectGameObjectToPrefab(go, prefab);
 
     }
 

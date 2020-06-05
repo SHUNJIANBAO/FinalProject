@@ -33,12 +33,7 @@ public static class PoolManager
         }
         catch (System.Exception)
         {
-
-            Debug.LogError(go.name);
-            foreach (var item in m_PoolDict)
-            {
-                Debug.LogError(item);
-            }
+            Debug.LogError("获取物体失败，路径："+path);
         }
         return m_PoolDict[pType][go.name].GetGameObject();
     }

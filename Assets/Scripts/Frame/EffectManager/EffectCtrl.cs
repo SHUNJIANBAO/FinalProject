@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EffectCtrl : MonoEntity 
+public class EffectCtrl : MonoEntity
 {
     AnimatorStateInfo _curState;
+    ParticleSystem _particle;
 
     EffectConfig _cfg;
     float _lifeTime;
@@ -14,6 +15,7 @@ public class EffectCtrl : MonoEntity
     {
         base.OnAwake();
         m_Animator = GetComponent<Animator>();
+        _particle = GetComponent<ParticleSystem>();
     }
 
     protected override void OnInit(params object[] objs)
@@ -21,24 +23,40 @@ public class EffectCtrl : MonoEntity
         base.OnInit(objs);
         _timeCount = 0;
         _cfg = (EffectConfig)objs[0];
-        m_Animator.Play("Play", 0, 0);
+        if (m_Animator != null)
+        {
+            m_Animator.Play("Play", 0, 0);
+        }
+        else if (_particle != null)
+        {
+            _particle.Play();
+        }
+        Debug.Log(_cfg.LifeTime);
     }
 
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        if (_cfg.LifeTime!=0)
+        if (_cfg.LifeTime != 0)
         {
-            _timeCount += Time.deltaTime* m_Animator.speed * Time.deltaTime;
-            if (_timeCount>_cfg.LifeTime)
+            _timeCount += Time.deltaTime;
+            Debug.Log(_timeCount);
+            if (_timeCount > _cfg.LifeTime)
             {
                 Destroy();
             }
         }
         else
         {
-            _curState = m_Animator.GetCurrentAnimatorStateInfo(0);
-            if (_curState.normalizedTime >= 1f)
+            if (m_Animator != null)
+            {
+                _curState = m_Animator.GetCurrentAnimatorStateInfo(0);
+                if (_curState.normalizedTime >= 1f)
+                {
+                    Destroy();
+                }
+            }
+            else
             {
                 Destroy();
             }
@@ -47,6 +65,11 @@ public class EffectCtrl : MonoEntity
 
     void Destroy()
     {
+        Debug.Log("Destroy");
+        if (_particle != null)
+        {
+            _particle.Stop();
+        }
         MonoBehaviourManager.Remove(this);
         PoolManager.DestroyGameObject(gameObject, PoolType.Effect);
     }

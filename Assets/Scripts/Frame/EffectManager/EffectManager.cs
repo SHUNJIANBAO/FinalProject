@@ -12,21 +12,27 @@ public class EffectManager : Singleton<EffectManager>
         }
         string effPath = PathManager.GetEffectPath(effName);
         var eff = PoolManager.InstantiateGameObject(effPath, PoolType.Effect);
-        eff.transform.SetParent(parent);
-        eff.transform.localPosition = offest;
-        eff.transform.localScale = parent.localScale;
-        if (parent.localScale.x > 0)
+        if (parent!=null)
         {
-            eff.transform.position = parent.transform.position + offest;
+            eff.transform.SetParent(parent);
+            eff.transform.localScale = parent.localScale;
+            if (parent.localScale.x > 0)
+            {
+                eff.transform.localPosition =  offest;
+            }
+            else
+            {
+                eff.transform.localPosition = new Vector3(-offest.x, offest.y, offest.z);
+            }
         }
         else
         {
-            eff.transform.position = parent.transform.position + new Vector3(-offest.x, offest.y, offest.z);
+            eff.transform.position = offest;
         }
-        var ctrl = eff.GetComponent<EffectCtrl>();
+        var ctrl = eff.GetComponent<EffectCtrl>()??eff.AddComponent<EffectCtrl>();
         EffectConfig cfg = new EffectConfig();
         cfg.LifeTime = lifeTime;
-        ctrl.Init(cfg);
+        MonoBehaviourManager.Add(ctrl, cfg);
         return eff;
     }
 
