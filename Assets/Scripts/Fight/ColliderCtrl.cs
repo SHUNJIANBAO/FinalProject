@@ -117,7 +117,7 @@ public class ColliderCtrl : MonoBehaviour
 
         if (!string.IsNullOrEmpty(_hitAudio))
         {
-            AudioManager.Instance.PlayAudio(_hitAudio, target.gameObject);
+            AudioManager.Instance.PlayAudio(_hitAudio);//, target.gameObject);
         }
         if (!string.IsNullOrEmpty(_hitEffect))
         {
@@ -135,7 +135,7 @@ public class ColliderCtrl : MonoBehaviour
                     }
                     break;
                 case E_HitEffectPosType.CharacterCenter:
-                    EffectManager.Instance.Play(_hitEffect, Vector3.zero, target, _hitEffectLife);
+                    EffectManager.Instance.Play(_hitEffect, target.transform.position, true, _hitEffectLife);
                     break;
             }
         }

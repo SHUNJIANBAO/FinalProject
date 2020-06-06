@@ -136,7 +136,7 @@ public class CharAttackStatus : CharFsmBase
         if (_timeCount>=_skill.PlayAudioTime)
         {
             _audioPlayed = true;
-            AudioManager.Instance.PlayAudio(_skill.PlayAudioName, m_Owner.gameObject);
+            AudioManager.Instance.PlayAudio(_skill.PlayAudioName); //, m_Owner.gameObject);
         }
     }
 

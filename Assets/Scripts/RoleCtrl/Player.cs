@@ -74,7 +74,8 @@ public class Player : Character
 
         BattleHandles.HitFeel(this, GameConfig.Instance.HitTimeStop);
 
-
+        AudioManager.Instance.PlayAudio("Hornet_Fight_Yell_07");
+        AudioManager.Instance.PlayAudio("ShotMuffCL");
         //if (hitForce > 0)
         //{
         //    ChangeStatus(E_CharacterFsmStatus.HitFly, true);

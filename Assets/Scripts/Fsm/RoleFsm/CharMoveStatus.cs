@@ -6,6 +6,7 @@ using System;
 
 public class CharMoveStatus : CharFsmBase
 {
+    string _runAudio;
     float _speedCurve;
     Action<Character> _moveCallback;
 
@@ -43,6 +44,19 @@ public class CharMoveStatus : CharFsmBase
         m_Animator.SetInteger("Index", (int)E_AnimatorIndex.Moving);
         _speedCurve = 0;
         DOTween.To(() => _speedCurve, s => _speedCurve = s, 1, 0.15f);
+        _runAudio = "";
+        if (m_Owner.GetType().IsAssignableFrom(typeof(Player)))
+        {
+            _runAudio = PlayerConfig.GetData(m_Owner.Id).RunAudio;
+        }
+        else if (m_Owner.GetType().IsAssignableFrom(typeof(Monster)))
+        {
+            _runAudio = PlayerConfig.GetData(m_Owner.Id).RunAudio;
+        }
+        if (!string.IsNullOrEmpty(_runAudio))
+        {
+            AudioManager.Instance.PlayAudio(_runAudio, null, true);
+        }
     }
     protected override void OnStay()
     {
@@ -79,5 +93,12 @@ public class CharMoveStatus : CharFsmBase
 
             //m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _speedCurve * m_Animator.speed * Time.deltaTime);
         }
+    }
+
+    protected override void OnExit()
+    {
+        base.OnExit();
+        AudioManager.Instance.StopAudio(_runAudio);
+
     }
 }
