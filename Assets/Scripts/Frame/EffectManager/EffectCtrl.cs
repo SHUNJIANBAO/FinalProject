@@ -31,7 +31,6 @@ public class EffectCtrl : MonoEntity
         {
             _particle.Play();
         }
-        Debug.Log(_cfg.LifeTime);
     }
 
     protected override void OnUpdate()
@@ -40,7 +39,6 @@ public class EffectCtrl : MonoEntity
         if (_cfg.LifeTime != 0)
         {
             _timeCount += Time.deltaTime;
-            Debug.Log(_timeCount);
             if (_timeCount > _cfg.LifeTime)
             {
                 Destroy();
@@ -65,7 +63,6 @@ public class EffectCtrl : MonoEntity
 
     void Destroy()
     {
-        Debug.Log("Destroy");
         if (_particle != null)
         {
             _particle.Stop();

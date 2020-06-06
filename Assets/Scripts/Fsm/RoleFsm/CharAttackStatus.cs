@@ -16,6 +16,8 @@ public class CharAttackStatus : CharFsmBase
     Action _damageCallback;
     int _damageIndex;
     int _blinkIndex;
+    bool _effectPlayed;
+    bool _audioPlayed;
 
     public CharAttackStatus(Character owner, Animator animator) : base(owner, animator)
     {
@@ -57,6 +59,8 @@ public class CharAttackStatus : CharFsmBase
         _timeCount = 0;
         _damageIndex = 0;
         _blinkIndex = 0;
+        _effectPlayed = false;
+        _audioPlayed = false;
         _skill = m_Owner.CurSkill;
         _skillName = AnimConfig.GetData(_skill.AnimId).Name;
         m_Animator.SetInteger("Index", _skill.AnimId);
@@ -87,6 +91,8 @@ public class CharAttackStatus : CharFsmBase
             CaculateDamageTime();
             CaculateInvincible();
             CaculateMove();
+            CaculatePlayAudio();
+            CaculatePlayEffect();
 
             if (m_Owner.IsGround && m_CurStateInfo.normalizedTime >= 0.9f)
             {
@@ -115,6 +121,47 @@ public class CharAttackStatus : CharFsmBase
         {
             Physics2D.IgnoreLayerCollision(GameConfig.Instance.PlayerLayer, GameConfig.Instance.EnemyLayer, false);
             m_Owner.IsInvincible = false;
+        }
+    }
+
+    /// <summary>
+    /// 计算播放音效时间点
+    /// </summary>
+    void CaculatePlayAudio()
+    {
+        if (string.IsNullOrEmpty(_skill.PlayAudioName)||_audioPlayed)
+        {
+            return;
+        }
+        if (_timeCount>=_skill.PlayAudioTime)
+        {
+            _audioPlayed = true;
+            AudioManager.Instance.PlayAudio(_skill.PlayAudioName, m_Owner.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// 计算播放特效时间点
+    /// </summary>
+    void CaculatePlayEffect()
+    {
+        if (string.IsNullOrEmpty(_skill.PlayEffectName)||_effectPlayed)
+        {
+            return;
+        }
+        if (_timeCount >= _skill.PlayEffectTime)
+        {
+            _effectPlayed = true;
+            if (_skill.EffectIsChild)
+            {
+                EffectManager.Instance.Play(_skill.PlayEffectName, _skill.EffectOffest, m_Owner.transform, _skill.EffectLife);
+            }
+            else
+            {
+                Vector3 offest = m_Owner.IsFaceRight ? _skill.EffectOffest : new Vector3(-_skill.EffectOffest.x, _skill.EffectOffest.y, _skill.EffectOffest.z);
+                Vector3 pos = m_Owner.transform.position + offest;
+                EffectManager.Instance.Play(_skill.PlayEffectName, pos, m_Owner.IsFaceRight, _skill.EffectLife);
+            }
         }
     }
 
@@ -207,7 +254,7 @@ public class CharAttackStatus : CharFsmBase
         var ctrl = collider.GetComponent<ColliderCtrl>();
         int colliderId = _skill.ColliderId.Count > index ? _skill.ColliderId[index] : _skill.ColliderId[0];
         int hitFlyForce = _skill.HitFlyForce.Count > index ? _skill.HitFlyForce[index] : _skill.HitFlyForce[0];
-        ctrl.Init(colliderId, m_Owner, (int)damage, hitFlyForce, _skill.HitEffect, _skill.HitEffectPosType);
+        ctrl.Init(colliderId, m_Owner, (int)damage, hitFlyForce, _skill);
     }
 
     /// <summary>

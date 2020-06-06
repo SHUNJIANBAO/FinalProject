@@ -16,14 +16,14 @@ public class EffectManager : Singleton<EffectManager>
         {
             eff.transform.SetParent(parent);
             eff.transform.localScale = parent.localScale;
-            if (parent.localScale.x > 0)
-            {
+            //if (parent.localScale.x > 0)
+            //{
                 eff.transform.localPosition =  offest;
-            }
-            else
-            {
-                eff.transform.localPosition = new Vector3(-offest.x, offest.y, offest.z);
-            }
+            //}
+            //else
+            //{
+            //    eff.transform.localPosition = new Vector3(-offest.x, offest.y, offest.z);
+            //}
         }
         else
         {
@@ -53,7 +53,7 @@ public class EffectManager : Singleton<EffectManager>
         {
             eff.transform.localScale = new Vector3(-1, 1, 1);
         }
-        var ctrl = eff.GetComponent<EffectCtrl>();
+        var ctrl = eff.GetComponent<EffectCtrl>() ?? eff.AddComponent<EffectCtrl>();
         EffectConfig cfg = new EffectConfig();
         cfg.LifeTime = lifeTime;
         MonoBehaviourManager.Add(ctrl, cfg);

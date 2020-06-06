@@ -22,6 +22,15 @@ public class SkillConfig : CsvCfg<SkillConfig>
     public List<float> MoveStartTime { get; protected set; }
     public List<float> MoveDuration { get; protected set; }
     public string HitEffect { get; protected set; }
+    public float HitEffectLife { get; protected set; }
+    public string PlayEffectName { get; protected set; }
+    public float PlayEffectTime { get; protected set; }
+    public Vector3 EffectOffest { get; protected set; }
+    public bool EffectIsChild { get; protected set; }
+    public float EffectLife { get; protected set; }
+    public string PlayAudioName { get; protected set; }
+    public float PlayAudioTime { get; protected set; }
+    public string HitAudio { get; protected set; }
     public E_HitEffectPosType HitEffectPosType { get; protected set; }
     public static string FilePath = "Config/Skill";
 

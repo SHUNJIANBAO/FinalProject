@@ -794,7 +794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DrawCollider: 0
-  CloseAI: 0
+  CloseAI: 1
   TimeScale: 1
 --- !u!114 &1935426827
 MonoBehaviour:

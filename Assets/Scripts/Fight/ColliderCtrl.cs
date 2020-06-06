@@ -10,6 +10,8 @@ public class ColliderCtrl : MonoBehaviour
     int _damage;
     int _hitForce;
     string _hitEffect;
+    float _hitEffectLife;
+    string _hitAudio;
     E_HitEffectPosType _hitPosType;
 
     float _timeCount;
@@ -20,13 +22,15 @@ public class ColliderCtrl : MonoBehaviour
         _box = GetComponent<BoxCollider2D>();
     }
 
-    public void Init(int colliderId, Character owner, int damage, int hitForce, string hitEffect, E_HitEffectPosType hitPosType)
+    public void Init(int colliderId, Character owner, int damage, int hitForce, SkillConfig skill)
     {
         _timeCount = 0;
         _damage = damage;
         _hitForce = hitForce;
-        _hitEffect = hitEffect;
-        _hitPosType = hitPosType;
+        _hitEffect = skill.HitEffect;
+        _hitPosType = skill.HitEffectPosType;
+        _hitAudio = skill.HitAudio;
+        _hitEffectLife = skill.HitEffectLife;
         _owner = owner;
         _coliderCfg = ColliderConfig.GetData(colliderId);
         _intervalTimeCount = _coliderCfg.DamageInterval;
@@ -48,7 +52,7 @@ public class ColliderCtrl : MonoBehaviour
                 transform.SetParent(_owner.transform, false);
                 //if (_owner.IsFaceRight)
                 //{
-                    transform.localPosition = _coliderCfg.Offest;
+                transform.localPosition = _coliderCfg.Offest;
                 //}
                 //else
                 //{
@@ -111,19 +115,29 @@ public class ColliderCtrl : MonoBehaviour
             target.Hurt(_owner.gameObject, _damage, _hitForce);
         }
 
-        switch (_hitPosType)
+        if (!string.IsNullOrEmpty(_hitAudio))
         {
-            case E_HitEffectPosType.HitPoint:
-                Vector2 dir = target.transform.position - _owner.transform.position;
-                var hit = Physics2D.Raycast(_owner.transform.position, dir, 5);
-                if (hit.transform.GetComponent<Character>() == target)
-                {
-                    EffectManager.Instance.Play(_hitEffect, hit.point, _owner.IsFaceRight);
-                }
-                break;
-            case E_HitEffectPosType.CharacterCenter:
-                EffectManager.Instance.Play(_hitEffect, Vector3.zero, target);
-                break;
+            AudioManager.Instance.PlayAudio(_hitAudio, target.gameObject);
+        }
+        if (!string.IsNullOrEmpty(_hitEffect))
+        {
+            switch (_hitPosType)
+            {
+                case E_HitEffectPosType.HitPoint:
+                    Vector2 dir = target.transform.position - _owner.transform.position;
+                    var hitArry = Physics2D.RaycastAll(_owner.transform.position, dir, 5);
+                    foreach (var hit in hitArry)
+                    {
+                        if (hit.transform.GetComponent<Character>() == target)
+                        {
+                            EffectManager.Instance.Play(_hitEffect, hit.point, _owner.IsFaceRight, _hitEffectLife);
+                        }
+                    }
+                    break;
+                case E_HitEffectPosType.CharacterCenter:
+                    EffectManager.Instance.Play(_hitEffect, Vector3.zero, target, _hitEffectLife);
+                    break;
+            }
         }
     }
 
