@@ -57,11 +57,16 @@ public class PlayerData : Data<PlayerData>
 
     public void SavePlayerInfo(PlayerInfo info)
     {
-        var tempInfo = PlayerInfos.Find(i => i.SaveId == info.SaveId);
-        if (tempInfo == null) throw new Exception("Archive Error!!!");
-        tempInfo = info;
-        tempInfo.GameTimeMinutes += (DateTime.Now - StartTime).Minutes;
-        Save();
+        for (int i = 0; i < PlayerInfos.Count; i++)
+        {
+            if (PlayerInfos[i].SaveId == info.SaveId)
+            {
+                PlayerInfos[i] = info;
+                PlayerInfos[i].GameTimeMinutes += (DateTime.Now - StartTime).Minutes;
+                Save();
+                LevelData.Save();
+            }
+        }
     }
 
     /// <summary>
@@ -71,6 +76,7 @@ public class PlayerData : Data<PlayerData>
     public void DeletePlayerInfo(PlayerInfo info)
     {
         PlayerInfos.Remove(info);
+        LevelData.Instance.DelLevelData(info.SaveId);
         Save();
     }
 

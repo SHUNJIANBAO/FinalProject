@@ -53,12 +53,14 @@ public class Main : MonoSingleton<Main>
     {
         PlayerData.Load();
         GameData.Load();
+        LevelData.Load();
     }
 
     void ClearData()
     {
         PlayerData.Clear();
         GameData.Clear();
+        LevelData.Clear();
     }
 
     public void OnGameEnter()

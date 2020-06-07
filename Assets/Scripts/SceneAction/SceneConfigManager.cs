@@ -5,6 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class SceneConfigManager : MonoBehaviour
 {
+    public int LevelId;
+
     [Header("摄像机是否水平跟随")]
     public bool Horizontal = true;
     [Header("摄像机是否垂直跟随")]
@@ -32,6 +34,7 @@ public class SceneConfigManager : MonoBehaviour
 
     private void Start()
     {
+        Init(LevelId);
         CloseTrashCamera();
         _collider = this.GetComponent<PolygonCollider2D>();
         _renderArray = this.GetComponentsInChildren<Renderer>();
@@ -40,6 +43,11 @@ public class SceneConfigManager : MonoBehaviour
 
         CameraManager.SetCameraConfiner(this._collider);
         CameraManager.SetCameraFollowMode(Horizontal, Vertical);
+    }
+
+    void Init(int levelId)
+    {
+
     }
 
     public void SetSceneGray(bool value)

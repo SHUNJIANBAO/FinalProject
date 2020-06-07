@@ -9,6 +9,8 @@ public class CharJumpStatus : CharFsmBase
     bool _isJumping;
     Action<Character> _jumpDownCallback;
 
+    float _lastY;
+
     float _jumpMoveSpeedRatio = 0.65f;
 
     public CharJumpStatus(Character owner, Animator animator) : base(owner, animator)
@@ -62,12 +64,13 @@ public class CharJumpStatus : CharFsmBase
                 _jumpDownCallback = objs[1] as Action<Character>;
             }
         }
+        _lastY = m_Owner.transform.position.y;
     }
-
+    
     protected override void OnStay()
     {
         base.OnStay();
-        if (m_Animator.GetInteger("Index")== (int)E_AnimatorIndex.JumpStart)
+        if (m_Animator.GetInteger("Index") == (int)E_AnimatorIndex.JumpStart)
         {
             if (m_CurStateInfo.normalizedTime >= 1f)
             {
@@ -88,14 +91,19 @@ public class CharJumpStatus : CharFsmBase
                 m_Owner.Rigibody.velocity = Vector2.zero;
             }
         }
-        else
+        else 
         {
             if (!m_Owner.IsGround)
             {
                 //跳跃时做x轴的位移，到指定点
                 m_Owner.MoveTarget.y = m_Owner.transform.position.y;
+                //if (Mathf.Abs(m_Owner.transform.position.x- m_Owner.MoveTarget.x)>0.1f)
+                //{
+                //    Vector3 dir = m_Owner.transform.position.x > m_Owner.MoveTarget.x ? Vector3.left : Vector3.right;
+                //    m_Owner.Rigibody.v(m_Owner.transform.position + dir * m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * m_Animator.speed * Time.deltaTime);
+                //}
                 m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _jumpMoveSpeedRatio * m_Animator.speed * Time.deltaTime);
-                if (Mathf.Abs(m_Owner.transform.position.x-m_Owner.MoveTarget.x)>0.1f)
+                if (Mathf.Abs(m_Owner.transform.position.x - m_Owner.MoveTarget.x) > 0.1f)
                 {
                     m_Owner.LookToTarget(m_Owner.MoveTarget);
                 }
@@ -110,28 +118,36 @@ public class CharJumpStatus : CharFsmBase
                     }
                 }
             }
-            else if (_isJumping)
+            else if(_isJumping)
             {
-                if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpEnd.ToString()))
+                //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpEnd.ToString()))
+                if (m_Animator.GetInteger("Index") == (int)E_AnimatorIndex.JumpEnd)
                 {
                     if (m_CurStateInfo.normalizedTime >= 1f)
                     {
                         m_Owner.ChangeStatus(E_CharacterFsmStatus.Idle);
-                        _isJumping = false;
                     }
                 }
-                else //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString()))
+                else  if(m_Owner.transform.position.y<_lastY) //if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpingDown.ToString()))
                 {
                     _jumpDownCallback?.Invoke(m_Owner);
                     m_Owner.MoveTarget = m_Owner.transform.position;
                     m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpEnd);
+                    return;
+                }
+                else if (m_Owner.transform.position.y == _lastY)
+                {
+                    m_Owner.transform.position = Vector3.MoveTowards(m_Owner.transform.position, m_Owner.MoveTarget, m_Owner.GetAttribute(E_Attribute.MoveSpeed.ToString()).GetTotalValue() * _jumpMoveSpeedRatio * m_Animator.speed * Time.deltaTime);
+                    return;
                 }
             }
         }
+        _lastY = m_Owner.transform.position.y;
     }
 
     protected override void OnExit()
     {
         base.OnExit();
+        _isJumping = false;
     }
 }

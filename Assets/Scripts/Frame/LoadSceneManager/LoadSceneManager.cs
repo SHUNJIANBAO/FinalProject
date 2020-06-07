@@ -6,7 +6,7 @@ using System;
 
 public class LoadSceneManager : MonoSingleton<LoadSceneManager>
 {
-    public float LoadCompleteDelay = 0.2f;
+    public float LoadCompleteDelay = 0.5f;
 
     public void LoadScene(int levelId, Action callback = null)
     {

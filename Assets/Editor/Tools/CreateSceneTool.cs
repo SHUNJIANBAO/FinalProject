@@ -69,6 +69,20 @@ public class CreateSceneTool : EditorWindow
         go.name = "传送门";
     }
 
+    [MenuItem("GameObject/场景相关/创建阻挡门")]
+    static void CreateDoor()
+    {
+        var go = CreateGameObject("Door", Selection.activeGameObject.transform);
+        go.name = "阻挡门";
+    }
+
+    [MenuItem("GameObject/场景相关/创建钥匙")]
+    static void CreateKey()
+    {
+        var go = CreateGameObject("Key", Selection.activeGameObject.transform);
+        go.name = "钥匙";
+    }
+
     public static GameObject CreateGameObject(string name,Transform parent=null)
     {
         string objPath = SceneGameObjectPath + name + ".prefab";
