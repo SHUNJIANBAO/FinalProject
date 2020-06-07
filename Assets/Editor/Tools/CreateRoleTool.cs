@@ -55,10 +55,15 @@ public class CreateRoleTool : EditorWindow
         CreatTargetDirectory(name);
 
         string savePath = GetNewAnimatorPath(name);
-        var controller= CreateAnimatorController(GetAnimatorPath(name), savePath);
+        var controller = CreateAnimatorController(GetAnimatorPath(name), savePath);
 
         GameObject go = new GameObject(name);
-        var rigi = go.GetComponent<Rigidbody2D>();
+        Rigidbody2D rigi = null;
+        rigi= go.GetComponent<Rigidbody2D>();
+        if (rigi==null)
+        {
+            rigi = go.AddComponent<Rigidbody2D>();
+        }
         switch (_roleType)
         {
             case RoleType.小怪:
@@ -81,11 +86,11 @@ public class CreateRoleTool : EditorWindow
         var sr = go.GetComponent<SpriteRenderer>();
         sr.sprite = GetRoleIdleSprite(name);
         sr.sortingOrder = 10;
-        go.GetComponent<BoxCollider2D>().size = Vector2.one*2;
+        go.GetComponent<BoxCollider2D>().size = Vector2.one * 2;
         go.GetComponent<Animator>().runtimeAnimatorController = controller;
         go.AddComponent<CharacterMovement>();
 
-        GameObject prefab= PrefabUtility.CreatePrefab(GetNewPrefabPath(name), go);
+        GameObject prefab = PrefabUtility.CreatePrefab(GetNewPrefabPath(name), go);
         PrefabUtility.ConnectGameObjectToPrefab(go, prefab);
         //Object.DestroyImmediate(go, true);
     }
@@ -102,11 +107,11 @@ public class CreateRoleTool : EditorWindow
         AnimatorController controller = AssetDatabase.LoadAssetAtPath(newControllerPath, typeof(AnimatorController)) as AnimatorController;
 
         string[] clipPathArry = System.IO.Directory.GetFiles(animPath);
-        List<AnimationClip> clipList =new List<AnimationClip>();
+        List<AnimationClip> clipList = new List<AnimationClip>();
         for (int i = 0; i < clipPathArry.Length; i++)
         {
             if (clipPathArry[i].EndsWith(".meta")) continue;
-            var clip= AssetDatabase.LoadAssetAtPath(clipPathArry[i],typeof(AnimationClip)) as AnimationClip;
+            var clip = AssetDatabase.LoadAssetAtPath(clipPathArry[i], typeof(AnimationClip)) as AnimationClip;
             clipList.Add(clip);
         }
 
@@ -141,22 +146,22 @@ public class CreateRoleTool : EditorWindow
 
     string GetAnimatorPath(string name)
     {
-        return "Assets/ArtResources/Animator/Roles/" +name+"/";
+        return "Assets/ArtResources/Animator/Roles/" + name + "/";
     }
 
     string GetNewAnimatorPath(string name)
     {
-        return "Assets/Resources/Prefabs/Roles/" + name + "/"+ name + "AnimatorController.controller";
+        return "Assets/Resources/Prefabs/Roles/" + name + "/" + name + "AnimatorController.controller";
     }
 
     string GetNewPrefabPath(string name)
     {
-        return "Assets/Resources/Prefabs/Roles/"+name+"/"+name+".prefab";
+        return "Assets/Resources/Prefabs/Roles/" + name + "/" + name + ".prefab";
     }
 
     Sprite GetRoleIdleSprite(string name)
     {
-        string spritePath = "Assets/ArtResources/ArtSources/Roles/" + name + "/Idle/"+ name+"_Idle_00001.png";
+        string spritePath = "Assets/ArtResources/ArtSources/Roles/" + name + "/Idle/" + name + "_Idle_00001.png";
         Sprite sprite = AssetDatabase.LoadAssetAtPath(spritePath, typeof(Sprite)) as Sprite;
         return sprite;
     }
