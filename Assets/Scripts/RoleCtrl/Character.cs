@@ -135,7 +135,7 @@ public class Character : MonoEntity
     protected override void OnUpdate()
     {
         base.OnUpdate();
-        IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, 0.3f, GameConfig.Instance.PlaneMask);
+        IsGround = Physics2D.OverlapCircle((Vector2)transform.position + m_BottomOffest, m_BoxCollider.size.x*0.5f, GameConfig.Instance.PlaneMask);
         //if (!IsGround)
         //{
         //    if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
@@ -275,8 +275,8 @@ public class Character : MonoEntity
     protected override void OnDrawGizmosUpdate()
     {
         base.OnDrawGizmosUpdate();
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere((Vector2)transform.position + m_BottomOffest, 0.3f);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawWireSphere((Vector2)transform.position + m_BottomOffest, m_BoxCollider.size.x * 0.5f);
     }
 
     #region 继承方法

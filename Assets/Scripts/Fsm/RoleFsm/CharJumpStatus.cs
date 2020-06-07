@@ -46,6 +46,7 @@ public class CharJumpStatus : CharFsmBase
         m_Owner.MoveTarget = m_Owner.transform.position;
         if (!m_Owner.IsGround)
         {
+            _isJumping = true;
             m_Animator.SetInteger("Index", (int)E_AnimatorIndex.JumpingDown);
         }
         if (objs != null)
@@ -66,7 +67,7 @@ public class CharJumpStatus : CharFsmBase
     protected override void OnStay()
     {
         base.OnStay();
-        if (m_CurStateInfo.IsName(E_AnimatorIndex.JumpStart.ToString()))
+        if (m_Animator.GetInteger("Index")== (int)E_AnimatorIndex.JumpStart)
         {
             if (m_CurStateInfo.normalizedTime >= 1f)
             {
