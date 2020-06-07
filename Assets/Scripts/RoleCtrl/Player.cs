@@ -48,6 +48,15 @@ public class Player : Character
         {
             _jumpOnHead = false;
         }
+        else
+        {
+            if (CurStatus != E_CharacterFsmStatus.Jump && CheckCanChangeStatus(E_CharacterFsmStatus.Jump))
+            {
+                System.Action<Character> act = SceneConfigManager.Instance.PlayJumpDownEffect;
+                ChangeStatus(E_CharacterFsmStatus.Jump, false, null, 0, act);
+            }
+
+        }
     }
 
     public override void Hurt(GameObject atkOwner, int damage, int hitForce)
@@ -135,6 +144,7 @@ public class Player : Character
     {
         if (Application.isPlaying)
         {
+            base.OnDrawGizmosUpdate();
             Gizmos.DrawCube(transform.position + (Vector3)BottomOffest, new Vector3(BoxCollider.size.x, 0.2f, 1));
         }
     }

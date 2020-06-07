@@ -37,6 +37,8 @@ public class UIArchivePanel : UIPanelBase
         {
             Button_DeleteArchive.gameObject.SetActive(false);
             Text_LevelName.text = "";
+            Image_Level.sprite = null;
+            Text_PlayTimeLong.text = "";
             GameObject_NullArchive.SetActive(true);
         }
         else
