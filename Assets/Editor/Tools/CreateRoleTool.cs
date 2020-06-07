@@ -161,7 +161,7 @@ public class CreateRoleTool : EditorWindow
 
     Sprite GetRoleIdleSprite(string name)
     {
-        string spritePath = "Assets/ArtResources/ArtSources/Roles/" + name + "/Idle/" + name + "_Idle_00001.png";
+        string spritePath = "Assets/ArtResources/Sprites/Roles/" + name + "/Idle/" + name + "_Idle_00001.png";
         Sprite sprite = AssetDatabase.LoadAssetAtPath(spritePath, typeof(Sprite)) as Sprite;
         return sprite;
     }
